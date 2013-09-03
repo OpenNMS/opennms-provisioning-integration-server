@@ -15,13 +15,15 @@ public class OcsRequisitionProvider {
     private final String ocsPassword;
     private final String foreignSource;
     private final String mapper;
+    private final String checksum;
 
-    public OcsRequisitionProvider(String ocsUrl, String ocsUsername, String ocsPassword, String foreignSource, String mapper) {
+    public OcsRequisitionProvider(String ocsUrl, String ocsUsername, String ocsPassword, String foreignSource, String mapper, String checksum) {
         this.ocsUrl = ocsUrl;
         this.ocsUsername = ocsUsername;
         this.ocsPassword = ocsPassword;
         this.foreignSource = foreignSource;
         this.mapper = mapper;
+        this.checksum = checksum;
     }
 
     public Requisition generateRequisition() {
@@ -44,7 +46,7 @@ public class OcsRequisitionProvider {
         OcsInventoryClientLogic ocsClient = new OcsInventoryClientLogicImp();
         Computers computers = null;
         try {
-            ocsClient.init(ocsUrl, ocsUsername, ocsPassword);
+            ocsClient.init(ocsUrl, ocsUsername, ocsPassword, checksum);
             computers = ocsClient.getComputers();
         } catch (Exception ex) {
             LOGGER.error("Call to OCS had problems", ex);

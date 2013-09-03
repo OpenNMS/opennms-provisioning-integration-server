@@ -30,12 +30,13 @@ public class Starter {
     private static OcsRequisitionProvider ocsRequisitionProvider;
     private static Requisition requisition;
     private static String mapper;
+    private static String checksum;
 
     public static void main(String[] args) throws JAXBException, IOException {
 
         loadProperties();
 
-        ocsRequisitionProvider = new OcsRequisitionProvider(ocsUrl, ocsUsername, ocsPassword, foreignSource, mapper);
+        ocsRequisitionProvider = new OcsRequisitionProvider(ocsUrl, ocsUsername, ocsPassword, foreignSource, mapper, checksum);
 
         switch (mode) {
             case "writeToFileMode":
@@ -84,9 +85,11 @@ public class Starter {
             requisitionFile = prop.getProperty("requisitionFile");
 
             port = Integer.parseInt(prop.getProperty("port"));
+            
+            checksum = prop.getProperty("checksum");
 
         } catch (IOException ex) {
-            LOGGER.error("loading conifg failed", ex);
+            LOGGER.error("loading config failed", ex);
             System.exit(1);
         }
     }
@@ -96,7 +99,7 @@ public class Starter {
         @Override
         public void handle(HttpExchange t) throws IOException {
             loadProperties();
-            ocsRequisitionProvider = new OcsRequisitionProvider(ocsUrl, ocsUsername, ocsPassword, foreignSource, mapper);
+            ocsRequisitionProvider = new OcsRequisitionProvider(ocsUrl, ocsUsername, ocsPassword, foreignSource, mapper, checksum);
 
             requisition = ocsRequisitionProvider.generateRequisition();
             try {
