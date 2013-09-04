@@ -1,21 +1,26 @@
 package org.opennms.provisioner.ocs;
 
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
-import com.sun.net.httpserver.HttpServer;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringWriter;
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
+
 import org.opennms.netmgt.provision.persist.requisition.Requisition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
+import com.sun.net.httpserver.HttpServer;
 
 public class Starter {
 
@@ -31,12 +36,13 @@ public class Starter {
     private static Requisition requisition;
     private static String mapper;
     private static String checksum;
+    private static List<String> tags;
 
     public static void main(String[] args) throws JAXBException, IOException {
 
         loadProperties();
 
-        ocsRequisitionProvider = new OcsRequisitionProvider(ocsUrl, ocsUsername, ocsPassword, foreignSource, mapper, checksum);
+        ocsRequisitionProvider = new OcsRequisitionProvider(ocsUrl, ocsUsername, ocsPassword, foreignSource, mapper, checksum, tags);
 
         switch (mode) {
             case "writeToFileMode":
@@ -87,6 +93,14 @@ public class Starter {
             port = Integer.parseInt(prop.getProperty("port"));
             
             checksum = prop.getProperty("checksum");
+            
+            final String tagCsv = prop.getProperty("tags");
+            tags = new ArrayList<String>();
+            if (tagCsv != null && tagCsv.trim().length() > 0) {
+                for (String aTag : tagCsv.split("\\s*,\\s*")) {
+                    tags.add(aTag.trim());
+                }
+            }
 
         } catch (IOException ex) {
             LOGGER.error("loading config failed", ex);
@@ -99,7 +113,7 @@ public class Starter {
         @Override
         public void handle(HttpExchange t) throws IOException {
             loadProperties();
-            ocsRequisitionProvider = new OcsRequisitionProvider(ocsUrl, ocsUsername, ocsPassword, foreignSource, mapper, checksum);
+            ocsRequisitionProvider = new OcsRequisitionProvider(ocsUrl, ocsUsername, ocsPassword, foreignSource, mapper, checksum, tags);
 
             requisition = ocsRequisitionProvider.generateRequisition();
             try {
