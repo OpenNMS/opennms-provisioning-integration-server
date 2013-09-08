@@ -37,12 +37,13 @@ public class Starter {
     private static String mapper;
     private static String checksum;
     private static List<String> tags;
+    private static String ocsDeviceType;
 
     public static void main(String[] args) throws JAXBException, IOException {
 
         loadProperties();
 
-        ocsRequisitionProvider = new OcsRequisitionProvider(ocsUrl, ocsUsername, ocsPassword, foreignSource, mapper, checksum, tags);
+        ocsRequisitionProvider = new OcsRequisitionProvider(ocsUrl, ocsUsername, ocsPassword, foreignSource, mapper, checksum, tags, ocsDeviceType);
 
         switch (mode) {
             case "writeToFileMode":
@@ -101,6 +102,8 @@ public class Starter {
                     tags.add(aTag.trim());
                 }
             }
+            
+            ocsDeviceType = prop.getProperty("ocsDeviceType", "computers");
 
         } catch (IOException ex) {
             LOGGER.error("loading config failed", ex);
@@ -113,7 +116,7 @@ public class Starter {
         @Override
         public void handle(HttpExchange t) throws IOException {
             loadProperties();
-            ocsRequisitionProvider = new OcsRequisitionProvider(ocsUrl, ocsUsername, ocsPassword, foreignSource, mapper, checksum, tags);
+            ocsRequisitionProvider = new OcsRequisitionProvider(ocsUrl, ocsUsername, ocsPassword, foreignSource, mapper, checksum, tags, ocsDeviceType);
 
             requisition = ocsRequisitionProvider.generateRequisition();
             try {

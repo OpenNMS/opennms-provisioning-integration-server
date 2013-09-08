@@ -2,6 +2,7 @@ package org.opennms.provisioner.ocs;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.opennms.netmgt.model.PrimaryType;
 import org.opennms.netmgt.provision.persist.requisition.Requisition;
 import org.opennms.netmgt.provision.persist.requisition.RequisitionAsset;
@@ -11,6 +12,8 @@ import org.opennms.netmgt.provision.persist.requisition.RequisitionNode;
 import org.opennms.ocs.inventory.client.response.Computer;
 import org.opennms.ocs.inventory.client.response.Computers;
 import org.opennms.ocs.inventory.client.response.Network;
+import org.opennms.ocs.inventory.client.response.snmp.SnmpDevice;
+import org.opennms.ocs.inventory.client.response.snmp.SnmpDevices;
 
 public class OcsDefaultMapper {
 
@@ -131,6 +134,40 @@ public class OcsDefaultMapper {
         RequisitionNode requisitionNode;
         for (Computer computer : computers.getComputers()) {
             requisitionNode = mapComputerToRequisitionNode(computer);
+            if (requisitionNode != null) {
+                requisition.getNodes().add(requisitionNode);
+            }
+        }
+        return requisition;
+    }
+
+    private RequisitionNode mapSnmpDeviceToRequisitionNode(SnmpDevice snmpDevice) {
+        RequisitionNode requisitionNode = new RequisitionNode();
+        requisitionNode.setForeignId(snmpDevice.getSNMP().getId() + "");
+        requisitionNode.setNodeLabel(snmpDevice.getSNMP().getName());
+    
+        RequisitionInterface requisitionInterface = new RequisitionInterface();
+        requisitionInterface.setIpAddr(snmpDevice.getSNMP().getIPAddr());
+        requisitionInterface.setDescr("OCS");
+        requisitionInterface.setSnmpPrimary(PrimaryType.PRIMARY);
+        requisitionInterface.setManaged(Boolean.TRUE);
+        requisitionInterface.insertMonitoredService(new RequisitionMonitoredService("SNMP"));
+        requisitionInterface.insertMonitoredService(new RequisitionMonitoredService("ICMP"));
+        requisitionNode.getAssets().add(new RequisitionAsset("operatingSystem", snmpDevice.getSNMP().getDescription()));
+    
+        String ocsSnmpDeviceLink = "<a href=" + ocsUrl + "/index.php?function=snmp_detail&head=1&id=" + requisitionNode.getForeignId() + ">OCS-Inventory</a>";
+        requisitionNode.getAssets().add(new RequisitionAsset("comment", ocsSnmpDeviceLink));
+    
+        requisitionNode.getInterfaces().add(requisitionInterface);
+    
+        return requisitionNode;
+    }
+
+    public Requisition mapSnmpDevicesToRequisition(SnmpDevices snmpDevices) {
+        Requisition requisition = new Requisition();
+        RequisitionNode requisitionNode;
+        for (SnmpDevice snmpDevice : snmpDevices.getSNMPDevices()) {
+            requisitionNode = mapSnmpDeviceToRequisitionNode(snmpDevice);
             if (requisitionNode != null) {
                 requisition.getNodes().add(requisitionNode);
             }
