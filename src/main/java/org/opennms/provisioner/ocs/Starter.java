@@ -126,7 +126,7 @@ public class Starter {
                 StringWriter stringWriter = new StringWriter();
                 jaxbMarshaller.marshal(requisition, stringWriter);
                 String response = stringWriter.toString();
-                t.sendResponseHeaders(200, response.length());
+                t.sendResponseHeaders(200, response.getBytes().length);
                 try (OutputStream os = t.getResponseBody()) {
                     os.write(response.getBytes());
                 }
@@ -136,6 +136,9 @@ public class Starter {
                 try (OutputStream os = t.getResponseBody()) {
                     os.write(ex.getMessage().getBytes());
                 }
+            } catch (IOException ioex) {
+                LOGGER.error("Caught IOException while serving response: {}", ioex);
+                System.exit(1);
             }
         }
     }
