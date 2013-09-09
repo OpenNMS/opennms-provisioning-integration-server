@@ -68,6 +68,7 @@ public class OcsRequisitionProvider {
             if (mapper.equals("default")) {
                 OcsDefaultMapper ocsMapper = new OcsDefaultMapper(ocsUrl);
                 requisition = ocsMapper.mapSnmpDevicesToRequisition(snmpDevices);
+                requisition.setForeignSource(foreignSource);
             } else {
                 OcsScriptMapper ocsMapper = new OcsScriptMapper(foreignSource, ocsUrl, mapper);
                 requisition = ocsMapper.mapSnmpDevicesToRequisition(snmpDevices);
