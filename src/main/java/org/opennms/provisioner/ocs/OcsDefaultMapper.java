@@ -153,7 +153,6 @@ public class OcsDefaultMapper {
         requisitionInterface.setManaged(Boolean.TRUE);
         requisitionInterface.insertMonitoredService(new RequisitionMonitoredService("SNMP"));
         requisitionInterface.insertMonitoredService(new RequisitionMonitoredService("ICMP"));
-        requisitionNode.getAssets().add(new RequisitionAsset("operatingSystem", snmpDevice.getSNMP().getDescription()));
     
         String ocsSnmpDeviceLink = "<a href=" + ocsUrl + "/index.php?function=snmp_detail&head=1&id=" + requisitionNode.getForeignId() + ">OCS-Inventory</a>";
         requisitionNode.getAssets().add(new RequisitionAsset("comment", ocsSnmpDeviceLink));
