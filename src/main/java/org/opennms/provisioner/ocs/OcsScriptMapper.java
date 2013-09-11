@@ -65,6 +65,7 @@ public class OcsScriptMapper {
             manager.declareBean("foreignSource", foreignSource, String.class);
             manager.declareBean("ocsUrl", ocsUrl, String.class);
             manager.declareBean("mapper", mapper, String.class);
+            manager.declareBean("logger", LoggerFactory.getLogger(OcsScriptMapper.class), Logger.class);
             requisition = (Requisition) manager.eval(mapper.substring(mapper.indexOf(".") + 1), mapper, 0, 0, mapperScript);
         } catch (IOException ex) {
             LOGGER.error("Problems reading script " + mapper, ex);
