@@ -1,4 +1,6 @@
 import java.lang.StringBuilder;
+import java.util.Set;
+import java.util.HashSet;
 
 import org.opennms.ocs.inventory.client.response.Bios;
 import org.opennms.ocs.inventory.client.response.Computer;
@@ -19,18 +21,27 @@ String mapper;
 
 Computers myComputers = computers;
 Requisition myRequisition = new Requisition(foreignSource);
+Set existingForeignIDs = new HashSet();
 
 for (Computer computer : myComputers.getComputers()) {
-    myRequisition.getNodes().add(this.getRequisitionNode(computer));
+    RequisitionNode rNode = this.getRequisitionNode(computer);
+    // true indicates the set did not already contain this element
+    if (existingForeignIDs.add(rNode.getForeignId())) {
+        myRequisition.getNodes().add(rNode);
+    } else {
+        // TODO actually do something useful here
+        logger.error("Ignoring duplicate foreign-ID '{}'", rNode.getForeignId());
+    }
 }
 
+logger.info("Returning requisition with {} nodes", myRequisition.getNodes().size());
 return myRequisition;
 
 private RequisitionNode getRequisitionNode(Computer computer) {
     RequisitionNode myRequisitionNode = new RequisitionNode();
     Computer myComputer = computer;
 
-    myRequisitionNode.setForeignId(myComputer.getHardware().getId() + "");
+    myRequisitionNode.setForeignId(myComputer.getHardware().getName() + "");
     myRequisitionNode.setNodeLabel(myComputer.getHardware().getName());
 
     populateBiosAssets(myComputer, myRequisitionNode);
@@ -46,7 +57,7 @@ private void populateBiosAssets(Computer myComputer, RequisitionNode myRequisiti
     if (myBios != null) {
         myRequisitionNode.getAssets().add(new RequisitionAsset("manufacturer", myBios.getSManufacturer()));
         myRequisitionNode.getAssets().add(new RequisitionAsset("model", myBios.getSModel()));
-        myRequisitionNode.getAssets().add(new RequisitionAsset("serialNumber", String.valueOf(myBios.getSSN())));
+        myRequisitionNode.getAssets().add(new RequisitionAsset("serialNumber", myBios.getSSN()));
     }
 }
 
