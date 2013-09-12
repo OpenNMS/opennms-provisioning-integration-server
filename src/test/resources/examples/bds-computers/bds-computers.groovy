@@ -5,6 +5,7 @@ import java.util.HashSet;
 import org.opennms.ocs.inventory.client.response.Bios;
 import org.opennms.ocs.inventory.client.response.Computer;
 import org.opennms.ocs.inventory.client.response.Computers;
+import org.opennms.ocs.inventory.client.response.Entry;
 import org.opennms.ocs.inventory.client.response.Hardware;
 import org.opennms.ocs.inventory.client.response.Network;
 import org.opennms.netmgt.provision.persist.requisition.RequisitionAsset;
@@ -23,8 +24,18 @@ Computers myComputers = computers;
 Requisition myRequisition = new Requisition(foreignSource);
 Set existingForeignIDs = new HashSet();
 
+Properties catMap = new Properties();
+try {
+    catMap.load(new FileInputStream("categorymap.properties"));
+    logger.info("Loaded properties");
+} catch (Exception e) {
+    logger.error("Could not read category mappings from " + catMapFile.getAbsolutePath(), e);
+    System.exit(1);
+}
+
+// Execution starts here
 for (Computer computer : myComputers.getComputers()) {
-    RequisitionNode rNode = this.getRequisitionNode(computer);
+    RequisitionNode rNode = this.getRequisitionNode(computer, catMap);
     // true indicates the set did not already contain this element
     if (existingForeignIDs.add(rNode.getForeignId())) {
         myRequisition.getNodes().add(rNode);
@@ -37,7 +48,7 @@ for (Computer computer : myComputers.getComputers()) {
 logger.info("Returning requisition with {} nodes", myRequisition.getNodes().size());
 return myRequisition;
 
-private RequisitionNode getRequisitionNode(Computer computer) {
+private RequisitionNode getRequisitionNode(Computer computer, Properties catMap) {
     RequisitionNode myRequisitionNode = new RequisitionNode();
     Computer myComputer = computer;
 
@@ -48,6 +59,7 @@ private RequisitionNode getRequisitionNode(Computer computer) {
     populateCpuAssets(myComputer, myRequisitionNode);
     populateOSAssets(myComputer, myRequisitionNode);
     populateInterfaces(myComputer, myRequisitionNode);
+    populateCategories(myComputer, myRequisitionNode, catMap);
 
     return myRequisitionNode;
 }
@@ -63,15 +75,15 @@ private void populateBiosAssets(Computer myComputer, RequisitionNode myRequisiti
 
 private void populateCpuAssets(Computer myComputer, RequisitionNode myRequisitionNode) {
     StringBuilder cpuStringBuilder = new StringBuilder(String.valueOf(myComputer.getHardware().getProcessorn()))
-        .append(" x ").append(String.valueOf(myComputer.getHardware().getProcessors()))
-        .append("MHz ").append(myComputer.getHardware().getProcessort());
+            .append(" x ").append(String.valueOf(myComputer.getHardware().getProcessors()))
+            .append("MHz ").append(myComputer.getHardware().getProcessort());
     myRequisitionNode.getAssets().add(new RequisitionAsset("cpu", cpuStringBuilder.toString()));
 }
 
 private void populateOSAssets(Computer myComputer, RequisitionNode myRequisitionNode) {
     StringBuilder osStringBuilder = new StringBuilder(myComputer.getHardware().getOsname())
-        .append(" ").append(myComputer.getHardware().getOsversion())
-        .append(" (").append(myComputer.getHardware().getOscomments()).append(")");
+            .append(" ").append(myComputer.getHardware().getOsversion())
+            .append(" (").append(myComputer.getHardware().getOscomments()).append(")");
     myRequisitionNode.getAssets().add(new RequisitionAsset("operatingsystem", osStringBuilder.toString()));
 }
 
@@ -87,4 +99,16 @@ private void populateInterfaces(Computer myComputer, RequisitionNode myRequisiti
     requisitionInterface.insertMonitoredService(new RequisitionMonitoredService("SNMP"));
 
     myRequisitionNode.getInterfaces().add(requisitionInterface);
+}
+
+private void populateCategories(Computer myComputer, RequisitionNode myRequisitionNode, Properties catMap) {
+    for (Entry entry : myComputer.getAccountInfo().getEntries()) {
+        if ("".equals(entry.getValue())) continue;
+        logger.info("On computer {} got an accountinfo entry called {} with value {}", myComputer.getHardware().getName(), entry.getName(), entry.getValue());
+        if (catMap.containsKey(entry.getName() + "." + entry.getValue())) {
+            myRequisitionNode.putCategory(new RequisitionCategory(catMap.get(entry.getName() + "." + entry.getValue())));
+        } else {
+            logger.info("NOT Adding category {}.{} to node {}", entry.getName(), entry.getValue(), myComputer.getHardware().getName());
+        }
+    }
 }
