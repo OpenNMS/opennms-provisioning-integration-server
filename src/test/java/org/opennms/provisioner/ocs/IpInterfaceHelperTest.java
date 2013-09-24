@@ -1,8 +1,6 @@
 package org.opennms.provisioner.ocs;
 
-import java.util.ArrayList;
-import java.util.List;
-import org.junit.Assert;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.opennms.ocs.inventory.client.response.Computer;
@@ -10,8 +8,10 @@ import org.opennms.ocs.inventory.client.response.Computers;
 import org.opennms.ocs.inventory.client.response.Hardware;
 import org.opennms.ocs.inventory.client.response.Network;
 
-public class IpInterfaceSelectorTest {
+public class IpInterfaceHelperTest {
 
+    private IpInterfaceHelper helper;
+    
     private Computers computers;
     private Computer computerWhite;
     private Computer computerBlack;
@@ -23,8 +23,6 @@ public class IpInterfaceSelectorTest {
     private Network networkWhite;
     private Network networkBlack;
     private Network networkDefault;
-    private List<String> ipBlackList = new ArrayList<>();
-    private List<String> ipWhiteList = new ArrayList<>();
     
     private String IP_WHITE = "1.1.1.1";
     private String IP_BLACK = "2.2.2.2";
@@ -32,6 +30,7 @@ public class IpInterfaceSelectorTest {
 
     @Before
     public void setup() {
+        helper = new IpInterfaceHelper();
         generateNetworks();
         generateComputers();
     }
@@ -39,81 +38,34 @@ public class IpInterfaceSelectorTest {
     @Test
     public void ipSelectionTest() {
 
-        Assert.assertNotNull(selectManagementNetwork(computerWhite));
-        Assert.assertEquals(IP_WHITE, selectManagementNetwork(computerWhite).getIPAddress());
+        assertNotNull(helper.selectManagementNetwork(computerWhite));
+        assertEquals(IP_WHITE, helper.selectManagementNetwork(computerWhite).getIPAddress());
 
-        Assert.assertNotNull(selectManagementNetwork(computerDefault));
-        Assert.assertEquals(IP_DEFAULT, selectManagementNetwork(computerDefault).getIPAddress());
+        assertNotNull(helper.selectManagementNetwork(computerDefault));
+        assertEquals(IP_DEFAULT, helper.selectManagementNetwork(computerDefault).getIPAddress());
 
-        Assert.assertNull(selectManagementNetwork(computerBlack));
+        assertNull(helper.selectManagementNetwork(computerBlack));
 
-        Assert.assertNotNull(selectManagementNetwork(computerDefaultWhite));
-        Assert.assertEquals(IP_WHITE, selectManagementNetwork(computerDefaultWhite).getIPAddress());
+        assertNotNull(helper.selectManagementNetwork(computerDefaultWhite));
+        assertEquals(IP_WHITE, helper.selectManagementNetwork(computerDefaultWhite).getIPAddress());
 
-        Assert.assertNotNull(selectManagementNetwork(computerDefaultBlack));
-        Assert.assertEquals(IP_DEFAULT, selectManagementNetwork(computerDefaultBlack).getIPAddress());
+        assertNotNull(helper.selectManagementNetwork(computerDefaultBlack));
+        assertEquals(IP_DEFAULT, helper.selectManagementNetwork(computerDefaultBlack).getIPAddress());
 
-        Assert.assertNotNull(selectManagementNetwork(computerBlackWhite));
-        Assert.assertEquals(IP_WHITE, selectManagementNetwork(computerBlackWhite).getIPAddress());
+        assertNotNull(helper.selectManagementNetwork(computerBlackWhite));
+        assertEquals(IP_WHITE, helper.selectManagementNetwork(computerBlackWhite).getIPAddress());
 
-        Assert.assertNotNull(selectManagementNetwork(computerDefaultBlackWhite));
-        Assert.assertEquals(IP_WHITE, selectManagementNetwork(computerDefaultBlackWhite).getIPAddress());
-    }
-
-    private Network selectManagementNetwork(Computer computer) {
-
-        List<Network> possibleNetworks = new ArrayList<>();
-        for (Network network : computer.getNetworks()) {
-            //check for a whitelisted interface
-            if (isIpWhiteListed(network.getIPAddress())) {
-                System.out.println("Match White for: " + computer.getHardware().getName() + "\t" + network.getIPAddress());
-                return network;
-            } else if (!isIpBlackListed(network.getIPAddress())) {
-                possibleNetworks.add(network);
-            }
-        }
-
-        if (possibleNetworks.isEmpty()) {
-            if (isIpBlackListed(computer.getHardware().getIpaddr())) {
-                return null;
-            } else {
-                Network dummyNetwork = new Network();
-                dummyNetwork.setIPAddress(computer.getHardware().getIpaddr());
-                System.out.println("Match dummy for: " + computer.getHardware().getName() + "\t" + dummyNetwork.getIPAddress());
-                return dummyNetwork;
-            }
-        } else {
-            // use any not whitelisted or blacklisted interface
-            System.out.println("Use any for: " + computer.getHardware().getName() + "\t" + possibleNetworks.get(0).getIPAddress());
-            return possibleNetworks.get(0);
-        }
-    }
-
-    private Boolean isIpBlackListed(String ipAddress) {
-        for (String blackedIp : ipBlackList) {
-            if (ipAddress.startsWith(blackedIp)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private Boolean isIpWhiteListed(String ipAddress) {
-        for (String whiteIp : ipWhiteList) {
-            if (ipAddress.startsWith(whiteIp)) {
-                return true;
-            }
-        }
-        return false;
+        assertNotNull(helper.selectManagementNetwork(computerDefaultBlackWhite));
+        assertEquals(IP_WHITE, helper.selectManagementNetwork(computerDefaultBlackWhite).getIPAddress());
     }
 
     private void generateNetworks() {
-        ipWhiteList.add(IP_WHITE);
+        helper.addIpWhite(IP_WHITE);
         networkWhite = new Network();
         networkWhite.setIPAddress(IP_WHITE);
         networkWhite.setDescription("NetworkWhite");
 
-        ipBlackList.add(IP_BLACK);
+        helper.addIpBlack(IP_BLACK);
         networkBlack = new Network();
         networkBlack.setIPAddress(IP_BLACK);
         networkBlack.setDescription("NetworkBlack");

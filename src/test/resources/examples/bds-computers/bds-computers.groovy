@@ -2,6 +2,7 @@ import java.lang.StringBuilder;
 import java.util.Set;
 import java.util.HashSet;
 
+import org.opennms.provisioner.ocs.IpInterfaceHelper;
 import org.opennms.ocs.inventory.client.response.Bios;
 import org.opennms.ocs.inventory.client.response.Computer;
 import org.opennms.ocs.inventory.client.response.Computers;
@@ -19,6 +20,9 @@ import org.opennms.netmgt.model.PrimaryType;
 String foreignSource;
 String ocsUrl;
 String mapper;
+
+IpInterfaceHelper ipInterfaceHelper = new IpInterfaceHelper();
+ipInterfaceHelper.initListsFromConfigs();
 
 Computers myComputers = computers;
 Requisition myRequisition = new Requisition(foreignSource);
@@ -89,16 +93,20 @@ private void populateOSAssets(Computer myComputer, RequisitionNode myRequisition
 
 private void populateInterfaces(Computer myComputer, RequisitionNode myRequisitionNode) {
     RequisitionInterface requisitionInterface = new RequisitionInterface();
-    Network managementNetwork = myComputer.getNetworks().get(0);
-    requisitionInterface.setIpAddr(managementNetwork.getIPAddress());
-    requisitionInterface.setDescr(managementNetwork.getDescription());
+    Network managementNetwork = ipInterfaceHelper.selectManagementNetwork(myComputer);
+    if (managementNetwork != null) {
+        requisitionInterface.setIpAddr(managementNetwork.getIPAddress());
+        requisitionInterface.setDescr(managementNetwork?.getDescription());
 
-    requisitionInterface.setSnmpPrimary(PrimaryType.PRIMARY);
-    requisitionInterface.setManaged(Boolean.TRUE);
-    requisitionInterface.insertMonitoredService(new RequisitionMonitoredService("ICMP"));
-    requisitionInterface.insertMonitoredService(new RequisitionMonitoredService("SNMP"));
+        requisitionInterface.setSnmpPrimary(PrimaryType.PRIMARY);
+        requisitionInterface.setManaged(Boolean.TRUE);
+        requisitionInterface.insertMonitoredService(new RequisitionMonitoredService("ICMP"));
+        requisitionInterface.insertMonitoredService(new RequisitionMonitoredService("SNMP"));
 
-    myRequisitionNode.getInterfaces().add(requisitionInterface);
+        myRequisitionNode.getInterfaces().add(requisitionInterface);
+    } else {
+        logger.error("No valid interface was found for computer '{}'", myComputer.getHardware().getName());
+    }
 }
 
 private void populateCategories(Computer myComputer, RequisitionNode myRequisitionNode, Properties catMap) {
