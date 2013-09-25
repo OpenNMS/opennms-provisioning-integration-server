@@ -21,9 +21,6 @@ String foreignSource;
 String ocsUrl;
 String mapper;
 
-IpInterfaceHelper ipInterfaceHelper = new IpInterfaceHelper();
-ipInterfaceHelper.initListsFromConfigs();
-
 Computers myComputers = computers;
 Requisition myRequisition = new Requisition(foreignSource);
 Set existingForeignIDs = new HashSet();
@@ -49,7 +46,7 @@ for (Computer computer : myComputers.getComputers()) {
     }
 }
 
-logger.info("Returning requisition with {} nodes", myRequisition.getNodes().size());
+logger.info("Returning {} requisition with {} nodes", myRequisition.getForeignSource(), myRequisition.getNodes().size());
 return myRequisition;
 
 private RequisitionNode getRequisitionNode(Computer computer, Properties catMap) {
@@ -71,28 +68,32 @@ private RequisitionNode getRequisitionNode(Computer computer, Properties catMap)
 private void populateBiosAssets(Computer myComputer, RequisitionNode myRequisitionNode) {
     Bios myBios = myComputer.getBios();
     if (myBios != null) {
-        myRequisitionNode.getAssets().add(new RequisitionAsset("manufacturer", myBios.getSManufacturer()));
-        myRequisitionNode.getAssets().add(new RequisitionAsset("model", myBios.getSModel()));
-        myRequisitionNode.getAssets().add(new RequisitionAsset("serialNumber", myBios.getSSN()));
+        myRequisitionNode.getAssets().add(new RequisitionAsset("manufacturer", assetStringCleaner(myBios.getSManufacturer(), 64)));
+        myRequisitionNode.getAssets().add(new RequisitionAsset("modelNumber", assetStringCleaner(myBios.getSModel(), 64)));
+        myRequisitionNode.getAssets().add(new RequisitionAsset("serialNumber", assetStringCleaner(myBios.getSSN(), 64)));
     }
 }
 
 private void populateCpuAssets(Computer myComputer, RequisitionNode myRequisitionNode) {
     StringBuilder cpuStringBuilder = new StringBuilder(String.valueOf(myComputer.getHardware().getProcessorn()))
-            .append(" x ").append(String.valueOf(myComputer.getHardware().getProcessors()))
-            .append("MHz ").append(myComputer.getHardware().getProcessort());
-    myRequisitionNode.getAssets().add(new RequisitionAsset("cpu", cpuStringBuilder.toString()));
+    .append(" x ").append(String.valueOf(myComputer.getHardware().getProcessors()))
+    .append("MHz ").append(myComputer.getHardware().getProcessort());    
+    myRequisitionNode.getAssets().add(new RequisitionAsset("cpu", assetStringCleaner(cpuStringBuilder.toString(), 64)));
 }
 
 private void populateOSAssets(Computer myComputer, RequisitionNode myRequisitionNode) {
     StringBuilder osStringBuilder = new StringBuilder(myComputer.getHardware().getOsname())
-            .append(" ").append(myComputer.getHardware().getOsversion())
-            .append(" (").append(myComputer.getHardware().getOscomments()).append(")");
-    myRequisitionNode.getAssets().add(new RequisitionAsset("operatingsystem", osStringBuilder.toString()));
+    .append(" ").append(myComputer.getHardware().getOsversion())
+    .append(" (").append(myComputer.getHardware().getOscomments()).append(")");
+    myRequisitionNode.getAssets().add(new RequisitionAsset("operatingSystem", assetStringCleaner(osStringBuilder.toString(), 64)));
 }
 
 private void populateInterfaces(Computer myComputer, RequisitionNode myRequisitionNode) {
     RequisitionInterface requisitionInterface = new RequisitionInterface();
+
+    IpInterfaceHelper ipInterfaceHelper = new IpInterfaceHelper();
+    ipInterfaceHelper.initListsFromConfigs();
+
     Network managementNetwork = ipInterfaceHelper.selectManagementNetwork(myComputer);
     if (managementNetwork != null) {
         requisitionInterface.setIpAddr(managementNetwork.getIPAddress());
@@ -119,4 +120,25 @@ private void populateCategories(Computer myComputer, RequisitionNode myRequisiti
             logger.info("NOT Adding category {}.{} to node {}", entry.getName(), entry.getValue(), myComputer.getHardware().getName());
         }
     }
+}
+
+private String assetStringCleaner(String assetString, Integer maxSize) {
+    
+    String result = assetString;
+    //Trademarks
+    result = result.replace("®", "");
+    result = result.replace("(R)", "");
+    result = result.replace("(tm)", "");
+    
+    //OperatingSystems
+    result = result.replace("Microsoft", "MS");
+    result = result.replace("Service Pack", "SP");
+    result = result.replace("CentOS release", "CentOS");
+    result = result.replace("Red Hat Enterprise Linux Server release", "Red Hat Linux");
+    
+    //duplicat spaces
+    result = result.replaceAll("\\s+", " ");
+    
+    result = result.take(maxSize);    
+    return result;
 }
