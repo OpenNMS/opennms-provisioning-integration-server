@@ -18,6 +18,27 @@ public class IpInterfaceHelper {
     private List<String> ipBlackList = new ArrayList<>();
     private List<String> ipWhiteList = new ArrayList<>();
     
+    public Network selectManagementNetworkWhiteAndBlackOnly(Computer computer) {
+        List<Network> possibleNetworks = new ArrayList<>();
+        for (Network network : computer.getNetworks()) {
+            if (isIpWhiteListed(network.getIPAddress()) && !isIpBlackListed(network.getIPAddress())) {
+                possibleNetworks.add(network);
+            }
+        }
+        if (possibleNetworks.size() >= 1) {
+            return possibleNetworks.get(0);
+        } else {
+            String ocsPickedIp = computer.getHardware().getIpaddr();
+            if(isIpWhiteListed(ocsPickedIp) && !isIpBlackListed(ocsPickedIp)) {
+                Network fakeNetwork = new Network();
+                fakeNetwork.setIPAddress(ocsPickedIp);
+                return fakeNetwork;
+            } else {
+                return null;
+            }
+        }
+    }
+    
     public Network selectManagementNetwork(Computer computer) {
 
         List<Network> possibleNetworks = new ArrayList<>();

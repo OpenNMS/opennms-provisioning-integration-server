@@ -36,7 +36,7 @@ public class IpInterfaceHelperTest {
     }
 
     @Test
-    public void ipSelectionTest() {
+    public void selectManagementNetworkTest() {
 
         assertNotNull(helper.selectManagementNetwork(computerWhite));
         assertEquals(IP_WHITE, helper.selectManagementNetwork(computerWhite).getIPAddress());
@@ -59,6 +59,28 @@ public class IpInterfaceHelperTest {
         assertEquals(IP_WHITE, helper.selectManagementNetwork(computerDefaultBlackWhite).getIPAddress());
     }
 
+    @Test
+    public void selectManagementNetworkWhiteAndBlackOnlyTest() {
+
+        assertNotNull(helper.selectManagementNetworkWhiteAndBlackOnly(computerWhite));
+        assertEquals(IP_WHITE, helper.selectManagementNetworkWhiteAndBlackOnly(computerWhite).getIPAddress());
+
+        assertNull(helper.selectManagementNetworkWhiteAndBlackOnly(computerDefault));
+        
+        assertNull(helper.selectManagementNetworkWhiteAndBlackOnly(computerBlack));
+
+        assertNotNull(helper.selectManagementNetworkWhiteAndBlackOnly(computerDefaultWhite));
+        assertEquals(IP_WHITE, helper.selectManagementNetworkWhiteAndBlackOnly(computerDefaultWhite).getIPAddress());
+
+        assertNull(helper.selectManagementNetworkWhiteAndBlackOnly(computerDefaultBlack));
+        
+        assertNotNull(helper.selectManagementNetworkWhiteAndBlackOnly(computerBlackWhite));
+        assertEquals(IP_WHITE, helper.selectManagementNetworkWhiteAndBlackOnly(computerBlackWhite).getIPAddress());
+
+        assertNotNull(helper.selectManagementNetworkWhiteAndBlackOnly(computerDefaultBlackWhite));
+        assertEquals(IP_WHITE, helper.selectManagementNetworkWhiteAndBlackOnly(computerDefaultBlackWhite).getIPAddress());
+    }
+    
     private void generateNetworks() {
         helper.addIpWhite(IP_WHITE);
         networkWhite = new Network();
@@ -78,6 +100,7 @@ public class IpInterfaceHelperTest {
     private void generateComputers() {
         computerWhite = new Computer();
         computerWhite.setHardware(new Hardware());
+        computerWhite.getHardware().setIpaddr(IP_WHITE);
         computerWhite.getHardware().setName("ComputerWhite");
         computerWhite.getNetworks().add(networkWhite);
 
@@ -95,18 +118,21 @@ public class IpInterfaceHelperTest {
 
         computerDefaultBlack = new Computer();
         computerDefaultBlack.setHardware(new Hardware());
+        computerDefaultBlack.getHardware().setIpaddr(IP_DEFAULT);
         computerDefaultBlack.getHardware().setName("ComputerDefaultBlack");
         computerDefaultBlack.getNetworks().add(networkDefault);
         computerDefaultBlack.getNetworks().add(networkBlack);
 
         computerDefaultWhite = new Computer();
         computerDefaultWhite.setHardware(new Hardware());
+        computerDefaultWhite.getHardware().setIpaddr(IP_WHITE);
         computerDefaultWhite.getHardware().setName("ComputerDefaultWhite");
         computerDefaultWhite.getNetworks().add(networkDefault);
         computerDefaultWhite.getNetworks().add(networkWhite);
 
         computerDefaultBlackWhite = new Computer();
         computerDefaultBlackWhite.setHardware(new Hardware());
+        computerDefaultBlackWhite.getHardware().setIpaddr(IP_WHITE);
         computerDefaultBlackWhite.getHardware().setName("ComputerDefaultBlackWhite");
         computerDefaultBlackWhite.getNetworks().add(networkDefault);
         computerDefaultBlackWhite.getNetworks().add(networkBlack);
@@ -114,6 +140,7 @@ public class IpInterfaceHelperTest {
 
         computerBlackWhite = new Computer();
         computerBlackWhite.setHardware(new Hardware());
+        computerBlackWhite.getHardware().setIpaddr(IP_WHITE);
         computerBlackWhite.getHardware().setName("ComputerBlackWhite");
         computerBlackWhite.getNetworks().add(networkBlack);
         computerBlackWhite.getNetworks().add(networkWhite);
