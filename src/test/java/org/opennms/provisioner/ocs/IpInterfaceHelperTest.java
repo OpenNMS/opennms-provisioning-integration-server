@@ -7,6 +7,7 @@ import org.opennms.ocs.inventory.client.response.Computer;
 import org.opennms.ocs.inventory.client.response.Computers;
 import org.opennms.ocs.inventory.client.response.Hardware;
 import org.opennms.ocs.inventory.client.response.Network;
+import org.opennms.core.utils.IPLike;
 
 public class IpInterfaceHelperTest {
 
@@ -24,9 +25,9 @@ public class IpInterfaceHelperTest {
     private Network networkBlack;
     private Network networkDefault;
     
-    private String IP_WHITE = "1.1.1.1";
-    private String IP_BLACK = "2.2.2.2";
-    private String IP_DEFAULT = "3.3.3.3";
+    private final String IP_WHITE = "1.1.1.1";
+    private final String IP_BLACK = "2.2.2.2";
+    private final String IP_DEFAULT = "3.3.3.3";
 
     @Before
     public void setup() {
@@ -35,6 +36,23 @@ public class IpInterfaceHelperTest {
         generateComputers();
     }
 
+    @Test
+    public void ipLikeTest() {
+        String ip = "1.1.1.1";
+        
+        String goodPatternA = "1.*.1.1";
+        assertTrue(IPLike.matches(ip, goodPatternA));
+        
+        String goodPatternB = "1.1-2.1.1";
+        assertTrue(IPLike.matches(ip, goodPatternB));
+                
+        String badPatternA = "1.2.1.1";
+        assertFalse(IPLike.matches(ip, badPatternA));
+        
+        String badPatternB = "1.2-3.1.1";
+        assertFalse(IPLike.matches(ip, badPatternB));        
+    }
+    
     @Test
     public void selectManagementNetworkTest() {
 
