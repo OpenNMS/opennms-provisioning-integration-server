@@ -11,8 +11,12 @@ import org.opennms.ocs.inventory.client.response.Computers;
 import org.opennms.ocs.inventory.client.response.Network;
 import org.opennms.ocs.inventory.client.response.snmp.SnmpDevice;
 import org.opennms.ocs.inventory.client.response.snmp.SnmpDevices;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class OcsDefaultMapper {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(OcsDefaultMapper.class);
 
     private String ocsUrl;
     private IpInterfaceHelper ipInterfaceHelper = new IpInterfaceHelper();
@@ -20,19 +24,7 @@ public class OcsDefaultMapper {
     
     public OcsDefaultMapper(String ocsUrl) {
         this.ocsUrl = ocsUrl;
-        
-        ipInterfaceHelper.addIpBlack("0.0.0.0");
-        ipInterfaceHelper.addIpBlack("127.0.0.1");
-        ipInterfaceHelper.addIpBlack("10.10.11.");
-        ipInterfaceHelper.addIpBlack("10.11.11.");
-        ipInterfaceHelper.addIpBlack("192.168.1.");
-    
-        ipInterfaceHelper.addIpBlack("10.202.201.");
-        ipInterfaceHelper.addIpBlack("10.200.131.");
-        ipInterfaceHelper.addIpBlack("192.168.10.");
-        
-        ipInterfaceHelper.addIpWhite("192.168.211.");
-        ipInterfaceHelper.addIpWhite("192.168.210.");       
+        ipInterfaceHelper.initListsFromConfigs();
     }
   
     private RequisitionNode mapComputerToRequisitionNode(Computer computer) {
@@ -41,13 +33,16 @@ public class OcsDefaultMapper {
         requisitionNode.setNodeLabel(computer.getHardware().getName());
 
         RequisitionInterface requisitionInterface = new RequisitionInterface();
-        Network managementNetwork = ipInterfaceHelper.selectManagementNetwork(computer);
-        requisitionInterface.setIpAddr(managementNetwork.getIPAddress());
-        requisitionInterface.setDescr(managementNetwork.getDescription());
-        requisitionInterface.setSnmpPrimary(PrimaryType.PRIMARY);
-        requisitionInterface.setManaged(Boolean.TRUE);
-        requisitionInterface.insertMonitoredService(new RequisitionMonitoredService("SNMP"));
-        requisitionInterface.insertMonitoredService(new RequisitionMonitoredService("ICMP"));
+        Network managementNetwork = ipInterfaceHelper.selectManagementNetworkWhiteAndBlackOnly(computer);
+        if (managementNetwork != null) {
+            requisitionInterface.setIpAddr(managementNetwork.getIPAddress());
+            requisitionInterface.setDescr(managementNetwork.getDescription());
+            requisitionInterface.setSnmpPrimary(PrimaryType.PRIMARY);
+            requisitionInterface.setManaged(Boolean.TRUE);
+            requisitionInterface.insertMonitoredService(new RequisitionMonitoredService("SNMP"));
+            requisitionInterface.insertMonitoredService(new RequisitionMonitoredService("ICMP"));
+            requisitionNode.getInterfaces().add(requisitionInterface);
+        }
         requisitionNode.getAssets().add(new RequisitionAsset("operatingSystem", computer.getHardware().getOsname()));
 
         String ocsComputerLink = "<a href=" + ocsUrl + "/index.php?function=computer&head=1&systemid=" + requisitionNode.getForeignId() + ">OCS-Inventory</a>";
@@ -55,7 +50,6 @@ public class OcsDefaultMapper {
 
         requisitionNode.getAssets().add(new RequisitionAsset("cpu", computer.getHardware().getProcessort()));
 
-        requisitionNode.getInterfaces().add(requisitionInterface);
 
         return requisitionNode;
     }
@@ -64,6 +58,7 @@ public class OcsDefaultMapper {
         Requisition requisition = new Requisition();
         RequisitionNode requisitionNode;
         for (Computer computer : computers.getComputers()) {
+            LOGGER.debug("Processing Computer {}", computer.getHardware().getName());
             requisitionNode = mapComputerToRequisitionNode(computer);
             if (requisitionNode != null) {
                 requisition.getNodes().add(requisitionNode);
