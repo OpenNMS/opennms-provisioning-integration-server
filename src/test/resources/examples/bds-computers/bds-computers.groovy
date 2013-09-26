@@ -36,6 +36,7 @@ try {
 
 // Execution starts here
 for (Computer computer : myComputers.getComputers()) {
+    logger.info("Processing Computer {}", computer.getHardware().getName());
     RequisitionNode rNode = this.getRequisitionNode(computer, catMap);
     // true indicates the set did not already contain this element
     if (existingForeignIDs.add(rNode.getForeignId())) {
@@ -90,11 +91,8 @@ private void populateOSAssets(Computer myComputer, RequisitionNode myRequisition
 
 private void populateInterfaces(Computer myComputer, RequisitionNode myRequisitionNode) {
     RequisitionInterface requisitionInterface = new RequisitionInterface();
-
-    IpInterfaceHelper ipInterfaceHelper = new IpInterfaceHelper();
-    ipInterfaceHelper.initListsFromConfigs();
-
-    Network managementNetwork = ipInterfaceHelper.selectManagementNetwork(myComputer);
+    
+    Network managementNetwork = ipInterfaceHelper.selectManagementNetworkWhiteAndBlackOnly(myComputer);
     if (managementNetwork != null) {
         requisitionInterface.setIpAddr(managementNetwork.getIPAddress());
         requisitionInterface.setDescr(managementNetwork?.getDescription());

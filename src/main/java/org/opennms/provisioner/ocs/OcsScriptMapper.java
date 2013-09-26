@@ -20,6 +20,7 @@ public class OcsScriptMapper {
     private String foreignSource;
     private String ocsUrl;
     private String mapper;
+    private IpInterfaceHelper ipInterfaceHelper;
 
     public OcsScriptMapper(String foreignSource, String ocsUrl, String mapper) {
         this.foreignSource = foreignSource;
@@ -29,6 +30,8 @@ public class OcsScriptMapper {
 
     public Requisition mapComputersToRequisition(Computers computers) {
         Requisition requisition = null;
+        ipInterfaceHelper = new IpInterfaceHelper();
+        ipInterfaceHelper.initListsFromConfigs();
         try {
             List<String> allScriptLines = Files.readAllLines(new File(mapper).toPath(), Charsets.UTF_8);
             String mapperScript = "";
@@ -42,6 +45,7 @@ public class OcsScriptMapper {
             manager.declareBean("ocsUrl", ocsUrl, String.class);
             manager.declareBean("mapper", mapper, String.class);
             manager.declareBean("logger", LoggerFactory.getLogger(OcsScriptMapper.class), Logger.class);
+            manager.declareBean("ipInterfaceHelper", ipInterfaceHelper, IpInterfaceHelper.class);
             requisition = (Requisition) manager.eval(mapper.substring(mapper.indexOf(".") + 1), mapper, 0, 0, mapperScript);
             requisition.setForeignSource(foreignSource);
         } catch (IOException ex) {
