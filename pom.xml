@@ -70,7 +70,14 @@
         <dependency>
             <groupId>org.opennms</groupId>
             <artifactId>opennms-provision-persistence</artifactId>
-            <version>1.12.0</version>
+            <version>1.12.1</version>
+            <type>jar</type>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.opennms</groupId>
+            <artifactId>opennms-util</artifactId>
+            <version>1.12.1</version>
             <type>jar</type>
         </dependency>
 
