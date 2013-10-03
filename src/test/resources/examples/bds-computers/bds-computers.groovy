@@ -61,9 +61,24 @@ private RequisitionNode getRequisitionNode(Computer computer, Properties catMap)
     populateCpuAssets(myComputer, myRequisitionNode);
     populateOSAssets(myComputer, myRequisitionNode);
     populateInterfaces(myComputer, myRequisitionNode);
-    populateCategories(myComputer, myRequisitionNode, catMap);
+    populateCategories(myComputer,  myRequisitionNode, catMap);
+    populateCommentLinks(myComputer, myRequisitionNode, ocsUrl);
+    populateLocationFixed(myComputer, myRequisitionNode);
 
     return myRequisitionNode;
+}
+
+
+public void populateCommentLinks(Computer myComputer, RequisitionNode myRequisitionNode, String ocsUrl) {
+    String ocsComputerLink = "<a href=" + ocsUrl + "/index.php?function=computer&head=1&systemid=" + myComputer.getHardware().getId() + ">OCS-Inventory</a>";
+    myRequisitionNode.getAssets().add(new RequisitionAsset("comment", ocsComputerLink));
+}
+
+public void populateLocationFAKE(Computer myComputer, RequisitionNode myRequisitionNode) {
+    myRequisitionNode.getAssets().add(new RequisitionAsset("country", "")); 
+    myRequisitionNode.getAssets().add(new RequisitionAsset("city", "")); 
+    myRequisitionNode.getAssets().add(new RequisitionAsset("latitude", "8.805845")); 
+    myRequisitionNode.getAssets().add(new RequisitionAsset("longitude", "2.426537")); 
 }
 
 private void populateBiosAssets(Computer myComputer, RequisitionNode myRequisitionNode) {
