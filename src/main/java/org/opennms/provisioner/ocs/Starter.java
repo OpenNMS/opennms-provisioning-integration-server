@@ -96,7 +96,7 @@ public class Starter {
             checksum = prop.getProperty("checksum");
             
             final String tagCsv = prop.getProperty("tags");
-            tags = new ArrayList<String>();
+            tags = new ArrayList<>();
             if (tagCsv != null && tagCsv.trim().length() > 0) {
                 for (String aTag : tagCsv.split("\\s*,\\s*")) {
                     tags.add(aTag.trim());
