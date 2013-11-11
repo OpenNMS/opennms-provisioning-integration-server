@@ -6,9 +6,11 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.opennms.core.utils.IPLike;
 import org.opennms.ocs.inventory.client.response.Computer;
 import org.opennms.ocs.inventory.client.response.Network;
+import org.opennms.ocs.inventory.client.response.snmp.SnmpDevice;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,6 +48,22 @@ public class IpInterfaceHelper {
                 return null;
             }
         }
+    }
+
+    public String selectIpAddressWhiteAndBlackOnly(SnmpDevice snmpDevice) {
+        String ipAddr = snmpDevice.getSNMP().getIPAddr();
+        if (isIpWhiteListed(ipAddr) && !isIpBlackListed(ipAddr)) {
+            return ipAddr;
+        }
+        return null;
+    }
+
+    public String selectIpAddress(SnmpDevice snmpDevice) {
+        String ipAddr = snmpDevice.getSNMP().getIPAddr();
+        if (isIpBlackListed(ipAddr)) {
+            return null;
+        }
+        return ipAddr;
     }
 
     public Network selectManagementNetwork(Computer computer) {
