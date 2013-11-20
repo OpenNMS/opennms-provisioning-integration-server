@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableMap;
 import java.util.Map;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.FileConfiguration;
 import org.opennms.netmgt.provision.persist.requisition.Requisition;
 import org.opennms.provisioner.ocs.mapper.DefaultOcsComputerMapper;
 import org.opennms.provisioner.ocs.mapper.DefaultOcsSnmpDevicesMapper;

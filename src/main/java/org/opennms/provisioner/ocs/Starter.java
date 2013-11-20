@@ -3,10 +3,9 @@ package org.opennms.provisioner.ocs;
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;
 import org.apache.commons.configuration.Configuration;
-import org.apache.commons.configuration.ConfigurationException;
 import org.opennms.provisioner.ocs.driver.Driver;
 import org.opennms.provisioner.ocs.driver.HttpServerDriver;
-import org.opennms.provisioner.ocs.driver.OneshotDriver;
+import org.opennms.provisioner.ocs.driver.FileDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,10 +20,10 @@ public class Starter {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(Starter.class);
 
-  // All known working modes
-  private static final Map<String, Driver.Factory> WORKING_MODES = ImmutableMap.<String, Driver.Factory>builder()
+  // All known working drivers
+  private static final Map<String, Driver.Factory> WORKING_DRIVERS = ImmutableMap.<String, Driver.Factory>builder()
           .put("http", new HttpServerDriver.Factory())
-          .put("oneshot", new OneshotDriver.Factory())
+          .put("file", new FileDriver.Factory())
           .build();
 
   // The global config manger instance
@@ -37,18 +36,18 @@ public class Starter {
     // Load the global configuration
     final Configuration config = configManager.getGlobal();
 
-    // Get the driver for the selected working mode
-    final String modeName = config.getString("mode");
-    final Driver.Factory driverFactory = WORKING_MODES.get(modeName);
+    // Get the driver for the selected working driver
+    final String driverName = config.getString("driver");
+    final Driver.Factory driverFactory = WORKING_DRIVERS.get(driverName);
     if (driverFactory != null) {
-      // Create the driver for the working mode
+      // Create the driver for the working driver
       final Driver driver = driverFactory.create(config);
 
-      // Execute the working mode implementation
+      // Execute the working driver implementation
       driver.run();
 
     } else {
-      throw new IllegalArgumentException("Invalid working mode specified: " + modeName);
+      throw new IllegalArgumentException("Invalid working driver specified: " + driverName);
     }
   }
 

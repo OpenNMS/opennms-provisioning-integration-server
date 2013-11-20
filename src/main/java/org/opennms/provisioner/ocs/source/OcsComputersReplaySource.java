@@ -1,14 +1,9 @@
 package org.opennms.provisioner.ocs.source;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import org.apache.commons.configuration.Configuration;
-import org.opennms.netmgt.provision.persist.requisition.Requisition;
-import org.opennms.ocs.inventory.client.request.logic.GetComputersLogic;
 import org.opennms.ocs.inventory.client.response.Computers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
