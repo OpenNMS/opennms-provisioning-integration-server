@@ -5,6 +5,7 @@ import java.util.HashSet;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+
 import org.opennms.provisioner.ocs.IpInterfaceHelper;
 import org.opennms.ocs.inventory.client.response.Bios;
 import org.opennms.ocs.inventory.client.response.Computer;
@@ -23,9 +24,11 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import java.nio.file.Files;
 
+String foreignSource;
+String mapper;
 
 final Computers myComputers = data;
-Requisition myRequisition = new Requisition();
+Requisition myRequisition = new Requisition(foreignSource);
 Set existingForeignIDs = new HashSet();
 
 Properties catMap = new Properties();
@@ -38,6 +41,7 @@ try {
 }
 
 // Execution starts here
+
 for (Computer computer : myComputers.getComputers()) {
     logger.info("Processing Computer {}", computer.getHardware().getName());
     if (this.isDisabled(computer)) {
@@ -55,8 +59,10 @@ for (Computer computer : myComputers.getComputers()) {
 }
 
 myRequisition = doRequisitionOverlay(myRequisition);
+
 logger.info("Returning {} requisition with {} nodes", myRequisition.getForeignSource(), myRequisition.getNodes().size());
 return myRequisition;
+
 
 private RequisitionNode getRequisitionNode(Computer computer, Properties catMap) {
     RequisitionNode myRequisitionNode = new RequisitionNode();
@@ -71,7 +77,6 @@ private RequisitionNode getRequisitionNode(Computer computer, Properties catMap)
     populateInterfaces(myComputer, myRequisitionNode);
     populateCategories(myComputer,   myRequisitionNode, catMap);
     populateCommentLinks(myComputer, myRequisitionNode, config.getString("ocs.url"));
-    populateLocationFAKE(myComputer, myRequisitionNode);
 
     return myRequisitionNode;
 }
@@ -80,13 +85,6 @@ private RequisitionNode getRequisitionNode(Computer computer, Properties catMap)
 public void populateCommentLinks(Computer myComputer, RequisitionNode myRequisitionNode, String ocsUrl) {
     String ocsComputerLink = "<a href=" + ocsUrl + "/index.php?function=computer&head=1&systemid=" + myComputer.getHardware().getId() + ">OCS-Inventory</a>";
     myRequisitionNode.getAssets().add(new RequisitionAsset("comment", ocsComputerLink));
-}
-
-public void populateLocationFAKE(Computer myComputer, RequisitionNode myRequisitionNode) {
-    myRequisitionNode.getAssets().add(new RequisitionAsset("country", "Sweden")); 
-    myRequisitionNode.getAssets().add(new RequisitionAsset("city", "Asensbruk")); 
-    myRequisitionNode.getAssets().add(new RequisitionAsset("latitude", "58.805845")); 
-    myRequisitionNode.getAssets().add(new RequisitionAsset("longitude", "12.426537")); 
 }
 
 private void populateBiosAssets(Computer myComputer, RequisitionNode myRequisitionNode) {
