@@ -19,12 +19,12 @@
 # JAVA_HOME=/usr/lib/jvm/java-1.7.0-openjdk
 JAVA_HOME=/usr/java/latest
 
-serviceNameLo="opennms-ocs-integration"                              # service name with the first letter in lowercase
-serviceName="opennms-ocs-integration"                                # service name
+serviceNameLo="opennms-ocs-integration"                    # service name with the first letter in lowercase
+serviceName="opennms-ocs-integration"                      # service name
 serviceUser="root"                                         # OS user name for the service
 serviceGroup="root"                                        # OS group name for the service
-applDir="/opt/opennms/etc/ocs-integration"               # home directory of the service application
-jarLocation="/opt/opennms/etc/ocs-integration/ocs-integration.jar"    # jar file of the service application
+applDir="/opt/opennms-ocs-integration"                     # home directory of the service application
+jarLocation="/opt/opennms-ocs-integration/ocs-integration.jar"    # jar file of the service application
 serviceUserHome="/home/$serviceUser"                       # home directory of the service user
 serviceLogFile="/var/log/$serviceNameLo.log"               # log file for StdOut/StdErr
 maxShutdownTime=15                                         # maximum number of seconds to wait for the daemon to terminate normally
