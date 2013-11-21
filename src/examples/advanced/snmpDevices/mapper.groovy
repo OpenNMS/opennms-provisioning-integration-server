@@ -11,8 +11,11 @@ import org.opennms.netmgt.provision.persist.requisition.RequisitionMonitoredServ
 import org.opennms.netmgt.provision.persist.requisition.Requisition
 import org.opennms.netmgt.model.PrimaryType;
 
+String foreignSource;
+String mapper;
+
 final SnmpDevices mySnmpDevices = data;
-Requisition myRequisition = new Requisition();
+Requisition myRequisition = new Requisition(foreignSource);
 
 for (SnmpDevice snmpDevice : mySnmpDevices.getSNMPDevices()) {
     myRequisition.getNodes().add(this.getRequisitionNode(snmpDevice));
@@ -37,6 +40,7 @@ private void populateOSAssets(SnmpDevice mySnmpDevice, RequisitionNode myRequisi
     StringBuilder osStringBuilder = new StringBuilder(mySnmpDevice.getSNMP().getDescription());
     myRequisitionNode.getAssets().add(new RequisitionAsset("operatingsystem", osStringBuilder.toString()));
 }
+
 private void populateInterfaces(SnmpDevice mySnmpDevice, RequisitionNode myRequisitionNode) {
     RequisitionInterface requisitionInterface = new RequisitionInterface();
     requisitionInterface.setIpAddr(mySnmpDevice.getSNMP().getIPAddr());

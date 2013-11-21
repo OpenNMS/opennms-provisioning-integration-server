@@ -11,29 +11,29 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * A working mode used to create a single XML serialized requisition.
+ * A working driver used to create a single XML serialized requisition.
  *
  * The instance name is passed as an parameter. The created requisition is
  * printed to standard output or to a given file name.
  *
  * @author Dustin Frisch <fooker@lab.sh>
  */
-public class OneshotDriver implements Driver {
+public class FileDriver implements Driver {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(OneshotDriver.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(FileDriver.class);
 
   public static final class Factory implements Driver.Factory {
 
     @Override
     public Driver create(final Configuration config) {
-      return new OneshotDriver(config);
+      return new FileDriver(config);
     }
   }
 
   // The global configuration
   private final Configuration config;
 
-  private OneshotDriver(final Configuration config) {
+  private FileDriver(final Configuration config) {
     this.config = config;
   }
 

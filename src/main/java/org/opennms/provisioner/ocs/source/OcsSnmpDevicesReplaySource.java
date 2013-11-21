@@ -4,8 +4,6 @@ import java.io.File;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 import org.apache.commons.configuration.Configuration;
-import org.opennms.ocs.inventory.client.request.logic.GetSnmpDevicesLogic;
-import org.opennms.ocs.inventory.client.response.Computers;
 import org.opennms.ocs.inventory.client.response.snmp.SnmpDevices;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
