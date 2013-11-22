@@ -11,6 +11,8 @@ import org.opennms.ocs.inventory.client.response.Computer;
 import org.opennms.ocs.inventory.client.response.Computers;
 import org.opennms.ocs.inventory.client.response.Network;
 import org.opennms.provisioner.ocs.IpInterfaceHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DefaultOcsComputerMapper implements Mapper {
 
@@ -22,7 +24,7 @@ public class DefaultOcsComputerMapper implements Mapper {
       return new DefaultOcsComputerMapper(instance, config);
     }
   }
-
+  private static final Logger LOGGER = LoggerFactory.getLogger(DefaultOcsComputerMapper.class);
   private final String instance;
   private final Configuration config;
   
@@ -36,7 +38,7 @@ public class DefaultOcsComputerMapper implements Mapper {
 
   @Override
   public Requisition map(Object data) throws Exception {
-    final Requisition requisition = new Requisition();
+    final Requisition requisition = new Requisition(instance);
 
     for (final Computer computer : ((Computers) data).getComputers()) {
 
@@ -56,15 +58,17 @@ public class DefaultOcsComputerMapper implements Mapper {
 
     final RequisitionInterface requisitionInterface = new RequisitionInterface();
     
-    final Network managementNetwork = this.ipInterfaceHelper.selectManagementNetworkWhiteAndBlackOnly(computer);
+    final Network managementNetwork = this.ipInterfaceHelper.selectManagementNetwork(computer);
     if (managementNetwork != null) {
       requisitionInterface.setIpAddr(managementNetwork.getIPAddress());
       requisitionInterface.setDescr(managementNetwork.getDescription());
       requisitionInterface.setSnmpPrimary(PrimaryType.PRIMARY);
-      requisitionInterface.setManaged(Boolean.TRUE);
+      requisitionInterface.setStatus(1);
       requisitionInterface.insertMonitoredService(new RequisitionMonitoredService("SNMP"));
       requisitionInterface.insertMonitoredService(new RequisitionMonitoredService("ICMP"));
       requisitionNode.getInterfaces().add(requisitionInterface);
+    } else {
+        LOGGER.warn("computer '{}' named '{}' has no electable ip-address following the black- and whitelists.", computer.getHardware().getId(), computer.getHardware().getName());
     }
     requisitionNode.getAssets().add(new RequisitionAsset("operatingSystem", computer.getHardware().getOsname()));
 

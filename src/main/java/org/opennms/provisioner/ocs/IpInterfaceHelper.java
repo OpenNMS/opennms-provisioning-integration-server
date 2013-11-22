@@ -121,6 +121,7 @@ public class IpInterfaceHelper {
 
     public void addIpWhite(String ip) {
         try {
+            //This check forces valid IPLike syntax
             IPLike.matches("1.1.1.1", ip);
             ipWhiteList.add(ip);
         } catch (Exception ex) {
@@ -130,6 +131,7 @@ public class IpInterfaceHelper {
 
     public void addIpBlack(String ip) {
         try {
+            //This check forces valid IPLike syntax
             IPLike.matches("1.1.1.1", ip);
             ipBlackList.add(ip);
         } catch (Exception ex) {
@@ -138,7 +140,6 @@ public class IpInterfaceHelper {
     }
 
     public void initListsFromConfigs() {
-        //TODO make the black- and white-lists configurable in a nice way
         try {
             List<String> rawBlackedList = Files.readAllLines(Paths.get("./", "blackList.properties"), Charset.forName("UTF-8"));
             for (String rawBlacked : rawBlackedList) {
