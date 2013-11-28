@@ -189,7 +189,7 @@ private Requisition loadOverlayRequisition(String foreignSource) {
     } catch (MalformedURLException mue) {
         logger.error("Failed to load overlay requisition for foreign-source {} due to malformed URL", mue, foreignSource);
     } catch (JAXBException jaxbe) {
-        logger.error("Failed to unmarshal overlay requisition for foreign-source {}", mue, foreignSource);
+        logger.error("Failed to unmarshal overlay requisition for foreign-source {}", jaxbe, foreignSource);
     } catch (IOException ioe) {
         logger.error("Failed to load overlay requisition for foreign-source {} due to IOException", ioe, foreignSource);
     }
