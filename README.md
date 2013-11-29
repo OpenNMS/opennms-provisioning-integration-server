@@ -1,3 +1,3 @@
-[![Build Status](https://travis-ci.org/DerTak/OpenNMS-OCS-Integration.png)](https://travis-ci.org/DerTak/OpenNMS-OCS-Integration)
 OpenNMS-OCS-Integration
 =======================
+http://www.opennms.org/wiki/OCS_Integration
