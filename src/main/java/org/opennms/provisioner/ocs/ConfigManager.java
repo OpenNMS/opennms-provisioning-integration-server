@@ -49,7 +49,7 @@ public class ConfigManager {
     // Build composition of system properties and config file
     this.globalConfig = new CompositeConfiguration() {{
       addConfiguration(new SystemConfiguration());
-      addConfiguration(new PropertiesConfiguration(ConfigManager.this.base.resolve("config.properties").toFile()));
+      addConfiguration(new PropertiesConfiguration(ConfigManager.this.base.resolve("global.properties").toFile()));
       
       setThrowExceptionOnMissing(true);
     }};
@@ -77,7 +77,7 @@ public class ConfigManager {
    * @throws ConfigurationException 
    */
   public Configuration getInstances(final String instance) throws ConfigurationException {
-    final File file = this.getPath(instance).resolve("config.properties").toFile();
+    final File file = this.getPath(instance).resolve("requisition.properties").toFile();
     
     // Raise wrapped file not found exception if the config file does not exist
     if (!file.exists()) {
