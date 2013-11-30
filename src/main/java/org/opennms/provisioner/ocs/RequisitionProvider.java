@@ -83,6 +83,9 @@ public class RequisitionProvider {
       throw new IllegalArgumentException("Unknown source implementation: " + sourceName);
     }
 
+    //TODO the script mapper should run in addition after a mapper with the prepared requisition. 
+    //If no mapper is selected a empty requisition should be send to the script (null mapper).
+    
     // Create the mapper used to map the data to a requisition. If no mapper is
     // specified, a default mapper for the configured source is used
     final String mapperName = this.config.getString("mapper", "default" + "." + this.config.getString("source"));
