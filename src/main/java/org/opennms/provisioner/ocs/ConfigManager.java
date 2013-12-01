@@ -151,9 +151,12 @@ public class ConfigManager {
       throw new ConfigurationException("Config file not found: " + path);
     }
     
-    return new PropertiesConfiguration(path.toFile()) {{
-      setThrowExceptionOnMissing(true);
-      setReloadingStrategy(new FileChangedReloadingStrategy());
+    return new CompositeConfiguration() {{
+      addConfiguration(new PropertiesConfiguration(path.toFile()) {{
+        setThrowExceptionOnMissing(true);
+        setReloadingStrategy(new FileChangedReloadingStrategy());
+      }});
+      addConfiguration(ConfigManager.this.globalConfig);
     }};
   }
   
