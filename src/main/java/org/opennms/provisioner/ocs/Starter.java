@@ -34,7 +34,7 @@ public class Starter {
     Starter.configManager = new ConfigManager();
 
     // Load the global configuration
-    final Configuration config = configManager.getGlobal();
+    final Configuration config = configManager.getGlobalConfig();
 
     // Get the driver for the selected working driver
     final String driverName = config.getString("driver");

@@ -70,7 +70,7 @@ public class RequisitionProvider {
    */
   public RequisitionProvider(final String instance) throws ConfigurationException {
     // Get the configuration for the instance
-    this.config = Starter.getConfigManager().getInstances(instance);
+    this.config = Starter.getConfigManager().getInstanceConfig(instance);
 
     // Create the source
     final String sourceName = this.config.getString("source");
