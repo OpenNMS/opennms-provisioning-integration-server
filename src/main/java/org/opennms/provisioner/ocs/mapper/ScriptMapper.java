@@ -55,7 +55,7 @@ public class ScriptMapper implements Mapper {
   @Override
   public Requisition map(Object data) throws Exception {
     // Get the path to the script
-    final Path script = Starter.getConfigManager().getPath(this.instance).resolve(this.config.getString("script"));
+    final Path script = Starter.getConfigManager().getInstancePath(this.instance).resolve(this.config.getString("script"));
 
     // Get the script engine by language defined in config or by extension if it
     // is not defined in the config
