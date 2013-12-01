@@ -9,12 +9,14 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.MapConfiguration;
 import org.apache.commons.configuration.PropertiesConfiguration;
 import org.apache.commons.configuration.SystemConfiguration;
 import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
@@ -156,6 +158,10 @@ public class ConfigManager {
         setThrowExceptionOnMissing(true);
         setReloadingStrategy(new FileChangedReloadingStrategy());
       }});
+      
+      addConfiguration(new MapConfiguration(Collections.singletonMap("requisition",
+                                                                     (Object) instance)));
+      
       addConfiguration(ConfigManager.this.globalConfig);
     }};
   }
