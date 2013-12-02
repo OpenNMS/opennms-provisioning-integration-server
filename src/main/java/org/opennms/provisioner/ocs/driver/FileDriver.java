@@ -45,7 +45,7 @@ public class FileDriver implements Driver {
   @Override
   public void run() throws Exception {
     // Get the instance matching glob and find all matching instances
-    final String instanceGlob = this.config.getString("instances", "*");
+    final String instanceGlob = this.config.getString("requisitions", "*");
     final Collection<String> instances = Starter.getConfigManager().getInstances(instanceGlob);
     
     // Get the target directory and ensure it exitst
