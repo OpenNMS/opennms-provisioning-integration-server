@@ -38,8 +38,7 @@ public class DefaultOcsComputerMapper implements Mapper {
   }
 
   @Override
-  public Requisition map(Object data) throws Exception {
-    final Requisition requisition = new Requisition(instance);
+  public Requisition map(Object data, Requisition requisition) throws Exception {
 
     for (final Computer computer : ((Computers) data).getComputers()) {
 

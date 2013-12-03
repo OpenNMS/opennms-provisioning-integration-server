@@ -6,6 +6,7 @@ import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.opennms.netmgt.provision.persist.requisition.Requisition;
 import org.opennms.provisioner.mapper.Mapper;
+import org.opennms.provisioner.mapper.NullMapper;
 import org.opennms.provisioner.mapper.ScriptMapper;
 import org.opennms.provisioner.ocs.mapper.DefaultOcsComputerMapper;
 import org.opennms.provisioner.ocs.mapper.DefaultOcsSnmpDevicesMapper;
@@ -48,12 +49,13 @@ public class RequisitionProvider {
 
   // All known mapper implementations
   private static final Map<String, Mapper.Factory> MAPPERS = ImmutableMap.<String, Mapper.Factory>builder()
+          .put("null.mapper", new NullMapper.Factory())
           .put("default.vmware.mapper", new DefaultVmwareMapper.Factory())
           .put("default.ocs.computers", new DefaultOcsComputerMapper.Factory())
           .put("default.ocs.snmpDevices", new DefaultOcsSnmpDevicesMapper.Factory())
           .put("default.ocs.computers.replay", new DefaultOcsComputerMapper.Factory())
           .put("default.ocs.snmpDevices.replay", new DefaultOcsSnmpDevicesMapper.Factory())
-          .put("script", new ScriptMapper.Factory())
+//          .put("script", new ScriptMapper.Factory())
           .build();
 
   // The global configuration
@@ -80,15 +82,11 @@ public class RequisitionProvider {
     final String sourceName = this.config.getString("source");
     final Source.Factory sourceFactory = SOURCES.get(sourceName);
     if (sourceFactory != null) {
-      this.source = sourceFactory.create(instance,
-                                         this.config);
+      this.source = sourceFactory.create(instance, this.config);
 
     } else {
       throw new IllegalArgumentException("Unknown source implementation: " + sourceName);
     }
-
-    //TODO the script mapper should run in addition after a mapper with the prepared requisition. 
-    //If no mapper is selected a empty requisition should be send to the script (null mapper).
     
     // Create the mapper used to map the data to a requisition. If no mapper is
     // specified, a default mapper for the configured source is used
@@ -105,22 +103,25 @@ public class RequisitionProvider {
   /**
    * Generates a requisition.
    * 
+   * @param instance of the requistion
    * @return the generated requisition
    * 
    * @throws Exception 
    */
-  public Requisition generate() throws Exception {
+  public Requisition generate(String instance) throws Exception {
+
     // Get the data from the source
     final Object data = this.source.dump();
+    Requisition requisition = new Requisition(instance);
+    
+    // Map the data to a requisition with the configured mapper
+    requisition = this.mapper.map(data, requisition);
 
-    // Map the data to a requisition
-    final Requisition requisition = this.mapper.map(data);
-
-    // Set the foreign source on the requisition
-    if (this.config.containsKey("foreignSource")) {
-      requisition.setForeignSource(this.config.getString("foreignSource"));
+    if (this.config.containsKey("script")) {
+        // Run the script mapper against the data and requisition
+        requisition = new ScriptMapper(instance, config).map(data, requisition);
     }
-
+    
     return requisition;
   }
 }

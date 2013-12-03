@@ -1,6 +1,5 @@
 package org.opennms.provisioner.driver;
 
-import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -59,7 +58,7 @@ public class FileDriver implements Driver {
       
       // Generate the requisition
       final RequisitionProvider requisitionProvider = new RequisitionProvider(instance);
-      final Requisition requisition = requisitionProvider.generate();
+      final Requisition requisition = requisitionProvider.generate(instance);
       
       // Create a XML serializer
       final JAXBContext jaxbContext = JAXBContext.newInstance(Requisition.class);

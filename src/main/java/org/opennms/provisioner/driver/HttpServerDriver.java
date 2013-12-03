@@ -85,7 +85,7 @@ public class HttpServerDriver implements Driver {
           final RequisitionProvider requisitionProvider = new RequisitionProvider(instance);
 
           // Generate the requisition
-          final Requisition requisition = requisitionProvider.generate();
+          final Requisition requisition = requisitionProvider.generate(instance);
 
           // Marshall the requisition and write it to the response stream
           jaxbMarshaller.marshal(requisition, response.getOutputStream());

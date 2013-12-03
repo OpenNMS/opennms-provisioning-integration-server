@@ -25,9 +25,11 @@ public interface Mapper {
    * 
    * @param data the information used to create the requisition.
    * 
+   * @param requisition Requisition already filled by a mapper, or an empty requistion.
+   * 
    * @return the mapped requisition
    * 
    * @throws Exception 
    */
-  public abstract Requisition map(final Object data) throws Exception;
+  public abstract Requisition map(final Object data, Requisition requisition) throws Exception;
 }

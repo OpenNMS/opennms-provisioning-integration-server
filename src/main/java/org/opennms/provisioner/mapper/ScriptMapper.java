@@ -53,7 +53,7 @@ public class ScriptMapper implements Mapper {
 
   //TODO provide the option to handover a requisition
   @Override
-  public Requisition map(Object data) throws Exception {
+  public Requisition map(Object data, Requisition requisition) throws Exception {
     // Get the path to the script
     final Path script = Starter.getConfigManager().getInstancePath(this.instance).resolve(this.config.getString("script"));
 
@@ -70,7 +70,7 @@ public class ScriptMapper implements Mapper {
     scriptBindings.put("logger", LoggerFactory.getLogger(script.toString()));
     scriptBindings.put("config", this.config);
     scriptBindings.put("ipInterfaceHelper", new IpInterfaceHelper());
-    scriptBindings.put("requisition", new Requisition(instance));
+    scriptBindings.put("requisition", requisition);
 
     // Evaluate the script and return the requisition created in the script
     try (final Reader scriptReader = Files.newBufferedReader(script,

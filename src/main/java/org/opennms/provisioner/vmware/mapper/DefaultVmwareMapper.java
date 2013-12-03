@@ -34,8 +34,7 @@ public class DefaultVmwareMapper implements Mapper {
     }
 
     @Override
-    public Requisition map(Object data) throws Exception {
-        final Requisition requisition = new Requisition(instance);
+    public Requisition map(Object data, Requisition requisition) throws Exception {
         //DO THE MAGIC
         return requisition;
     }
