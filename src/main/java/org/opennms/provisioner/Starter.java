@@ -1,11 +1,11 @@
-package org.opennms.provisioner.ocs;
+package org.opennms.provisioner;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;
 import org.apache.commons.configuration.Configuration;
-import org.opennms.provisioner.ocs.driver.Driver;
-import org.opennms.provisioner.ocs.driver.HttpServerDriver;
-import org.opennms.provisioner.ocs.driver.FileDriver;
+import org.opennms.provisioner.driver.Driver;
+import org.opennms.provisioner.driver.HttpServerDriver;
+import org.opennms.provisioner.driver.FileDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

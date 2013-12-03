@@ -1,4 +1,4 @@
-package org.opennms.provisioner.ocs.mapper;
+package org.opennms.provisioner.mapper;
 
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
@@ -10,8 +10,8 @@ import javax.script.ScriptEngineManager;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.io.FilenameUtils;
 import org.opennms.netmgt.provision.persist.requisition.Requisition;
-import org.opennms.provisioner.ocs.IpInterfaceHelper;
-import org.opennms.provisioner.ocs.Starter;
+import org.opennms.provisioner.IpInterfaceHelper;
+import org.opennms.provisioner.Starter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -1,4 +1,4 @@
-package org.opennms.provisioner.ocs;
+package org.opennms.provisioner;
 
 import java.io.File;
 import java.io.IOException;

@@ -1,19 +1,20 @@
-package org.opennms.provisioner.ocs;
+package org.opennms.provisioner;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.opennms.netmgt.provision.persist.requisition.Requisition;
+import org.opennms.provisioner.mapper.Mapper;
+import org.opennms.provisioner.mapper.ScriptMapper;
 import org.opennms.provisioner.ocs.mapper.DefaultOcsComputerMapper;
 import org.opennms.provisioner.ocs.mapper.DefaultOcsSnmpDevicesMapper;
-import org.opennms.provisioner.ocs.mapper.Mapper;
-import org.opennms.provisioner.ocs.mapper.ScriptMapper;
 import org.opennms.provisioner.ocs.source.OcsComputersReplaySource;
 import org.opennms.provisioner.ocs.source.OcsComputersSource;
 import org.opennms.provisioner.ocs.source.OcsSnmpDevicesReplaySource;
 import org.opennms.provisioner.ocs.source.OcsSnmpDevicesSource;
-import org.opennms.provisioner.ocs.source.Source;
+import org.opennms.provisioner.source.Source;
+import org.opennms.provisioner.vmware.source.VmwareSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,6 +38,7 @@ public class RequisitionProvider {
 
   // All known source implementations
   private static final Map<String, Source.Factory> SOURCES = ImmutableMap.<String, Source.Factory>builder()
+          .put("vmware.source", new VmwareSource.Factory())
           .put("ocs.computers", new OcsComputersSource.Factory())
           .put("ocs.snmpDevices", new OcsSnmpDevicesSource.Factory())
           .put("ocs.computers.replay", new OcsComputersReplaySource.Factory())

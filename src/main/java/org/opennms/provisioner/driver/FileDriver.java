@@ -1,4 +1,4 @@
-package org.opennms.provisioner.ocs.driver;
+package org.opennms.provisioner.driver;
 
 import java.io.FileOutputStream;
 import java.io.OutputStream;
@@ -10,8 +10,8 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import org.apache.commons.configuration.Configuration;
 import org.opennms.netmgt.provision.persist.requisition.Requisition;
-import org.opennms.provisioner.ocs.RequisitionProvider;
-import org.opennms.provisioner.ocs.Starter;
+import org.opennms.provisioner.RequisitionProvider;
+import org.opennms.provisioner.Starter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

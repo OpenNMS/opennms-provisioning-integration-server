@@ -5,6 +5,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 import org.apache.commons.configuration.Configuration;
 import org.opennms.ocs.inventory.client.response.snmp.SnmpDevices;
+import org.opennms.provisioner.source.Source;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

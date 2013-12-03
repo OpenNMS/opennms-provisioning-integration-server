@@ -1,5 +1,6 @@
-package org.opennms.provisioner.ocs;
+package org.opennms.provisioner;
 
+import org.opennms.provisioner.IpInterfaceHelper;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;

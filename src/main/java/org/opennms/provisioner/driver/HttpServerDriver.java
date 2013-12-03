@@ -1,4 +1,4 @@
-package org.opennms.provisioner.ocs.driver;
+package org.opennms.provisioner.driver;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -12,7 +12,7 @@ import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.opennms.netmgt.provision.persist.requisition.Requisition;
-import org.opennms.provisioner.ocs.RequisitionProvider;
+import org.opennms.provisioner.RequisitionProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

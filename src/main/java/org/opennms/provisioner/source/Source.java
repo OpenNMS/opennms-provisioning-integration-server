@@ -1,4 +1,4 @@
-package org.opennms.provisioner.ocs.source;
+package org.opennms.provisioner.source;
 
 import org.apache.commons.configuration.Configuration;
 

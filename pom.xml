@@ -57,6 +57,24 @@
     </dependency>
                 
     <dependency>
+        <groupId>com.vmware</groupId>
+        <artifactId>vijava</artifactId>
+        <version>520110926</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.sblim.slp</groupId>
+        <artifactId>sblimSLPClient</artifactId>
+        <version>1.17</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.sblim.wbem</groupId>
+        <artifactId>sblimCIMClient</artifactId>
+        <version>1.17</version>
+    </dependency>
+                                                            
+    <dependency>
       <groupId>org.opennms</groupId>
       <artifactId>opennms-provision-persistence</artifactId>
       <version>1.12.1</version>
@@ -104,7 +122,7 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>org.opennms.provisioner.ocs.Starter</mainClass>
+              <mainClass>org.opennms.provisioner.Starter</mainClass>
             </manifest>
           </archive>
           <descriptorRefs>

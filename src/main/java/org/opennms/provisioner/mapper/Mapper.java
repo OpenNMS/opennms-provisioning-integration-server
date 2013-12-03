@@ -1,4 +1,4 @@
-package org.opennms.provisioner.ocs.mapper;
+package org.opennms.provisioner.mapper;
 
 import org.apache.commons.configuration.Configuration;
 import org.opennms.netmgt.provision.persist.requisition.Requisition;

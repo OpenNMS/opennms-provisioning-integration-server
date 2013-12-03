@@ -1,4 +1,4 @@
-package org.opennms.provisioner.ocs.driver;
+package org.opennms.provisioner.driver;
 
 import org.apache.commons.configuration.Configuration;
 

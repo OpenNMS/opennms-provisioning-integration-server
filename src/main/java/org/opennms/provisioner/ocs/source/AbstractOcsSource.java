@@ -3,6 +3,7 @@ package org.opennms.provisioner.ocs.source;
 import java.util.Arrays;
 import java.util.List;
 import org.apache.commons.configuration.Configuration;
+import org.opennms.provisioner.source.Source;
 
 public abstract class AbstractOcsSource implements Source {
   

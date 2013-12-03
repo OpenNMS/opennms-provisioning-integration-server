@@ -9,7 +9,8 @@ import org.opennms.netmgt.provision.persist.requisition.RequisitionMonitoredServ
 import org.opennms.netmgt.provision.persist.requisition.RequisitionNode;
 import org.opennms.ocs.inventory.client.response.snmp.SnmpDevice;
 import org.opennms.ocs.inventory.client.response.snmp.SnmpDevices;
-import org.opennms.provisioner.ocs.IpInterfaceHelper;
+import org.opennms.provisioner.IpInterfaceHelper;
+import org.opennms.provisioner.mapper.Mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
