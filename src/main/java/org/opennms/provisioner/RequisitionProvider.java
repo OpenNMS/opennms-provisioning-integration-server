@@ -14,6 +14,7 @@ import org.opennms.provisioner.ocs.source.OcsComputersSource;
 import org.opennms.provisioner.ocs.source.OcsSnmpDevicesReplaySource;
 import org.opennms.provisioner.ocs.source.OcsSnmpDevicesSource;
 import org.opennms.provisioner.source.Source;
+import org.opennms.provisioner.vmware.mapper.DefaultVmwareMapper;
 import org.opennms.provisioner.vmware.source.VmwareSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,6 +48,7 @@ public class RequisitionProvider {
 
   // All known mapper implementations
   private static final Map<String, Mapper.Factory> MAPPERS = ImmutableMap.<String, Mapper.Factory>builder()
+          .put("default.vmware.mapper", new DefaultVmwareMapper.Factory())
           .put("default.ocs.computers", new DefaultOcsComputerMapper.Factory())
           .put("default.ocs.snmpDevices", new DefaultOcsSnmpDevicesMapper.Factory())
           .put("default.ocs.computers.replay", new DefaultOcsComputerMapper.Factory())
@@ -93,8 +95,7 @@ public class RequisitionProvider {
     final String mapperName = this.config.getString("mapper", "default" + "." + this.config.getString("source"));
     final Mapper.Factory mapperFactory = MAPPERS.get(mapperName);
     if (mapperFactory != null) {
-      this.mapper = mapperFactory.create(instance,
-                                         this.config);
+      this.mapper = mapperFactory.create(instance, this.config);
       
     } else {
       throw new IllegalArgumentException("Unknown mapper imaplementation: " + mapperName);
