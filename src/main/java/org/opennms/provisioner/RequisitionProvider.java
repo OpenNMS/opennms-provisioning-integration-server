@@ -1,7 +1,6 @@
 package org.opennms.provisioner;
 
 import com.google.common.collect.ImmutableMap;
-import java.util.Map;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.opennms.netmgt.provision.persist.requisition.Requisition;
@@ -19,6 +18,8 @@ import org.opennms.provisioner.vmware.mapper.DefaultVmwareMapper;
 import org.opennms.provisioner.vmware.source.VmwareSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Map;
 
 /**
  * Generates a requisition.
@@ -96,14 +97,14 @@ public class RequisitionProvider {
       this.mapper = mapperFactory.create(instance, this.config);
       
     } else {
-      throw new IllegalArgumentException("Unknown mapper imaplementation: " + mapperName);
+      throw new IllegalArgumentException("Unknown mapper implementation: " + mapperName);
     }
   }
 
   /**
    * Generates a requisition.
    * 
-   * @param instance of the requistion
+   * @param instance of the requisition
    * @return the generated requisition
    * 
    * @throws Exception 
