@@ -17,6 +17,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <rpmbuild>/usr/bin/rpmbuild</rpmbuild>
   </properties>
 
   <dependencies>
@@ -127,126 +128,71 @@
           </execution>
         </executions>
       </plugin>
-<!--
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>rpm-maven-plugin</artifactId>
-        <version>2.1-alpha-3</version>
-        <executions>
-          <execution>
-            <id>generate-rpm</id>
-            <goals>
-              <goal>rpm</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <copyright>2013, The OpenNMS Group, Inc.</copyright>
-          <group>Applications/System</group>
-          <prefix>/opt/opennms-ocs</prefix>
-          <defineStatements>
-             <defineStatement>_unpackaged_files_terminate_build 0</defineStatement>
-          </defineStatements>
-          <mappings>
-            <mapping>
-              <directory>/usr/local/bin/landfill</directory>
-              <filemode>440</filemode>
-              <username>dumper</username>
-              <groupname>dumpgroup</groupname>
-              <sources>
-                <source>
-                  <location>target/classes</location>
-                </source>
-              </sources>
-            </mapping>
-            <mapping>
-              <directory>/usr/local/doc/landfill</directory>
-              <documentation>true</documentation>
-              <filemode>444</filemode>
-              <username>dumper</username>
-              <groupname>dumpgroup</groupname>
-              <sources>
-                <source>
-                  <location>target/site</location>
-                </source>
-              </sources>
-            </mapping>
-            <mapping>
-              <directory>/usr/local/lib</directory>
-              <filemode>750</filemode>
-              <username>dumper</username>
-              <groupname>dumpgroup</groupname>
-              <dependency>
-                <includes>
-                  <include>jmock:jmock</include>
-                  <include>javax.servlet:servlet-api:2.4</include>
-                </includes>
-                <excludes>
-                  <exclude>junit:junit</exclude>
-                </excludes>
-              </dependency>
-            </mapping>
-            <mapping>
-              <directory>/usr/local/bin</directory>
-              <filemode>750</filemode>
-              <username>dumper</username>
-              <groupname>dumpgroup</groupname>
-              <sources>
-                <source>
-                  <location>src/main/bin</location>
-                </source>
-                <softlinkSource>
-                  <location>/usr/local/bin/new.sh</location>
-                  <destination>old.sh</destination>
-                </softlinkSource>
-              </sources>
-            </mapping>
-            <mapping>
-              <directory>/usr/local/oldbin</directory>
-              <filemode>750</filemode>
-              <username>dumper</username>
-              <groupname>dumpgroup</groupname>
-              <sources>
-                <softlinkSource>
-                  <location>/usr/local/bin</location>
-                </softlinkSource>
-              </sources>
-            </mapping>
-            <mapping>
-              <directory>/usr/local/conf/landfill</directory>
-              <configuration>true</configuration>
-              <filemode>640</filemode>
-              <username>dumper</username>
-              <groupname>dumpgroup</groupname>
-              <sources>
-                <source>
-                  <location>src/main/conf</location>
-                </source>
-              </sources>
-            </mapping>
-            <mapping>
-              <directory>/usr/local/log/landfill</directory>
-              <filemode>750</filemode>
-              <username>dumper</username>
-              <groupname>dumpgroup</groupname>
-            </mapping>
-          </mappings>
-          <preinstallScriptlet>
-            <script>echo "installing now"</script>
-          </preinstallScriptlet>
-          <postinstallScriptlet>
-            <scriptFile>src/main/scripts/postinstall</scriptFile>
-            <fileEncoding>utf-8</fileEncoding>
-          </postinstallScriptlet>
-          <preremoveScriptlet>
-            <scriptFile>src/main/scripts/preremove</scriptFile>
-            <fileEncoding>utf-8</fileEncoding>
-          </preremoveScript>
-        </configuration>
-      </plugin>
--->
     </plugins>
   </build>
+  <profiles>
+    <profile>
+      <id>build-rpm</id>
+      <activation>
+        <file><exists>/usr/bin/rpmbuild</exists></file>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>rpm-maven-plugin</artifactId>
+            <version>2.1-alpha-3</version>
+            <executions>
+              <execution>
+                <id>generate-rpm</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>rpm</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <copyright>2013, The OpenNMS Group, Inc.</copyright>
+              <group>Applications/System</group>
+              <prefix>/opt/opennms-ocs-integration</prefix>
+              <defineStatements>
+                 <defineStatement>_unpackaged_files_terminate_build 0</defineStatement>
+              </defineStatements>
+              <mappings>
+                <mapping>
+                  <directory>/opt/opennms-ocs-integration</directory>
+                  <filemode>444</filemode>
+                  <username>root</username>
+                  <groupname>root</groupname>
+                  <sources>
+                    <source>
+                      <location>target/ocs-${project.version}-jar-with-dependencies.jar</location>
+                      <destination>ocs-integration.jar</destination>
+                    </source>
+                  </sources>
+                </mapping>
+                <mapping>
+                  <directory>/etc/init.d</directory>
+                  <filemode>755</filemode>
+                  <username>root</username>
+                  <groupname>root</groupname>
+                  <sources>
+                    <source>
+                      <location>src/examples/opennms-ocs-integration-daemon</location>
+                      <destination>opennms-ocs-integration</destination>
+                    </source>
+                  </sources>
+                </mapping>
+              </mappings>
+              <postinstallScriptlet>
+                <script>echo "Don't forget to change the JAVA_HOME variable in the init script if your java is not in /usr/java/latest."</script>
+              </postinstallScriptlet>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
   <repositories>
     <!-- OpenNMS Repository Snapshot -->
     <!--        <repository>
