@@ -15,6 +15,14 @@
     <url>http://www.opennms.com/</url>
   </organization>
 
+  <developers>
+    <developer>
+      <id>ranger</id>
+      <name>Benjamin Reed</name>
+      <email>ranger@opennms.org</email>
+    </developer>
+  </developers>
+
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <rpmbuild>/usr/bin/rpmbuild</rpmbuild>
@@ -108,29 +116,129 @@
       </plugin>
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
-        <configuration>
-          <archive>
-            <manifest>
-              <mainClass>org.opennms.provisioner.ocs.Starter</mainClass>
-            </manifest>
-          </archive>
-          <descriptorRefs>
-            <descriptorRef>jar-with-dependencies</descriptorRef>
-          </descriptorRefs>
-        </configuration>
         <executions>
           <execution>
-            <id>make-assembly</id> <!-- this is used for inheritance merges -->
-            <phase>package</phase> <!-- bind to the packaging phase -->
+            <id>make-jar-with-dependencies</id>
+            <phase>package</phase>
             <goals>
               <goal>single</goal>
             </goals>
+            <configuration>
+              <archive>
+                <manifest>
+                  <mainClass>org.opennms.provisioner.ocs.Starter</mainClass>
+                </manifest>
+              </archive>
+              <descriptorRefs>
+                <descriptorRef>jar-with-dependencies</descriptorRef>
+              </descriptorRefs>
+            </configuration>
+          </execution>
+          <execution>
+            <id>make-package</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <descriptors>
+                <descriptor>src/assemble/package.xml</descriptor>
+              </descriptors>
+            </configuration>
           </execution>
         </executions>
       </plugin>
     </plugins>
   </build>
   <profiles>
+    <profile>
+      <id>build-deb</id>
+      <activation>
+        <file><exists>/usr/bin/dpkg-deb</exists></file>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-resources-plugin</artifactId>
+            <version>2.6</version>
+            <executions>
+              <execution>
+                <id>copy-deb-jar</id>
+                <phase>package</phase>
+                <goals><goal>copy-resources</goal></goals>
+                <configuration>
+                  <overwrite>true</overwrite>
+                  <outputDirectory>${basedir}/target/deb/opt/opennms-ocs-integration</outputDirectory>
+                  <resources>
+                    <resource>
+                      <directory>${basedir}/target/${project.artifactId}-${project.version}-dist</directory>
+                      <includes><include>*.jar</include></includes>
+                    </resource>
+                  </resources>
+                </configuration>
+              </execution>
+              <execution>
+                <id>copy-deb-init</id>
+                <phase>package</phase>
+                <goals><goal>copy-resources</goal></goals>
+                <configuration>
+                  <overwrite>true</overwrite>
+                  <outputDirectory>${basedir}/target/deb/etc/init.d</outputDirectory>
+                  <resources>
+                    <resource>
+                      <directory>${basedir}/target/${project.artifactId}-${project.version}-dist</directory>
+                      <includes><include>opennms-ocs-integration</include></includes>
+                    </resource>
+                  </resources>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <version>1.7</version>
+            <executions>
+              <execution>
+                <id>fix-permissions</id>
+                <phase>package</phase>
+                <configuration>
+                  <target>
+                    <chmod perm="ugo+x">
+                      <fileset dir="${basedir}/target/deb">
+                        <include name="**/opennms-ocs-integration"/>
+                        <include name="DEBIAN/post*"/>
+                        <include name="DEBIAN/pre*"/>
+                      </fileset>
+                    </chmod>
+                  </target>
+                </configuration>
+                <goals><goal>run</goal></goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>net.sf.debian-maven</groupId>
+            <artifactId>debian-maven-plugin</artifactId>
+            <version>1.0.6</version>
+            <configuration>
+              <packageName>opennms-ocs-integration</packageName>
+              <packageRevision>0.SNAPSHOT.${maven.build.timestamp}</packageRevision>
+              <excludeAllArtifacts>true</excludeAllArtifacts>
+              <excludeAllDependencies>true</excludeAllDependencies>
+              <includeAttachedArtifacts>false</includeAttachedArtifacts>
+            </configuration>
+            <executions>
+              <execution>
+                <id>make-deb</id>
+                <phase>package</phase>
+                <goals><goal>package</goal></goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
     <profile>
       <id>build-rpm</id>
       <activation>
@@ -166,7 +274,7 @@
                   <groupname>root</groupname>
                   <sources>
                     <source>
-                      <location>target/ocs-${project.version}-jar-with-dependencies.jar</location>
+                      <location>target/${project.artifactId}-${project.version}-jar-with-dependencies.jar</location>
                       <destination>ocs-integration.jar</destination>
                     </source>
                   </sources>
