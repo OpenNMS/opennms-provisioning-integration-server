@@ -6,9 +6,15 @@
   <artifactId>ocs</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
-  
+
   <name>OpenNMS Provisioner OCS</name>
-  
+  <description>A tool for generating and serving OpenNMS provisioning requisitions based on OCS inventory.</description>
+
+  <organization>
+    <name>The OpenNMS Group, Inc.</name>
+    <url>http://www.opennms.com/</url>
+  </organization>
+
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
@@ -19,25 +25,25 @@
       <artifactId>slf4j-api</artifactId>
       <version>1.7.5</version>
     </dependency>
-        
+
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
       <version>1.0.13</version>
     </dependency>
-        
+
     <dependency>
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
       <version>2.4</version>
     </dependency>
-        
+
     <dependency>
       <groupId>commons-configuration</groupId>
       <artifactId>commons-configuration</artifactId>
       <version>1.9</version>
     </dependency>
-        
+
     <dependency>
       <groupId>org.codehaus.groovy</groupId>
       <artifactId>groovy-all</artifactId>
@@ -49,31 +55,31 @@
       <artifactId>bsh</artifactId>
       <version>2.0b5</version>
     </dependency>
-        
+
     <dependency>
       <groupId>org.opennms</groupId>
       <artifactId>ocs.inventory.client</artifactId>
       <version>1.0</version>
     </dependency>
-                
+
     <dependency>
       <groupId>org.opennms</groupId>
       <artifactId>opennms-provision-persistence</artifactId>
       <version>1.12.1</version>
     </dependency>
-        
+
     <dependency>
       <groupId>org.opennms</groupId>
       <artifactId>opennms-util</artifactId>
       <version>1.12.1</version>
     </dependency>
-    
+
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
       <version>15.0</version>
     </dependency>
-    
+
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-server</artifactId>
@@ -87,7 +93,7 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-  
+
   <build>
     <plugins>
       <plugin>
@@ -121,6 +127,124 @@
           </execution>
         </executions>
       </plugin>
+<!--
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>rpm-maven-plugin</artifactId>
+        <version>2.1-alpha-3</version>
+        <executions>
+          <execution>
+            <id>generate-rpm</id>
+            <goals>
+              <goal>rpm</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <copyright>2013, The OpenNMS Group, Inc.</copyright>
+          <group>Applications/System</group>
+          <prefix>/opt/opennms-ocs</prefix>
+          <defineStatements>
+             <defineStatement>_unpackaged_files_terminate_build 0</defineStatement>
+          </defineStatements>
+          <mappings>
+            <mapping>
+              <directory>/usr/local/bin/landfill</directory>
+              <filemode>440</filemode>
+              <username>dumper</username>
+              <groupname>dumpgroup</groupname>
+              <sources>
+                <source>
+                  <location>target/classes</location>
+                </source>
+              </sources>
+            </mapping>
+            <mapping>
+              <directory>/usr/local/doc/landfill</directory>
+              <documentation>true</documentation>
+              <filemode>444</filemode>
+              <username>dumper</username>
+              <groupname>dumpgroup</groupname>
+              <sources>
+                <source>
+                  <location>target/site</location>
+                </source>
+              </sources>
+            </mapping>
+            <mapping>
+              <directory>/usr/local/lib</directory>
+              <filemode>750</filemode>
+              <username>dumper</username>
+              <groupname>dumpgroup</groupname>
+              <dependency>
+                <includes>
+                  <include>jmock:jmock</include>
+                  <include>javax.servlet:servlet-api:2.4</include>
+                </includes>
+                <excludes>
+                  <exclude>junit:junit</exclude>
+                </excludes>
+              </dependency>
+            </mapping>
+            <mapping>
+              <directory>/usr/local/bin</directory>
+              <filemode>750</filemode>
+              <username>dumper</username>
+              <groupname>dumpgroup</groupname>
+              <sources>
+                <source>
+                  <location>src/main/bin</location>
+                </source>
+                <softlinkSource>
+                  <location>/usr/local/bin/new.sh</location>
+                  <destination>old.sh</destination>
+                </softlinkSource>
+              </sources>
+            </mapping>
+            <mapping>
+              <directory>/usr/local/oldbin</directory>
+              <filemode>750</filemode>
+              <username>dumper</username>
+              <groupname>dumpgroup</groupname>
+              <sources>
+                <softlinkSource>
+                  <location>/usr/local/bin</location>
+                </softlinkSource>
+              </sources>
+            </mapping>
+            <mapping>
+              <directory>/usr/local/conf/landfill</directory>
+              <configuration>true</configuration>
+              <filemode>640</filemode>
+              <username>dumper</username>
+              <groupname>dumpgroup</groupname>
+              <sources>
+                <source>
+                  <location>src/main/conf</location>
+                </source>
+              </sources>
+            </mapping>
+            <mapping>
+              <directory>/usr/local/log/landfill</directory>
+              <filemode>750</filemode>
+              <username>dumper</username>
+              <groupname>dumpgroup</groupname>
+            </mapping>
+          </mappings>
+          <preinstallScriptlet>
+            <script>echo "installing now"</script>
+          </preinstallScriptlet>
+          <postinstallScriptlet>
+            <scriptFile>src/main/scripts/postinstall</scriptFile>
+            <fileEncoding>utf-8</fileEncoding>
+          </postinstallScriptlet>
+          <preremoveScriptlet>
+            <scriptFile>src/main/scripts/preremove</scriptFile>
+            <fileEncoding>utf-8</fileEncoding>
+          </preremoveScript>
+        </configuration>
+      </plugin>
+-->
     </plugins>
   </build>
   <repositories>
@@ -150,5 +274,5 @@
       <url>http://maven.opennms.org/content/groups/opennms.org-release/</url>
     </repository>
   </repositories>
-    
+
 </project>
