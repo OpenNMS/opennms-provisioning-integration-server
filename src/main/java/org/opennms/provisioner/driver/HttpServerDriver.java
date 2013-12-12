@@ -68,14 +68,13 @@ public class HttpServerDriver implements Driver {
         // As this is the only handler, we mark every request as handled
         baseRequest.setHandled(true);
         
-        // Get the instance fro the request path
+        // Get the instance for the request path
         final String instance = request.getPathInfo().substring(1);
 
         LOGGER.debug("Handling request for instance: {}", instance);
         
         // Check if the instance name was passed and valid
-        if (instance == null
-            || instance.isEmpty()) {
+        if (instance == null || instance.isEmpty() || instance.contains("favicon.ico")) {
           response.sendError(404, "No instance specified");
           return;
         }

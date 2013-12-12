@@ -56,7 +56,6 @@ public class RequisitionProvider {
           .put("default.ocs.snmpDevices", new DefaultOcsSnmpDevicesMapper.Factory())
           .put("default.ocs.computers.replay", new DefaultOcsComputerMapper.Factory())
           .put("default.ocs.snmpDevices.replay", new DefaultOcsSnmpDevicesMapper.Factory())
-//          .put("script", new ScriptMapper.Factory())
           .build();
 
   // The global configuration
