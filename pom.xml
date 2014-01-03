@@ -71,7 +71,7 @@
       <version>1.0</version>
     </dependency>
 
-    <dependency>
+    <!-- dependency>
         <groupId>com.vmware</groupId>
         <artifactId>vijava</artifactId>
         <version>520110926</version>
@@ -87,7 +87,7 @@
         <groupId>org.sblim.wbem</groupId>
         <artifactId>sblimCIMClient</artifactId>
         <version>1.17</version>
-    </dependency>
+    </dependency -->
                                                             
     <dependency>
       <groupId>org.opennms</groupId>
