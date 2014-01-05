@@ -50,7 +50,7 @@ public class HttpServerDriver implements Driver {
     final Server server = new Server(new InetSocketAddress(this.config.getString("host", "127.0.0.1"),
                                                            this.config.getInt("port", 8686)));
 
-    // Create the marshaller for the requision
+    // Create the marshaller for the requisition
     final JAXBContext jaxbContext = JAXBContext.newInstance(Requisition.class);
 
     final Marshaller jaxbMarshaller = jaxbContext.createMarshaller();

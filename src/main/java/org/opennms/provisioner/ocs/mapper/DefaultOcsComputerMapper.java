@@ -17,66 +17,69 @@ import org.slf4j.LoggerFactory;
 
 public class DefaultOcsComputerMapper implements Mapper {
 
-  public static class Factory implements Mapper.Factory {
+    public static class Factory implements Mapper.Factory {
+
+        @Override
+        public Mapper create(final String instance,
+                             final Configuration config) {
+            return new DefaultOcsComputerMapper(instance, config);
+        }
+    }
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultOcsComputerMapper.class);
+    private final String instance;
+    private final Configuration config;
+
+    private final IpInterfaceHelper ipInterfaceHelper = new IpInterfaceHelper();
+
+    public DefaultOcsComputerMapper(final String instance, final Configuration config) {
+        this.instance = instance;
+        this.config = config;
+    }
 
     @Override
-    public Mapper create(final String instance,
-                         final Configuration config) {
-      return new DefaultOcsComputerMapper(instance, config);
-    }
-  }
-  private static final Logger LOGGER = LoggerFactory.getLogger(DefaultOcsComputerMapper.class);
-  private final String instance;
-  private final Configuration config;
-  
-  private final IpInterfaceHelper ipInterfaceHelper = new IpInterfaceHelper();
+    public Requisition map(Object data, Requisition requisition) throws Exception {
 
-  public DefaultOcsComputerMapper(final String instance,
-                                  final Configuration config) {
-    this.instance = instance;
-    this.config = config;
-  }
+        for (final Computer computer : ((Computers) data).getComputers()) {
 
-  @Override
-  public Requisition map(Object data, Requisition requisition) throws Exception {
+            final RequisitionNode requisitionNode = mapComputerToRequisitionNode(computer);
+            if (requisitionNode != null) {
+                requisition.getNodes().add(requisitionNode);
+            }
+        }
 
-    for (final Computer computer : ((Computers) data).getComputers()) {
-
-      final RequisitionNode requisitionNode = mapComputerToRequisitionNode(computer);
-      if (requisitionNode != null) {
-        requisition.getNodes().add(requisitionNode);
-      }
+        return requisition;
     }
 
-    return requisition;
-  }
+    private RequisitionNode mapComputerToRequisitionNode(Computer computer) {
+        final RequisitionNode requisitionNode = new RequisitionNode();
+        requisitionNode.setForeignId(Integer.toString(computer.getHardware().getId()));
+        requisitionNode.setNodeLabel(computer.getHardware().getName());
 
-  private RequisitionNode mapComputerToRequisitionNode(Computer computer) {
-    final RequisitionNode requisitionNode = new RequisitionNode();
-    requisitionNode.setForeignId(Integer.toString(computer.getHardware().getId()));
-    requisitionNode.setNodeLabel(computer.getHardware().getName());
+        final RequisitionInterface requisitionInterface = new RequisitionInterface();
 
-    final RequisitionInterface requisitionInterface = new RequisitionInterface();
-    
-    final Network managementNetwork = this.ipInterfaceHelper.selectManagementNetwork(computer);
-    if (managementNetwork != null) {
-      requisitionInterface.setIpAddr(managementNetwork.getIPAddress());
-      requisitionInterface.setDescr(managementNetwork.getDescription());
-      requisitionInterface.setSnmpPrimary(PrimaryType.PRIMARY);
-      requisitionInterface.setStatus(1);
-      requisitionInterface.insertMonitoredService(new RequisitionMonitoredService("SNMP"));
-      requisitionInterface.insertMonitoredService(new RequisitionMonitoredService("ICMP"));
-      requisitionNode.getInterfaces().add(requisitionInterface);
-    } else {
-        LOGGER.warn("computer '{}' named '{}' has no electable ip-address following the black- and whitelists.", computer.getHardware().getId(), computer.getHardware().getName());
+        final Network managementNetwork = this.ipInterfaceHelper.selectManagementNetwork(computer);
+        if (managementNetwork != null) {
+            requisitionInterface.setIpAddr(managementNetwork.getIPAddress());
+            requisitionInterface.setDescr(managementNetwork.getDescription());
+            requisitionInterface.setSnmpPrimary(PrimaryType.PRIMARY);
+            requisitionInterface.setStatus(1);
+            requisitionInterface.insertMonitoredService(new RequisitionMonitoredService("SNMP"));
+            requisitionInterface.insertMonitoredService(new RequisitionMonitoredService("ICMP"));
+            requisitionNode.getInterfaces().add(requisitionInterface);
+        } else {
+            LOGGER.warn("computer '{}' named '{}' has no electable ip-address following the black- and whitelists.", computer.getHardware().getId(), computer.getHardware().getName());
+        }
+
+        requisitionNode.getCategories().addAll(ipInterfaceHelper.populateCategories(computer, config, instance));
+
+        requisitionNode.getAssets().add(new RequisitionAsset("operatingSystem", ipInterfaceHelper.assetStringCleaner(computer.getHardware().getOsname(), 64)));
+
+        final String ocsComputerLink = "<a href=" + this.config.getString("ocs.url") + "/index.php?function=computer&head=1&systemid=" + requisitionNode.getForeignId() + ">OCS-Inventory</a>";
+        requisitionNode.getAssets().add(new RequisitionAsset("comment", ocsComputerLink));
+
+        requisitionNode.getAssets().add(new RequisitionAsset("cpu", ipInterfaceHelper.assetStringCleaner(computer.getHardware().getProcessort(), 64)));
+
+        return requisitionNode;
     }
-    requisitionNode.getAssets().add(new RequisitionAsset("operatingSystem", computer.getHardware().getOsname()));
-
-    final String ocsComputerLink = "<a href=" + this.config.getString("ocs.url") + "/index.php?function=computer&head=1&systemid=" + requisitionNode.getForeignId() + ">OCS-Inventory</a>";
-    requisitionNode.getAssets().add(new RequisitionAsset("comment", ocsComputerLink));
-
-    requisitionNode.getAssets().add(new RequisitionAsset("cpu", computer.getHardware().getProcessort()));
-
-    return requisitionNode;
-  }
 }

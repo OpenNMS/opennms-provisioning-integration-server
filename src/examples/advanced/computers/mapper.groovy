@@ -163,7 +163,7 @@ private String assetStringCleaner(String assetString, Integer maxSize) {
     result = result.replace("CentOS release", "CentOS");
     result = result.replace("Red Hat Enterprise Linux Server release", "Red Hat Linux");
     
-    //duplicat spaces
+    //duplicate spaces
     result = result.replaceAll("\\s+", " ");
     
     result = result.take(maxSize);    

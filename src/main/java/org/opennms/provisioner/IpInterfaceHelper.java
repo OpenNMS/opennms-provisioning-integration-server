@@ -1,14 +1,20 @@
 package org.opennms.provisioner;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
+import org.apache.commons.configuration.Configuration;
 import org.opennms.core.utils.IPLike;
+import org.opennms.netmgt.provision.persist.requisition.RequisitionCategory;
 import org.opennms.ocs.inventory.client.response.Computer;
+import org.opennms.ocs.inventory.client.response.Entry;
 import org.opennms.ocs.inventory.client.response.Network;
 import org.opennms.ocs.inventory.client.response.snmp.SnmpDevice;
 import org.slf4j.Logger;
@@ -156,5 +162,58 @@ public class IpInterfaceHelper {
             ipBlackList = new ArrayList<>();
             ipWhiteList = new ArrayList<>();
         }
+    }
+
+//TODO Move to OCS-Helper
+    public List<RequisitionCategory> populateCategories(Computer myComputer, Configuration config, String instance) {
+        List<RequisitionCategory> categories = new ArrayList<>();
+
+        if (!config.getString("categoryMap").isEmpty()) {
+            Properties catMap = new Properties();
+            try {
+                File categoryMap = new File(config.getString("categoryMap"));
+                catMap.load(new FileInputStream(instance + File.separator+ categoryMap));
+                LOGGER.info("Loaded properties from {}", categoryMap.getAbsolutePath());
+            } catch (Exception e) {
+                LOGGER.error("Could not read category mappings from", e);
+                throw new RuntimeException(e);
+            }
+
+            for (Entry entry : myComputer.getAccountInfo().getEntries()) {
+                if ("".equals(entry.getValue())) continue;
+                LOGGER.info("On computer {} got an accountinfo entry called {} with value {}", myComputer.getHardware().getName(), entry.getName(), entry.getValue());
+                if (catMap.containsKey(entry.getName() + "." + entry.getValue())) {
+                    categories.add(new RequisitionCategory(catMap.get(entry.getName() + "." + entry.getValue()).toString()));
+                } else {
+                    LOGGER.info("NOT Adding category {}.{} to node {}", entry.getName(), entry.getValue(), myComputer.getHardware().getName());
+                }
+            }
+        }
+        return categories;
+    }
+
+    public String assetStringCleaner(String assetString, Integer maxSize) {
+        String result = "";
+        if (assetString != null) {
+            result = assetString;
+            //Trademarks
+            result = result.replace("®", "");
+            result = result.replace("(R)", "");
+            result = result.replace("(tm)", "");
+
+            //OperatingSystems
+            result = result.replace("Microsoft", "MS");
+            result = result.replace("Service Pack", "SP");
+            result = result.replace("CentOS release", "CentOS");
+            result = result.replace("Red Hat Enterprise Linux Server release", "Red Hat Linux");
+
+            //duplicate spaces
+            result = result.replaceAll("\\s+", " ");
+
+            if (result.length() > maxSize) {
+                result = result.substring(0, maxSize);
+            }
+        }
+        return result;
     }
 }
