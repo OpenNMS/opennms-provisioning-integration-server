@@ -1,5 +1,6 @@
 package org.opennms.provisioner.ocs.mapper;
 
+import com.google.common.collect.Sets;
 import org.apache.commons.configuration.Configuration;
 import org.opennms.netmgt.model.PrimaryType;
 import org.opennms.netmgt.provision.persist.requisition.Requisition;
@@ -15,6 +16,9 @@ import org.opennms.provisioner.IpInterfaceHelper;
 import org.opennms.provisioner.mapper.Mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class DefaultOcsComputerMapper implements Mapper {
 
@@ -59,12 +63,13 @@ public class DefaultOcsComputerMapper implements Mapper {
         requisitionNode.setNodeLabel(computer.getHardware().getName());
 
         if (config.containsKey(OCS_ACCOUNTINFO) && !config.getString(OCS_ACCOUNTINFO).isEmpty()) {
-            Boolean matches = false;
+            Set<String> requiredAccountInfos = Sets.newHashSet(config.getString(OCS_ACCOUNTINFO).split("\\s+"));
+            Set<String> availableAccountInfos = new HashSet<String>();
             for (Entry accountInfo : computer.getAccountInfo().getEntries()) {
-                if ((accountInfo.getName() + "." + accountInfo.getValue()).equals(config.getString(OCS_ACCOUNTINFO))) {
-                    matches = true;
-                }
+                availableAccountInfos.add(accountInfo.getName() + "." + accountInfo.getValue());
             }
+            boolean matches = availableAccountInfos.containsAll(requiredAccountInfos);
+
             if (!matches) {
                 LOGGER.debug("skip computer {}, does not match accountinfo filter", computer.getHardware().getName());
                 return null;
@@ -96,6 +101,5 @@ public class DefaultOcsComputerMapper implements Mapper {
         requisitionNode.getAssets().add(new RequisitionAsset("cpu", ipInterfaceHelper.assetStringCleaner(computer.getHardware().getProcessort(), 64)));
 
         return requisitionNode;
-
     }
 }
