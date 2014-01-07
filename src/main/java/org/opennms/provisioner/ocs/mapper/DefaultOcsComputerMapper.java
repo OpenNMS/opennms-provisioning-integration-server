@@ -9,6 +9,7 @@ import org.opennms.netmgt.provision.persist.requisition.RequisitionMonitoredServ
 import org.opennms.netmgt.provision.persist.requisition.RequisitionNode;
 import org.opennms.ocs.inventory.client.response.Computer;
 import org.opennms.ocs.inventory.client.response.Computers;
+import org.opennms.ocs.inventory.client.response.Entry;
 import org.opennms.ocs.inventory.client.response.Network;
 import org.opennms.provisioner.IpInterfaceHelper;
 import org.opennms.provisioner.mapper.Mapper;
@@ -27,6 +28,7 @@ public class DefaultOcsComputerMapper implements Mapper {
     }
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DefaultOcsComputerMapper.class);
+    private static final String OCS_ACCOUNTINFO = "ocs.accountinfo";
     private final String instance;
     private final Configuration config;
 
@@ -56,6 +58,19 @@ public class DefaultOcsComputerMapper implements Mapper {
         requisitionNode.setForeignId(Integer.toString(computer.getHardware().getId()));
         requisitionNode.setNodeLabel(computer.getHardware().getName());
 
+        if (config.containsKey(OCS_ACCOUNTINFO) && !config.getString(OCS_ACCOUNTINFO).isEmpty()) {
+            Boolean matches = false;
+            for (Entry accountInfo : computer.getAccountInfo().getEntries()) {
+                if ((accountInfo.getName() + "." + accountInfo.getValue()).equals(config.getString(OCS_ACCOUNTINFO))) {
+                    matches = true;
+                }
+            }
+            if (!matches) {
+                LOGGER.debug("skip computer {}, does not match accountinfo filter", computer.getHardware().getName());
+                return null;
+            }
+        }
+
         final RequisitionInterface requisitionInterface = new RequisitionInterface();
 
         final Network managementNetwork = this.ipInterfaceHelper.selectManagementNetwork(computer);
@@ -81,5 +96,6 @@ public class DefaultOcsComputerMapper implements Mapper {
         requisitionNode.getAssets().add(new RequisitionAsset("cpu", ipInterfaceHelper.assetStringCleaner(computer.getHardware().getProcessort(), 64)));
 
         return requisitionNode;
+
     }
 }
