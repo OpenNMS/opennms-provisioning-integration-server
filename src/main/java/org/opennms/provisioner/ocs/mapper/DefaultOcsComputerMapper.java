@@ -59,12 +59,12 @@ public class DefaultOcsComputerMapper implements Mapper {
 
     private RequisitionNode mapComputerToRequisitionNode(Computer computer) {
         final RequisitionNode requisitionNode = new RequisitionNode();
-        requisitionNode.setForeignId(Integer.toString(computer.getHardware().getId()));
+        requisitionNode.setForeignId(computer.getHardware().getName());
         requisitionNode.setNodeLabel(computer.getHardware().getName());
 
         if (config.containsKey(OCS_ACCOUNTINFO) && !config.getString(OCS_ACCOUNTINFO).isEmpty()) {
             Set<String> requiredAccountInfos = Sets.newHashSet(config.getString(OCS_ACCOUNTINFO).split("\\s+"));
-            Set<String> availableAccountInfos = new HashSet<String>();
+            Set<String> availableAccountInfos = new HashSet<>();
             for (Entry accountInfo : computer.getAccountInfo().getEntries()) {
                 availableAccountInfos.add(accountInfo.getName() + "." + accountInfo.getValue());
             }
@@ -94,11 +94,10 @@ public class DefaultOcsComputerMapper implements Mapper {
         requisitionNode.getCategories().addAll(ipInterfaceHelper.populateCategories(computer, config, instance));
 
         requisitionNode.getAssets().add(new RequisitionAsset("operatingSystem", ipInterfaceHelper.assetStringCleaner(computer.getHardware().getOsname(), 64)));
-
-        final String ocsComputerLink = "<a href=" + this.config.getString("ocs.url") + "/index.php?function=computer&head=1&systemid=" + requisitionNode.getForeignId() + ">OCS-Inventory</a>";
-        requisitionNode.getAssets().add(new RequisitionAsset("comment", ocsComputerLink));
-
         requisitionNode.getAssets().add(new RequisitionAsset("cpu", ipInterfaceHelper.assetStringCleaner(computer.getHardware().getProcessort(), 64)));
+
+        final String ocsComputerLink = "<a href=" + this.config.getString("ocs.url") + "/index.php?function=computer&head=1&systemid=" + computer.getHardware().getId() + ">OCS-Inventory</a>";
+        requisitionNode.getAssets().add(new RequisitionAsset("comment", ocsComputerLink));
 
         return requisitionNode;
     }
