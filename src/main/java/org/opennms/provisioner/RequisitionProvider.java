@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Map;
+import org.opennms.provisioner.source.HttpRequisitionSource;
 
 /**
  * Generates a requisition.
@@ -41,6 +42,7 @@ public class RequisitionProvider {
 
   // All known source implementations
   private static final Map<String, Source.Factory> SOURCES = ImmutableMap.<String, Source.Factory>builder()
+          .put("requisition.source", new HttpRequisitionSource.Factory())
           .put("vmware.source", new VmwareSource.Factory())
           .put("ocs.computers", new OcsComputersSource.Factory())
           .put("ocs.snmpDevices", new OcsSnmpDevicesSource.Factory())
