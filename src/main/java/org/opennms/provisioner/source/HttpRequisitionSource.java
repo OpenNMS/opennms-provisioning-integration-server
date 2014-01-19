@@ -55,8 +55,8 @@ public class HttpRequisitionSource implements Source {
                 // Set the default credentials provider
                 builder.setDefaultCredentialsProvider(provider);
             }
-            HttpClient client = builder.build();
 
+            HttpClient client = builder.build();
             HttpGet request = new HttpGet(getUrl());
             HttpResponse response = client.execute(request);
             try {
