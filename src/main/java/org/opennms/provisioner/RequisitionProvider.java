@@ -1,6 +1,7 @@
 package org.opennms.provisioner;
 
 import com.google.common.collect.ImmutableMap;
+import java.util.Map;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.opennms.netmgt.provision.persist.requisition.Requisition;
@@ -16,10 +17,9 @@ import org.opennms.provisioner.ocs.source.OcsSnmpDevicesSource;
 import org.opennms.provisioner.source.Source;
 import org.opennms.provisioner.vmware.mapper.DefaultVmwareMapper;
 import org.opennms.provisioner.vmware.source.VmwareSource;
+import org.opennms.provisioner.xls.source.XlsSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Map;
 
 /**
  * Generates a requisition.
@@ -42,6 +42,7 @@ public class RequisitionProvider {
   // All known source implementations
   private static final Map<String, Source.Factory> SOURCES = ImmutableMap.<String, Source.Factory>builder()
           .put("vmware.source", new VmwareSource.Factory())
+          .put("xls.source", new XlsSource.Factory())
           .put("ocs.computers", new OcsComputersSource.Factory())
           .put("ocs.snmpDevices", new OcsSnmpDevicesSource.Factory())
           .put("ocs.computers.replay", new OcsComputersReplaySource.Factory())
