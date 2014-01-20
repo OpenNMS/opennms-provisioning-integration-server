@@ -55,7 +55,7 @@ public class XlsSource implements Source {
                     RequisitionInterface reqInterface;
                     Integer row = 1;
                     while (row < sheet.getRows()) {
-                        if (!sheet.getCell(0, row).getContents().isEmpty()) {
+                        if (row.equals(1) || !sheet.getCell(0, row).getContents().trim().equalsIgnoreCase(sheet.getCell(0, row - 1).getContents().trim())) {
                             node = new RequisitionNode();
                             node.setNodeLabel(sheet.getCell(0, row).getContents().trim());
                             node.setForeignId(sheet.getCell(0, row).getContents().trim());
