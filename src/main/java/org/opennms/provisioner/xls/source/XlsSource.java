@@ -74,9 +74,9 @@ public class XlsSource implements Source {
                         }
                         reqInterface = new RequisitionInterface();
                         reqInterface.setIpAddr(sheet.getCell(1, row).getContents());
-                        if (sheet.getCell(2, row).getContents().equals("Primay")) {
+                        if (sheet.getCell(2, row).getContents().equalsIgnoreCase("P")) {
                             reqInterface.setSnmpPrimary(PrimaryType.PRIMARY);
-                        } else if (sheet.getCell(2, row).getContents().equals("Secondary")) {
+                        } else if (sheet.getCell(2, row).getContents().equalsIgnoreCase("S")) {
                             reqInterface.setSnmpPrimary(PrimaryType.SECONDARY);
                         } else {
                             reqInterface.setSnmpPrimary(PrimaryType.NOT_ELIGIBLE);
@@ -85,7 +85,7 @@ public class XlsSource implements Source {
                         if (!sheet.getCell(4, row).getContents().isEmpty()) {
                             String[] forcedServices = sheet.getCell(4, row).getContents().trim().split(",");
                             for (String service : forcedServices) {
-                                reqInterface.getMonitoredServices().add(new RequisitionMonitoredService(service));
+                                reqInterface.getMonitoredServices().add(new RequisitionMonitoredService(service.trim()));
                             }
                         }
                         node.getInterfaces().add(reqInterface);
