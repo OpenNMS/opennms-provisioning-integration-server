@@ -5,6 +5,7 @@ import java.util.Map;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.opennms.netmgt.provision.persist.requisition.Requisition;
+import org.opennms.provisioner.jdbc.source.JdbcSource;
 import org.opennms.provisioner.mapper.Mapper;
 import org.opennms.provisioner.mapper.NullMapper;
 import org.opennms.provisioner.mapper.ScriptMapper;
@@ -14,13 +15,13 @@ import org.opennms.provisioner.ocs.source.OcsComputersReplaySource;
 import org.opennms.provisioner.ocs.source.OcsComputersSource;
 import org.opennms.provisioner.ocs.source.OcsSnmpDevicesReplaySource;
 import org.opennms.provisioner.ocs.source.OcsSnmpDevicesSource;
+import org.opennms.provisioner.source.HttpRequisitionSource;
 import org.opennms.provisioner.source.Source;
 import org.opennms.provisioner.vmware.mapper.DefaultVmwareMapper;
 import org.opennms.provisioner.vmware.source.VmwareSource;
 import org.opennms.provisioner.xls.source.XlsSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.opennms.provisioner.source.HttpRequisitionSource;
 
 /**
  * Generates a requisition.
@@ -45,6 +46,7 @@ public class RequisitionProvider {
           .put("requisition.source", new HttpRequisitionSource.Factory())
           .put("vmware.source", new VmwareSource.Factory())
           .put("xls.source", new XlsSource.Factory())
+          .put("jdbc.source", new JdbcSource.Factory())
           .put("ocs.computers", new OcsComputersSource.Factory())
           .put("ocs.snmpDevices", new OcsSnmpDevicesSource.Factory())
           .put("ocs.computers.replay", new OcsComputersReplaySource.Factory())
