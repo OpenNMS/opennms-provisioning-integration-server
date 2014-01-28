@@ -25,7 +25,7 @@ public class XlsSource implements Source {
     private static final Logger LOGGER = LoggerFactory.getLogger(XlsSource.class);
     private final String instance;
     private final Configuration config;
-    private final String SPLITTER = ",";
+    private final String WITHIN_SPLITTER = ",";
 
     private final String PREFIX_NODE = "Node_";
     private final String PREFIX_CATEGORY = "cat_";
@@ -132,7 +132,7 @@ public class XlsSource implements Source {
         Set<RequisitionCategory> categories = new TreeSet<>();
         for (Integer column : getRelevantColumnIDs(sheet, PREFIX_CATEGORY)) {
             String rawCategories = sheet.getCell(column, rowID).getContents().trim();
-            for (String category : rawCategories.split(SPLITTER)) {
+            for (String category : rawCategories.split(WITHIN_SPLITTER)) {
                 category = category.trim();
                 if (!category.isEmpty()) {
                     categories.add(new RequisitionCategory(category));
@@ -146,7 +146,7 @@ public class XlsSource implements Source {
         Set<RequisitionMonitoredService> services = new TreeSet<>();
         for (Integer column : getRelevantColumnIDs(sheet, PREFIX_SERVICE)) {
             String rawServices = sheet.getCell(column, rowID).getContents().trim();
-            for (String service : rawServices.split(SPLITTER)) {
+            for (String service : rawServices.split(WITHIN_SPLITTER)) {
                 service = service.trim();
                 if (!service.isEmpty()) {
                     services.add(new RequisitionMonitoredService(service));

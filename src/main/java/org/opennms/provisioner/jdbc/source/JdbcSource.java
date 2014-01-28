@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import org.apache.commons.configuration.Configuration;
 import org.opennms.netmgt.provision.persist.requisition.Requisition;
+import org.opennms.netmgt.provision.persist.requisition.RequisitionInterface;
 import org.opennms.netmgt.provision.persist.requisition.RequisitionNode;
 import org.opennms.provisioner.source.Source;
 import org.slf4j.Logger;
@@ -85,11 +86,16 @@ public class JdbcSource implements Source {
 
             if (resultSet != null) {
                 while (resultSet.next()) {
-                    String nodeLabel = resultSet.getString("MyNode");
+                    String nodeLabel = resultSet.getString("NodeLabel").trim();
                     LOGGER.info("NodeLabel :: {}", nodeLabel);
+
                     RequisitionNode node = new RequisitionNode();
                     node.setNodeLabel(nodeLabel);
                     node.setForeignId(nodeLabel);
+
+                    String ipAddress = resultSet.getString("IpAddress").trim();
+                    RequisitionInterface reqInterface = new RequisitionInterface();
+                    reqInterface.setIpAddr(ipAddress);
 
                     requisition.getNodes().add(node);
                 }
