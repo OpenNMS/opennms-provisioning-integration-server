@@ -7,3 +7,5 @@ target/
 *.ear
 *.iml
 /nbactions.xml
+*.iws
+*.ipr
