@@ -100,8 +100,14 @@
             <artifactId>postgresql</artifactId>
             <version>9.1-901-1.jdbc4</version>
         </dependency>
-                                                                 
-        <dependency>
+
+      <dependency>
+          <groupId>mysql</groupId>
+          <artifactId>mysql-connector-java</artifactId>
+          <version>5.1.28</version>
+      </dependency>
+
+      <dependency>
             <groupId>org.opennms</groupId>
             <artifactId>opennms-provision-persistence</artifactId>
             <version>1.12.1</version>

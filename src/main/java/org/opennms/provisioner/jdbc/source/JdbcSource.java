@@ -16,29 +16,26 @@ import org.slf4j.LoggerFactory;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Set;
-import java.util.TreeSet;
 
 public class JdbcSource implements Source {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JdbcSource.class);
+
     private final String instance;
     private final Configuration config;
-    private final String SPLITTER = ",";
 
-    private final String PREFIX_NODE = "Node_";
-    private final String PREFIX_CATEGORY = "cat_";
-    private final String PREFIX_SERVICE = "svc_";
-    private final String PREFIX_IP_ADDRESS = "IP_";
-    private final String PREFIX_INTERFACE_TYPE = "IfType_";
-    private final String PREFIX_ASSET_DESCRIPTION = "Asset_Description";
-
-    private final String INTERFACE_TYPE_PRIMARY = "P";
-    private final String INTERFACE_TYPE_SECONDARY = "S";
-    private final String ASSET_DESCRIPTION = "description";
+    private static final String COLUMN_NODE_LABEL = "Node_Label";
+    private static final String COLUMN_CATEGORY = "Cat";
+    private static final String COLUMN_SERVICE = "Svc";
+    private static final String COLUMN_IP_ADDRESS = "Ip_Address";
+    private static final String COLUMN_INTERFACE_TYPE = "If_Type";
+    private static final String COLUMN_ASSET_DESCRIPTION = "Asset_Description";
+    private static final String COLUMN_FOREIGN_ID = "Foreign_Id";
+    private static final String INTERFACE_TYPE_PRIMARY = "P";
+    private static final String INTERFACE_TYPE_SECONDARY = "S";
+    private static final String ASSET_DESCRIPTION = "description";
 
     public static class Factory implements Source.Factory {
 
@@ -58,9 +55,8 @@ public class JdbcSource implements Source {
 
         Requisition requisition = new Requisition(instance);
 
-        Connection connection = null;
-        Statement statement = null;
-        ResultSet resultSet = null;
+        Statement statement;
+        ResultSet resultSet;
 
         LOGGER.debug("-------- JDBC Connection Testing ------------");
         try {
@@ -75,65 +71,49 @@ public class JdbcSource implements Source {
 
         LOGGER.debug("JDBC Driver Registered!");
 
-        try {
-            connection = DriverManager.getConnection(this.getJdbcUrl(), this.getJdbcUser(), this.getJdbcPassword());
-        } catch (SQLException e) {
-            LOGGER.error("Connection Failed! Check output console", e);
-            return null;
-        }
-
-        if (connection != null) {
-            LOGGER.debug("JDBC Connection is working!");
-        } else {
-            LOGGER.error("Failed to make connection!");
-            return null;
-        }
-
-        try {
+        try (Connection connection = DriverManager.getConnection(this.getJdbcUrl(), this.getJdbcUser(), this.getJdbcPassword())) {
             statement = connection.createStatement();
 
             LOGGER.info(this.getJdbcSelectStatement());
 
-            Set<String> columns = new TreeSet<String>();
-
             resultSet = statement.executeQuery(this.getJdbcSelectStatement());
-
-            ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
-
-            for (int i = 0; i < resultSetMetaData.getColumnCount(); i++) {
-                columns.add(resultSetMetaData.getColumnName(i + 1));
-            }
-
-            LOGGER.info("Columns: {}",columns);
 
             if (resultSet != null) {
                 while (resultSet.next()) {
-                    String nodeLabel = getString(resultSet, "Node_Label", columns);
+                    String foreignId = getString(resultSet, COLUMN_FOREIGN_ID);
 
-                    if (nodeLabel == null) {
-                        LOGGER.warn("Node_Label is null");
+                    if (foreignId == null) {
+                        LOGGER.warn("Foreign_Id is null - skipping row...");
                         continue;
                     }
 
-                    RequisitionNode node = requisition.getNode(nodeLabel);
+                    RequisitionNode node = requisition.getNode(foreignId);
 
                     if (node == null) {
                         node = new RequisitionNode();
-                        node.setNodeLabel(nodeLabel);
-                        node.setForeignId(nodeLabel);
+                        node.setForeignId(foreignId);
                         requisition.getNodes().add(node);
                     } else {
-                        LOGGER.info("Existing node - updating {} ", nodeLabel);
+                        LOGGER.info("Existing node - updating {} ", foreignId);
                     }
 
+                    String nodeLabel = getString(resultSet, COLUMN_NODE_LABEL);
 
-                    String description = getString(resultSet, "Asset_Description", columns);
+                    if (nodeLabel != null) {
+                        node.setNodeLabel(nodeLabel);
+                    }
+
+                    String description = getString(resultSet, COLUMN_ASSET_DESCRIPTION);
 
                     if (description != null) {
-                        node.getAssets().add(new RequisitionAsset("description", description));
+                        if (node.getAsset(ASSET_DESCRIPTION) == null) {
+                            node.getAssets().add(new RequisitionAsset(ASSET_DESCRIPTION, description));
+                        } else {
+                            node.getAsset(ASSET_DESCRIPTION).setValue(description);
+                        }
                     }
 
-                    String ipAddress = getString(resultSet, "Ip_Address", columns);
+                    String ipAddress = getString(resultSet, COLUMN_IP_ADDRESS);
 
                     if (ipAddress != null) {
                         RequisitionInterface reqInterface = node.getInterface(ipAddress);
@@ -144,18 +124,18 @@ public class JdbcSource implements Source {
                             node.getInterfaces().add(reqInterface);
                         }
 
-                        String ifType = getString(resultSet, "If_Type", columns);
+                        String ifType = getString(resultSet, COLUMN_INTERFACE_TYPE);
 
-                        if ("P".equalsIgnoreCase(ifType)) {
+                        if (INTERFACE_TYPE_PRIMARY.equalsIgnoreCase(ifType)) {
                             reqInterface.setSnmpPrimary(PrimaryType.PRIMARY);
                         } else {
-                            if ("S".equalsIgnoreCase(ifType)) {
+                            if (INTERFACE_TYPE_SECONDARY.equalsIgnoreCase(ifType)) {
                                 reqInterface.setSnmpPrimary(PrimaryType.SECONDARY);
                             } else {
                                 reqInterface.setSnmpPrimary(PrimaryType.NOT_ELIGIBLE);
                             }
                         }
-                        String service = getString(resultSet, "Svc", columns);
+                        String service = getString(resultSet, COLUMN_SERVICE);
 
                         if (service != null) {
                             if (reqInterface.getMonitoredService(service) == null) {
@@ -163,10 +143,10 @@ public class JdbcSource implements Source {
                             }
                         }
                     } else {
-                        LOGGER.warn("Ip_Address is null, ignoring If_Type and Svc");
+                        LOGGER.warn(COLUMN_IP_ADDRESS + " is null, ignoring " + COLUMN_INTERFACE_TYPE + " and " + COLUMN_SERVICE);
                     }
 
-                    String category = getString(resultSet, "Cat", columns);
+                    String category = getString(resultSet, COLUMN_CATEGORY);
 
                     if (category != null) {
                         if (node.getCategory(category) == null) {
@@ -185,16 +165,16 @@ public class JdbcSource implements Source {
         return requisition;
     }
 
-    private String getString(ResultSet resultSet, String columnName, Set<String> columns) {
-        if (!columns.contains(columnName.toLowerCase())) {
-            return null;
-        }
-
+    private String getString(ResultSet resultSet, String columnName) {
         try {
             String result = resultSet.getString(columnName);
 
             if (result != null) {
-                return result.trim();
+                result = result.trim();
+            }
+
+            if ("".equals(result)) {
+                return null;
             }
 
             return result;
