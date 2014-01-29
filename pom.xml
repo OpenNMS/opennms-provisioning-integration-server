@@ -1,113 +1,76 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.opennms.provisioner</groupId>
-  <artifactId>ocs</artifactId>
-  <version>1.0-SNAPSHOT</version>
-  <packaging>jar</packaging>
+    <groupId>org.opennms</groupId>
+    <artifactId>pris</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
 
-  <name>OpenNMS Provisioner OCS</name>
-  <description>A tool for generating and serving OpenNMS provisioning requisitions based on OCS inventory.</description>
-
-  <organization>
-    <name>The OpenNMS Group, Inc.</name>
-    <url>http://www.opennms.com/</url>
-  </organization>
-
-  <developers>
-    <developer>
-      <id>ranger</id>
-      <name>Benjamin Reed</name>
-      <email>ranger@opennms.org</email>
-    </developer>
-  </developers>
-
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <rpmbuild>/usr/bin/rpmbuild</rpmbuild>
-  </properties>
-
-  <dependencies>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-      <version>1.7.5</version>
-    </dependency>
-
-    <dependency>
-      <groupId>ch.qos.logback</groupId>
-      <artifactId>logback-classic</artifactId>
-      <version>1.0.13</version>
-    </dependency>
-
-    <dependency>
-      <groupId>commons-io</groupId>
-      <artifactId>commons-io</artifactId>
-      <version>2.4</version>
-    </dependency>
-
-    <dependency>
-      <groupId>commons-configuration</groupId>
-      <artifactId>commons-configuration</artifactId>
-      <version>1.9</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.codehaus.groovy</groupId>
-      <artifactId>groovy-all</artifactId>
-      <version>2.1.6</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.beanshell</groupId>
-      <artifactId>bsh</artifactId>
-      <version>2.0b5</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.opennms</groupId>
-      <artifactId>ocs.inventory.client</artifactId>
-      <version>1.0</version>
-    </dependency>
-
-    <dependency>
-        <groupId>net.sourceforge.jexcelapi</groupId>
-        <artifactId>jxl</artifactId>
-        <version>2.6.12</version>
-    </dependency>
-
-    <!-- dependency>
-        <groupId>com.vmware</groupId>
-        <artifactId>vijava</artifactId>
-        <version>520110926</version>
-    </dependency>
-
-    <dependency>
-        <groupId>org.sblim.slp</groupId>
-        <artifactId>sblimSLPClient</artifactId>
-        <version>1.17</version>
-    </dependency>
+    <name>OpenNMS Provisioning Integration Server</name>
+  
+    <dependencies>
+        
+        <!-- Logging -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.5</version>
+        </dependency>
 
         <dependency>
-            <groupId>org.sblim.wbem</groupId>
-            <artifactId>sblimCIMClient</artifactId>
-            <version>1.17</version>
-        </dependency -->
-                                            
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.0.13</version>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-configuration</groupId>
+            <artifactId>commons-configuration</artifactId>
+            <version>1.9</version>
+        </dependency>
+
+        <!-- Script Languages -->
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+            <version>2.1.6</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.beanshell</groupId>
+            <artifactId>bsh</artifactId>
+            <version>2.0b5</version>
+        </dependency>
+
+        <!-- OCS-Inventory -->
+        <dependency>
+            <groupId>org.opennms</groupId>
+            <artifactId>ocs.inventory.client</artifactId>
+            <version>1.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.sourceforge.jexcelapi</groupId>
+            <artifactId>jxl</artifactId>
+            <version>2.6.12</version>
+        </dependency>
+
+        <!-- Database Drivers -->                                                                                      
         <dependency>
             <groupId>postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>9.1-901-1.jdbc4</version>
         </dependency>
 
-      <dependency>
-          <groupId>mysql</groupId>
-          <artifactId>mysql-connector-java</artifactId>
-          <version>5.1.28</version>
-      </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.28</version>
+        </dependency>
 
-      <dependency>
+        <!-- OpenNMS Dependencies -->
+        <dependency>
             <groupId>org.opennms</groupId>
             <artifactId>opennms-provision-persistence</artifactId>
             <version>1.12.1</version>
@@ -120,37 +83,64 @@
         </dependency>
 
         <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-server</artifactId>
+            <version>7.6.13.v20130916</version>
+        </dependency>
+
+        <!-- Helper APIs -->
+        <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>15.0</version>
         </dependency>
 
         <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-server</artifactId>
-            <version>7.6.13.v20130916</version>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.4</version>
         </dependency>
 
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.11</version>
-            <scope>test</scope>
-        </dependency>
-    
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpcore</artifactId>
             <version>4.3</version>
             <type>jar</type>
         </dependency>
-    
+
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
             <version>4.3.1</version>
             <type>jar</type>
         </dependency>
+        
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.11</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!--
+        <dependency>
+            <groupId>com.vmware</groupId>
+            <artifactId>vijava</artifactId>
+            <version>520110926</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.sblim.slp</groupId>
+            <artifactId>sblimSLPClient</artifactId>
+            <version>1.17</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.sblim.wbem</groupId>
+            <artifactId>sblimCIMClient</artifactId>
+            <version>1.17</version>
+        </dependency>
+        -->
     </dependencies>
 
     <build>
@@ -176,7 +166,7 @@
                         <configuration>
                             <archive>
                                 <manifest>
-                                    <mainClass>org.opennms.provisioner.Starter</mainClass>
+                                    <mainClass>org.opennms.pris.Starter</mainClass>
                                 </manifest>
                             </archive>
                             <descriptorRefs>
@@ -200,176 +190,11 @@
             </plugin>
         </plugins>
     </build>
-    <profiles>
-        <profile>
-            <id>build-deb</id>
-            <activation>
-                <file>
-                    <exists>/usr/bin/dpkg-deb</exists>
-                </file>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <artifactId>maven-resources-plugin</artifactId>
-                        <version>2.6</version>
-                        <executions>
-                            <execution>
-                                <id>copy-deb-jar</id>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>copy-resources</goal>
-                                </goals>
-                                <configuration>
-                                    <overwrite>true</overwrite>
-                                    <outputDirectory>${basedir}/target/deb/opt/opennms-ocs-integration</outputDirectory>
-                                    <resources>
-                                        <resource>
-                                            <directory>${basedir}/target/${project.artifactId}-${project.version}-dist</directory>
-                                            <includes>
-                                                <include>*.jar</include>
-                                            </includes>
-                                        </resource>
-                                    </resources>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>copy-deb-init</id>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>copy-resources</goal>
-                                </goals>
-                                <configuration>
-                                    <overwrite>true</overwrite>
-                                    <outputDirectory>${basedir}/target/deb/etc/init.d</outputDirectory>
-                                    <resources>
-                                        <resource>
-                                            <directory>${basedir}/target/${project.artifactId}-${project.version}-dist</directory>
-                                            <includes>
-                                                <include>opennms-ocs-integration</include>
-                                            </includes>
-                                        </resource>
-                                    </resources>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-antrun-plugin</artifactId>
-                        <version>1.7</version>
-                        <executions>
-                            <execution>
-                                <id>fix-permissions</id>
-                                <phase>package</phase>
-                                <configuration>
-                                    <target>
-                                        <chmod perm="ugo+x">
-                                            <fileset dir="${basedir}/target/deb">
-                                                <include name="**/opennms-ocs-integration"/>
-                                                <include name="DEBIAN/post*"/>
-                                                <include name="DEBIAN/pre*"/>
-                                            </fileset>
-                                        </chmod>
-                                    </target>
-                                </configuration>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>net.sf.debian-maven</groupId>
-                        <artifactId>debian-maven-plugin</artifactId>
-                        <version>1.0.6</version>
-                        <configuration>
-                            <packageName>opennms-ocs-integration</packageName>
-                            <packageRevision>0.SNAPSHOT.${maven.build.timestamp}</packageRevision>
-                            <excludeAllArtifacts>true</excludeAllArtifacts>
-                            <excludeAllDependencies>true</excludeAllDependencies>
-                            <includeAttachedArtifacts>false</includeAttachedArtifacts>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <id>make-deb</id>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>package</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>build-rpm</id>
-            <activation>
-                <file>
-                    <exists>/usr/bin/rpmbuild</exists>
-                </file>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>rpm-maven-plugin</artifactId>
-                        <version>2.1-alpha-3</version>
-                        <executions>
-                            <execution>
-                                <id>generate-rpm</id>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>rpm</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <copyright>2013, The OpenNMS Group, Inc.</copyright>
-                            <group>Applications/System</group>
-                            <prefix>/opt/opennms-ocs-integration</prefix>
-                            <defineStatements>
-                                <defineStatement>_unpackaged_files_terminate_build 0</defineStatement>
-                            </defineStatements>
-                            <mappings>
-                                <mapping>
-                                    <directory>/opt/opennms-ocs-integration</directory>
-                                    <filemode>444</filemode>
-                                    <username>root</username>
-                                    <groupname>root</groupname>
-                                    <sources>
-                                        <source>
-                                            <location>target/${project.artifactId}-${project.version}-jar-with-dependencies.jar</location>
-                                            <destination>ocs-integration.jar</destination>
-                                        </source>
-                                    </sources>
-                                </mapping>
-                                <mapping>
-                                    <directory>/etc/init.d</directory>
-                                    <filemode>755</filemode>
-                                    <username>root</username>
-                                    <groupname>root</groupname>
-                                    <sources>
-                                        <source>
-                                            <location>src/examples/opennms-ocs-integration-daemon</location>
-                                            <destination>opennms-ocs-integration</destination>
-                                        </source>
-                                    </sources>
-                                </mapping>
-                            </mappings>
-                            <postinstallScriptlet>
-                                <script>echo "Don't forget to change the JAVA_HOME variable in the init script if your java is not in /usr/java/latest."</script>
-                            </postinstallScriptlet>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
     <repositories>
+
         <!-- OpenNMS Repository Snapshot -->
-        <!--        <repository>
+        <!--
+        <repository>
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
@@ -379,7 +204,8 @@
             <id>opennms-snapshots</id>
             <name>OpenNMS Snapshot Maven Repository</name>
             <url>http://maven.opennms.org/content/groups/opennms.org-snapshot/</url>
-        </repository>-->
+        </repository>
+        -->
 
         <!-- OpenNMS Repository Release -->
         <repository>
@@ -394,5 +220,4 @@
             <url>http://maven.opennms.org/content/groups/opennms.org-release/</url>
         </repository>
     </repositories>
-
 </project>
