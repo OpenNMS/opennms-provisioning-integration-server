@@ -2,6 +2,7 @@ package org.opennms.pris.xls.source;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Set;
 import java.util.TreeSet;
 import jxl.Cell;
@@ -16,6 +17,7 @@ import org.opennms.netmgt.provision.persist.requisition.RequisitionCategory;
 import org.opennms.netmgt.provision.persist.requisition.RequisitionInterface;
 import org.opennms.netmgt.provision.persist.requisition.RequisitionMonitoredService;
 import org.opennms.netmgt.provision.persist.requisition.RequisitionNode;
+import org.opennms.pris.Starter;
 import org.opennms.pris.source.Source;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -172,6 +174,10 @@ public class XlsSource implements Source {
     }
 
     public String getXlsFile() {
-        return this.config.getString("xls.file", null);
+        Path xlsFilePath = Starter.getConfigManager().getInstancePath(this.instance).resolve(this.config.getString("xls.file", null));
+        if (xlsFilePath == null) {
+            return null;
+        }
+        return xlsFilePath.toString();
     }
 }
