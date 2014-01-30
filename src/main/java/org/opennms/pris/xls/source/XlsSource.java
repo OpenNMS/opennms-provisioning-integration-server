@@ -62,7 +62,7 @@ public class XlsSource implements Source {
                     Sheet sheet = workbook.getSheet(instance);
                     if (sheet == null) {
                         LOGGER.error("can not find sheet {} in workbook from file {}", instance, xls.getAbsolutePath());
-                        throw new RuntimeException("reading sheet " + instance + " from " + xls.getAbsolutePath() + "failed");
+                        throw new RuntimeException("reading sheet " + instance + " from " + xls.getAbsolutePath() + " failed");
                     }
                     RequisitionNode node = new RequisitionNode();
                     RequisitionInterface reqInterface;

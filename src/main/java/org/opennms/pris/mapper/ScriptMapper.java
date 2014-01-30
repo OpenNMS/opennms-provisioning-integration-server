@@ -51,28 +51,35 @@ public class ScriptMapper implements Mapper {
 
     @Override
     public Requisition map(Object data, Requisition requisition) throws Exception {
-        // Get the path to the script
-        final Path script = Starter.getConfigManager().getInstancePath(this.instance).resolve(this.config.getString("script"));
+
+        String[] scriptNames = this.config.getStringArray("script");
+        for (String scriptName : scriptNames) {
+            // Get the path to the script
+            final Path script = Starter.getConfigManager().getInstancePath(this.instance).resolve(scriptName);
 
         // Get the script engine by language defined in config or by extension if it
-        // is not defined in the config
-        final ScriptEngine scriptEngine = this.config.containsKey("lang")
-                ? SCRIPT_ENGINE_MANAGER.getEngineByName(this.config.getString("lang"))
-                : SCRIPT_ENGINE_MANAGER.getEngineByExtension(FilenameUtils.getExtension(script.toString()));
+            // is not defined in the config
+            final ScriptEngine scriptEngine = this.config.containsKey("lang")
+                    ? SCRIPT_ENGINE_MANAGER.getEngineByName(this.config.getString("lang"))
+                    : SCRIPT_ENGINE_MANAGER.getEngineByExtension(FilenameUtils.getExtension(script.toString()));
 
-        // Create some bindings for values available in the script
-        final Bindings scriptBindings = scriptEngine.createBindings();
-        scriptBindings.put("script", script);
-        scriptBindings.put("data", data);
-        scriptBindings.put("logger", LoggerFactory.getLogger(script.toString()));
-        scriptBindings.put("config", this.config);
-        scriptBindings.put("instance", instance);
-        scriptBindings.put("ipInterfaceHelper", new IpInterfaceHelper());
-        scriptBindings.put("requisition", requisition);
+            // Create some bindings for values available in the script
+            final Bindings scriptBindings = scriptEngine.createBindings();
+            scriptBindings.put("script", script);
+            scriptBindings.put("data", data);
+            scriptBindings.put("logger", LoggerFactory.getLogger(script.toString()));
+            scriptBindings.put("config", this.config);
+            scriptBindings.put("instance", instance);
+            scriptBindings.put("ipInterfaceHelper", new IpInterfaceHelper());
+            scriptBindings.put("requisition", requisition);
 
-        // Evaluate the script and return the requisition created in the script
-        try (final Reader scriptReader = Files.newBufferedReader(script, StandardCharsets.UTF_8)) {
-            return (Requisition) scriptEngine.eval(scriptReader, scriptBindings);
+            // Evaluate the script and return the requisition created in the script
+            try (final Reader scriptReader = Files.newBufferedReader(script, StandardCharsets.UTF_8)) {
+                LOGGER.debug("Start Script {}", scriptName);
+                requisition = (Requisition) scriptEngine.eval(scriptReader, scriptBindings);
+                LOGGER.debug("Done  Script {}", scriptName);
+            }
         }
+        return requisition;
     }
 }
