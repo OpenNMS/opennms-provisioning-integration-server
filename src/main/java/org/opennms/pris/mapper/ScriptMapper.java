@@ -57,7 +57,7 @@ public class ScriptMapper implements Mapper {
             // Get the path to the script
             final Path script = Starter.getConfigManager().getInstancePath(this.instance).resolve(scriptName);
 
-        // Get the script engine by language defined in config or by extension if it
+            // Get the script engine by language defined in config or by extension if it
             // is not defined in the config
             final ScriptEngine scriptEngine = this.config.containsKey("lang")
                     ? SCRIPT_ENGINE_MANAGER.getEngineByName(this.config.getString("lang"))
