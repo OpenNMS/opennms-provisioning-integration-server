@@ -15,6 +15,7 @@ import org.opennms.pris.ocs.source.OcsComputersReplaySource;
 import org.opennms.pris.ocs.source.OcsComputersSource;
 import org.opennms.pris.ocs.source.OcsSnmpDevicesReplaySource;
 import org.opennms.pris.ocs.source.OcsSnmpDevicesSource;
+import org.opennms.pris.source.HttpRequisitionMergeSource;
 import org.opennms.pris.source.HttpRequisitionSource;
 import org.opennms.pris.source.Source;
 import org.opennms.pris.vmware.mapper.DefaultVmwareMapper;
@@ -47,6 +48,7 @@ public class RequisitionProvider {
           .put("vmware.source", new VmwareSource.Factory())
           .put("xls.source", new XlsSource.Factory())
           .put("jdbc.source", new JdbcSource.Factory())
+          .put("requisitionMerge.source", new HttpRequisitionMergeSource.Factory())
           .put("ocs.computers", new OcsComputersSource.Factory())
           .put("ocs.snmpDevices", new OcsSnmpDevicesSource.Factory())
           .put("ocs.computers.replay", new OcsComputersReplaySource.Factory())
