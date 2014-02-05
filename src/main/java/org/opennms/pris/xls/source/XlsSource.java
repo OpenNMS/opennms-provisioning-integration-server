@@ -71,8 +71,8 @@ public class XlsSource implements Source {
                     Integer row = 1;
                     while (row < sheet.getRows()) {
                         //TODO clean this if
-                        if (!sheet.getCell(0, row).getContents().trim().isEmpty()) {
-                            if (row.equals(1) || !sheet.getCell(0, row).getContents().trim().equalsIgnoreCase(sheet.getCell(0, row - 1).getContents().trim())) {
+                        if (!sheet.getCell(getRelevantColumnID(sheet, PREFIX_NODE), row).getContents().trim().isEmpty()) {
+                            if (row.equals(1) || !sheet.getCell(getRelevantColumnID(sheet, PREFIX_NODE), row).getContents().trim().equalsIgnoreCase(sheet.getCell(getRelevantColumnID(sheet, PREFIX_NODE), row - 1).getContents().trim())) {
                                 String nodeLabel = sheet.getCell(getRelevantColumnID(sheet, PREFIX_NODE), row).getContents().trim();
                                 node = new RequisitionNode();
                                 node.setNodeLabel(nodeLabel);
