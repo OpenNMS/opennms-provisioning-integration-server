@@ -71,18 +71,20 @@ public class XlsSource implements Source {
                     Integer row = 1;
                     while (row < sheet.getRows()) {
                         //TODO clean this if
-                        if (row.equals(1) || !sheet.getCell(0, row).getContents().trim().equalsIgnoreCase(sheet.getCell(0, row - 1).getContents().trim())) {
-                            String nodeLabel = sheet.getCell(getRelevantColumnID(sheet, PREFIX_NODE), row).getContents().trim();
-                            node = new RequisitionNode();
-                            node.setNodeLabel(nodeLabel);
-                            node.setForeignId(nodeLabel);
-                            String assetDescription = sheet.getCell(getRelevantColumnID(sheet, PREFIX_ASSET_DESCRIPTION), row).getContents().trim();
-                            if (!assetDescription.isEmpty()) {
-                                node.getAssets().add(new RequisitionAsset(ASSET_DESCRIPTION, assetDescription));
+                        if (!sheet.getCell(0, row).getContents().trim().isEmpty()) {
+                            if (row.equals(1) || !sheet.getCell(0, row).getContents().trim().equalsIgnoreCase(sheet.getCell(0, row - 1).getContents().trim())) {
+                                String nodeLabel = sheet.getCell(getRelevantColumnID(sheet, PREFIX_NODE), row).getContents().trim();
+                                node = new RequisitionNode();
+                                node.setNodeLabel(nodeLabel);
+                                node.setForeignId(nodeLabel);
+                                String assetDescription = sheet.getCell(getRelevantColumnID(sheet, PREFIX_ASSET_DESCRIPTION), row).getContents().trim();
+                                if (!assetDescription.isEmpty()) {
+                                    node.getAssets().add(new RequisitionAsset(ASSET_DESCRIPTION, assetDescription));
+                                }
+                                //adding categories
+                                node.getCategories().addAll(getCategoriesByRow(sheet, row));
+                                requisition.getNodes().add(node);
                             }
-                            //adding categories
-                            node.getCategories().addAll(getCategoriesByRow(sheet, row));
-                            requisition.getNodes().add(node);
                         }
                         //Add interface
                         reqInterface = getInterfaceByRow(sheet, row);
