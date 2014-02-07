@@ -3,122 +3,154 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.opennms</groupId>
-    <artifactId>pris</artifactId>
-    <version>1.0-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <artifactId>pris-parent</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
 
-    <name>OpenNMS Provisioning Integration Server</name>
+    <name>OpenNMS :: Provisioning Integration Server :: Parent</name>
   
+    <modules>
+        <module>opennms-pris</module>
+        <module>opennms-pris-docs</module>
+    </modules>
+
+    <properties>
+        <!-- build settings -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <!-- global version settings -->
+        <beanshellVersion>2.0b5</beanshellVersion>
+        <chQosLogbackVersion>1.0.13</chQosLogbackVersion>
+        <commonsConfigurationVersion>1.9</commonsConfigurationVersion>
+        <commonsIoVersion>2.4</commonsIoVersion>
+        <doxiaModuleMarkdownVersion>1.4</doxiaModuleMarkdownVersion>
+        <groovyVersion>2.1.6</groovyVersion>
+        <guavaVersion>15.0</guavaVersion>
+        <httpClientVersion>4.3.1</httpClientVersion>
+        <httpCoreVersion>4.3</httpCoreVersion>
+        <jettyServerVersion>7.6.13.v20130916</jettyServerVersion>
+        <jexcelApiVersion>2.6.12</jexcelApiVersion>
+        <junitVersion>4.11</junitVersion>
+        <mavenSitePluginVersion>3.3</mavenSitePluginVersion>
+        <mysqlConnectorVersion>5.1.28</mysqlConnectorVersion>
+        <ocsInventoryClientVersion>1.0</ocsInventoryClientVersion>
+        <opennmsProvisionPersistenceVersion>1.12.1</opennmsProvisionPersistenceVersion>
+        <opennmsUtilVersion>1.12.1</opennmsUtilVersion>
+        <postgresqlDriverVersion>9.1-901-1.jdbc4</postgresqlDriverVersion>
+        <slf4jVersion>1.7.5</slf4jVersion>
+    </properties>
+    
     <dependencies>
         
         <!-- Logging -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.5</version>
+            <version>${slf4jVersion}</version>
         </dependency>
 
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.0.13</version>
+            <version>${chQosLogbackVersion}</version>
         </dependency>
 
         <dependency>
             <groupId>commons-configuration</groupId>
             <artifactId>commons-configuration</artifactId>
-            <version>1.9</version>
+            <version>${commonsConfigurationVersion}</version>
         </dependency>
 
         <!-- Script Languages -->
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-all</artifactId>
-            <version>2.1.6</version>
+            <version>${groovyVersion}</version>
         </dependency>
 
         <dependency>
             <groupId>org.beanshell</groupId>
             <artifactId>bsh</artifactId>
-            <version>2.0b5</version>
+            <version>${beanshellVersion}</version>
         </dependency>
 
         <!-- OCS-Inventory -->
         <dependency>
             <groupId>org.opennms</groupId>
             <artifactId>ocs.inventory.client</artifactId>
-            <version>1.0</version>
+            <version>${ocsInventoryClientVersion}</version>
         </dependency>
 
         <dependency>
             <groupId>net.sourceforge.jexcelapi</groupId>
             <artifactId>jxl</artifactId>
-            <version>2.6.12</version>
+            <version>${jexcelApiVersion}</version>
         </dependency>
 
         <!-- Database Drivers -->                                                                                      
         <dependency>
             <groupId>postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>9.1-901-1.jdbc4</version>
+            <version>${postgresqlDriverVersion}</version>
         </dependency>
 
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>5.1.28</version>
+            <version>${mysqlConnectorVersion}</version>
         </dependency>
 
         <!-- OpenNMS Dependencies -->
         <dependency>
             <groupId>org.opennms</groupId>
             <artifactId>opennms-provision-persistence</artifactId>
-            <version>1.12.1</version>
+            <version>${opennmsProvisionPersistenceVersion}</version>
         </dependency>
 
         <dependency>
             <groupId>org.opennms</groupId>
             <artifactId>opennms-util</artifactId>
-            <version>1.12.1</version>
+            <version>${opennmsUtilVersion}</version>
         </dependency>
 
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-server</artifactId>
-            <version>7.6.13.v20130916</version>
+            <version>${jettyServerVersion}</version>
         </dependency>
 
         <!-- Helper APIs -->
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>15.0</version>
+            <version>${guavaVersion}</version>
         </dependency>
 
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.4</version>
+            <version>${commonsIoVersion}</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpcore</artifactId>
-            <version>4.3</version>
+            <version>${httpCoreVersion}</version>
             <type>jar</type>
         </dependency>
 
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-            <version>4.3.1</version>
+            <version>${httpClientVersion}</version>
             <type>jar</type>
         </dependency>
         
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.11</version>
+            <version>${junitVersion}</version>
             <scope>test</scope>
         </dependency>
 
@@ -142,53 +174,21 @@
         </dependency>
         -->
     </dependencies>
-
     <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.5.1</version>
-                <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
-                </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>make-jar-with-dependencies</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                        <configuration>
-                            <archive>
-                                <manifest>
-                                    <mainClass>org.opennms.pris.Starter</mainClass>
-                                </manifest>
-                            </archive>
-                            <descriptorRefs>
-                                <descriptorRef>jar-with-dependencies</descriptorRef>
-                            </descriptorRefs>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>make-package</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                        <configuration>
-                            <descriptors>
-                                <descriptor>src/assemble/package.xml</descriptor>
-                            </descriptors>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.1</version>
+        <configuration>
+          <source>1.7</source>
+          <target>1.7</target>
+          <compilerArgument>-Xlint:all</compilerArgument>
+          <showWarnings>true</showWarnings>
+          <showDeprecation>true</showDeprecation>
+        </configuration>
+      </plugin>
+    </plugins>
     </build>
     <repositories>
 
