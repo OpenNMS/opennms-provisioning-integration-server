@@ -1,10 +1,15 @@
 import java.lang.StringBuilder;
 
+//FIXME: Unused import
 import org.opennms.ocs.inventory.client.response.snmp.Snmp;
+
 import org.opennms.ocs.inventory.client.response.snmp.SnmpDevice;
 import org.opennms.ocs.inventory.client.response.snmp.SnmpDevices;
 import org.opennms.netmgt.provision.persist.requisition.RequisitionAsset;
+
+//FIXME: Unused import
 import org.opennms.netmgt.provision.persist.requisition.RequisitionCategory;
+
 import org.opennms.netmgt.provision.persist.requisition.RequisitionNode;
 import org.opennms.netmgt.provision.persist.requisition.RequisitionInterface;
 import org.opennms.netmgt.provision.persist.requisition.RequisitionMonitoredService;
@@ -12,6 +17,8 @@ import org.opennms.netmgt.provision.persist.requisition.Requisition
 import org.opennms.netmgt.model.PrimaryType;
 
 String foreignSource;
+
+//FIXME: Variable mapper is not used
 String mapper;
 
 final SnmpDevices mySnmpDevices = data;
