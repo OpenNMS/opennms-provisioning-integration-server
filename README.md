@@ -57,7 +57,6 @@ We don't use the issue tracking from GitHub, we use instead the main OpenNMS pro
 
 * Issues: http://issues.opennms.org/browse/PRIS
 * IRC: irc://freenode.org/#opennms
-* Lead for this project: markus@opennms.com and ronny@opennms.com
 * License: GPLv3
 
 [GitHub]: https://github.com/DerTak/opennms-provisioning-integration-server.git
