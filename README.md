@@ -3,9 +3,9 @@ The provisioning integration server (pris) is a software which provides the abil
 
 The project is divided in three modules:
 
-* parent module ties documentation and the server itself together. Maintains also version numbers
-* opennms-pris is the server code itself.
-* opennms-pris-docs the documentation for the software and sources
+* `parent` module ties documentation and the server itself together. Maintains also version numbers
+* `opennms-pris` is the server code itself.
+* `opennms-pris-docs` the documentation for the software and sources
 
 The documentation will be automatically build from Markdown to HTML and you can browse the docs in the target directory.
 
