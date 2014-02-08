@@ -1,5 +1,7 @@
 # OpenNMS Provisioning Integration Server
 
+![OpenNMS pris overview](images/pris-overview.png "OpenNMS pris overview")
+
 * Why?
 * What is the general overview
 * How is the structure in the file system
@@ -16,7 +18,6 @@
 ### XLS Source
 ### opennms-requisition Source
 ### JDBC Source
-### VMware-vCenter Source
 ### OCS Source
 
 ## Mapper scripts
