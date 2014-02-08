@@ -52,12 +52,13 @@ In your source directory run the command
 
 It make sure cleaning everything from previous builds, compiles the code and build everything as a runnable jar in target directories.
 
-# Issue tracking and further information
+# General information
 We don't use the issue tracking from GitHub, we use instead the main OpenNMS project issue tracker, cause this part is developed within the OpenNMS Project.
 
 * Issues: http://issues.opennms.org/browse/PRIS
 * IRC: irc://freenode.org/#opennms
 * License: GPLv3
+* Illustrations created with [yED]
 
 [GitHub]: https://github.com/DerTak/opennms-provisioning-integration-server.git
 [OpenJDK]: http://openjdk.java.net/
@@ -65,6 +66,8 @@ We don't use the issue tracking from GitHub, we use instead the main OpenNMS pro
 [Maven]: http://maven.apache.org/
 [git-scm]: http://git-scm.com/
 [nvie]: http://nvie.com/posts/a-successful-git-branching-model/
+[yED]: http://www.yworks.com/en/products_yed_about.html
+
 
 [old doku]
 http://www.opennms.org/wiki/OCS_Integration
