@@ -20,7 +20,7 @@ You have several branches you can build now. The master branch is the latest fun
 
 It will give you a list of all tagged releases. There are several other branches which follow the [nvie] branch pattern and has the following naming convention
 
-* 'master' A production-ready state
+* 'master' a production-ready state
 * 'release-*' a stable release
 * 'hotfix-*' fix for bugs
 * 'feature-*' enhance the software with a new feature
