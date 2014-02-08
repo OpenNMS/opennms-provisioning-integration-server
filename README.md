@@ -55,10 +55,10 @@ It make sure cleaning everything from previous builds, compiles the code and bui
 # Issue tracking and further information
 We don't use the issue tracking from GitHub, we use instead the main OpenNMS project issue tracker, cause this part is developed within the OpenNMS Project.
 
-* http://issues.opennms.org/browse/PRIS
+* Issues: http://issues.opennms.org/browse/PRIS
 * IRC: irc://freenode.org/#opennms
 * Lead for this project: markus@opennms.com and ronny@opennms.com
-* The software is licensed in GPLv3
+* License: GPLv3
 
 [GitHub]: https://github.com/DerTak/opennms-provisioning-integration-server.git
 [OpenJDK]: http://openjdk.java.net/
