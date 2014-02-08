@@ -18,7 +18,7 @@ You have several branches you can build now. The master branch is the latest fun
 
     git tag -l
 
-It will give you a list of all tagged releases. There are several other branches which follow the the naming convention
+It will give you a list of all tagged releases. There are several other branches which follow the [nvie] branch pattern and has the following naming convention
 
 * 'master' A production-ready state
 * 'release-*' a stable release
@@ -57,6 +57,7 @@ It make sure cleaning everything from previous builds, compiles the code and bui
 [Oracle Java Development Kit]: http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html
 [Maven]: http://maven.apache.org/
 [git-scm]: http://git-scm.com/
+[nvie]: http://nvie.com/posts/a-successful-git-branching-model/
 
 [old doku]
 http://www.opennms.org/wiki/OCS_Integration
