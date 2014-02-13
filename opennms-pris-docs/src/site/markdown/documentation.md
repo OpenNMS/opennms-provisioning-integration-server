@@ -28,84 +28,94 @@ This driver starts up a web server and provides up-to-date requisitions on a htt
 ## Sources
 * What are sources
 
-### merge-source (requisitionMerge.source)
+### merge-source
+| source name             | custom mapper                   |
+|-------------------------|--------------------------------:|
+| requisitionMerge.source | provides a requisition directly |
+
+| parameter                  | required | description         |
+|----------------------------|:--------:|--------------------:|
+| requisition.A.url          | *        |                     |
+| requisition.A.username     |          |                     |
+| requisition.A.password     |          |                     |
+|                            |          |                     |
+| requisition.B.url          | *        |                     |
+| requisition.B.username     |          |                     |
+| requisition.B.password     |          |                     |
+|                            |          |                     |
+| requisition.merge.keepAllA |          | if this parameters is present in the config all nodes from requisition A will be present in the resulting requisition. |
+| requisition.merge.keepAllB |          | if this parameters is present in the config all nodes from requisition B will be present in the resulting requisition. |
+
 This source is reading two already defined requisitions via http and merges them into one new requisition. By default the resulting requisition will contain all nodes that are present in both requisitions, identified by the foreignId. The A-Node (from requisition A) is enriched with the data from B-Node.
 
-The following parameters are **required**:
 
-* requisition.A.url
-* requisition.B.url
-
-The follwoing parameters are **optional**:
-
-* requisition.A.username
-* requisition.A.password
-* requisition.B.username
-* requisition.B.password
-* requisition.merge.keepAllA = if this parameters is present in the config all nodes from requisition A will be present in the resulting requisition.
-* requisition.merge.keepAllB = if this parameters is present in the config all nodes from requisition B will be present in the resulting requisition.
-
-### XLS Source (xls.source)
+### XLS Source
 The "xls.source" is abel to read xls spreadsheet files and create an OpenNMS requisition based on its content.
 
-The follwoing parameter is **required**:
+| source name | custom mapper                   |
+|-------------|--------------------------------:|
+| xls.source  | provides a requisition directly |
 
-* xls.file = the path of the xls file to read
+| parameter | required | description                      |
+|-----------|:--------:|---------------------------------:|
+| xls.file  | *        | the path of the xls file to read |
 
-The structure of the spreadsheet has to follow this rules. The source is reading from a sheet named like the requisition you are requesting. The first row of the sheet is reserved to column-names. This column-names have to start with certen prefixes to be recognized. 
-The following prefixed are **required** once:
+The structure of the spreadsheet has to follow this rules. The source is reading from a sheet named like the requisition you are requesting. The first row of the sheet is reserved to column-names. This column-names have to start with certen prefixes to be recognized.
 
-* Node_ = will be interpreted as nodelabel and foreignId
-* IP_ = will be interpreted as an ipaddress as a new interface on the node
-* IfType_ = is interpreted as snmp-primary flag. Thas controlls the snmp behavior. Valid are "P", "S" and "N".
-* Asset_Description = will be interpreted as the description in the asset record for the node
-
-The following prefixed are **optional** and can be used multiple times:
-
-* cat_ = will be interpreted as a surrvailance-category. Multiple comma seperated categories can be provided.
-* svc_ = will be interpreted as a service on the interface of the node. Multiple comma seperated services can be provided.
+| prefixes  | required | description                      |
+|-----------|:--------:|---------------------------------:|
+| `Node_`     | * | will be interpreted as nodelabel and foreignId |
+| `IP_`       | * | will be interpreted as an ipaddress as a new interface on the node |
+| `IfType_` | * | is interpreted as snmp-primary flag. Thas controlls the snmp behavior. Valid are `P`, `S` and `N`. |
+| `Asset_Description` | * | will be interpreted as the description in the asset record for the node |
+| `cat_`     | | will be interpreted as a surrvailance-category. Multiple comma seperated categories can be provided. It can be used multiple times per sheet.|
+| `svc_`     | | will be interpreted as a service on the interface of the node. Multiple comma seperated services can be provided. It can be used multiple times per sheet.|
 
 To add a node with multiple interfaces, add an additional sequent row with the same nodelabel (Node_). This row will be added as a new interface based on the data from the  IP_, IfType_, svc_ columns.
 
 The order in which the columns are arranged is irelevant. Also additional columns can be pressent.
 
-### opennms-requisition Source (requisition.source)
+### opennms-requisition Source
 This source is reading a already defined requisition via http. If username an password is provided it will be used as basic auth credentions.
 
-The follwoing parameters are **required**:
+| source name         | custom mapper                   |
+|---------------------|--------------------------------:|
+| requisition.source  | provides a requisition directly |
 
-* requisition.url
+| parameter       | required | description                      |
+|-----------------|:--------:|---------------------------------:|
+| requisition.url | *        | the path of the xls file to read |
+| requisition.username | | |
+| requisition.password | | |
 
-The follwoing parameters are **optional**:
-
-* requisition.username
-* requisition.password
-
-### JDBC Source (jdbc.source)
+### JDBC Source
 The jdbc source provides the ability to run an SQL-Query against an external system and interpret the result as an OpenNMS requisition.
-The following parameters are **required**:
 
-* jdbc.driver = 
-* jdbc.url = 
-* jdbc.selectStatement = 
+| source name | custom mapper                   |
+|-------------|--------------------------------:|
+| jdbc.source | provides a requisition directly |
 
-The follwoing parameters are **optional**:
-
-* jdbc.user = well what do you think?
-* jdbc.password = 
-
+| parameter            | required | description                     |
+|----------------------|:--------:|--------------------------------:|
+| jdbc.driver          | * | |
+| jdbc.url             | * | |
+| jdbc.selectStatement | * | |
+| jdbc.user            |   | |
+| jdbc.password        |   | |
 
 ### OCS Source
 OCS is handling computers and snmp-devices separately in its APIs. For that reason there are two different sources available to connect to OCS. Some parameters are part of both sources and described first.
 
 #### general ocs parameters
 The following parameters are **required**:
+
 * ocs.url = The url of the OCS webapplication.
 * ocs.username = A OCS user with rights to access the OCS Soap interface.
 * ocs.password = The password for the OCS user with rights to access the OCS Soap interface.
 * ocs.checksum = The ocs.checksum parameter controls how detailed the data is that the integration is requesting from the OCS. It is important to request all the data you want to map into your requisition but not to much, cause a high checksum causes the request to be significantly slower. Read the [OCS Web-Services](http://wiki.ocsinventory-ng.org/index.php/Developers:Web_services) documentation for more information. The default checksum for the defaultmappers is 4099.
 
 The follwoing parameter is **optional**:
+
 * ocs.tags = OCS supports tags / custom fields. If a tag is added to the ocs.tags list, just computers and snmpDevices that are marked with all the tags will be read from the OCS. This feature can be used to tag computers as "testing" or "production".
 
 #### source (ocs.computers)
