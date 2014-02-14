@@ -3,6 +3,10 @@ package org.opennms.pris.xls.source;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import jxl.Cell;
@@ -17,6 +21,7 @@ import org.opennms.netmgt.provision.persist.requisition.RequisitionCategory;
 import org.opennms.netmgt.provision.persist.requisition.RequisitionInterface;
 import org.opennms.netmgt.provision.persist.requisition.RequisitionMonitoredService;
 import org.opennms.netmgt.provision.persist.requisition.RequisitionNode;
+import org.opennms.pris.ASSET_FIELD;
 import org.opennms.pris.Starter;
 import org.opennms.pris.source.Source;
 import org.slf4j.Logger;
@@ -29,16 +34,15 @@ public class XlsSource implements Source {
     private final Configuration config;
     private final String WITHIN_SPLITTER = ",";
 
-    private final String PREFIX_NODE = "Node_";
-    private final String PREFIX_CATEGORY = "cat_";
-    private final String PREFIX_SERVICE = "svc_";
-    private final String PREFIX_IP_ADDRESS = "IP_";
-    private final String PREFIX_INTERFACE_TYPE = "IfType_";
-    private final String PREFIX_ASSET_DESCRIPTION = "Asset_Description";
-
+    private final String PREFIX_FOR_ASSETS = "Asset_";
     private final String INTERFACE_TYPE_PRIMARY = "P";
     private final String INTERFACE_TYPE_SECONDARY = "S";
-    private final String ASSET_DESCRIPTION = "description";
+
+    private Map<String, Integer> requiredColumns;
+    private Map<String, List<Integer>> optionalMultiColumns;
+    private Map<String, Integer> assetColumns;
+
+    private File xls = null;
 
     public static class Factory implements Source.Factory {
 
@@ -57,7 +61,7 @@ public class XlsSource implements Source {
     public Object dump() {
         Requisition requisition = new Requisition(instance);
         if (getXlsFile() != null) {
-            File xls = new File(getXlsFile());
+            xls = new File(getXlsFile());
             if (xls.canRead()) {
                 try {
                     Workbook workbook = Workbook.getWorkbook(xls);
@@ -66,32 +70,37 @@ public class XlsSource implements Source {
                         LOGGER.error("can not find sheet {} in workbook from file {}", instance, xls.getAbsolutePath());
                         throw new RuntimeException("reading sheet " + instance + " from " + xls.getAbsolutePath() + " failed. Dose the file contain a sheet called " + instance + "?");
                     }
+
+                    requiredColumns = initializeRequiredColumns(sheet);
+                    optionalMultiColumns = initializeOptionalMultiColumns(sheet);
+                    assetColumns = initializeAssetColumns(sheet);
+
                     RequisitionNode node = new RequisitionNode();
                     RequisitionInterface reqInterface;
                     Integer row = 1;
                     while (row < sheet.getRows()) {
                         //TODO clean this if
-                        if (!sheet.getCell(getRelevantColumnID(sheet, PREFIX_NODE), row).getContents().trim().isEmpty()) {
-                            if (row.equals(1) || !sheet.getCell(getRelevantColumnID(sheet, PREFIX_NODE), row).getContents().trim().equalsIgnoreCase(sheet.getCell(getRelevantColumnID(sheet, PREFIX_NODE), row - 1).getContents().trim())) {
-                                String nodeLabel = sheet.getCell(getRelevantColumnID(sheet, PREFIX_NODE), row).getContents().trim();
+                        if (!sheet.getCell(getRelevantColumnID(REQUIRED_PREFIXES.PREFIX_NODE.getPrefix()), row).getContents().trim().isEmpty()) {
+                            if (row.equals(1) || !sheet.getCell(getRelevantColumnID(REQUIRED_PREFIXES.PREFIX_NODE.getPrefix()), row).getContents().trim().equalsIgnoreCase(sheet.getCell(getRelevantColumnID(REQUIRED_PREFIXES.PREFIX_NODE.getPrefix()), row - 1).getContents().trim())) {
+                                String nodeLabel = sheet.getCell(getRelevantColumnID(REQUIRED_PREFIXES.PREFIX_NODE.getPrefix()), row).getContents().trim();
                                 node = new RequisitionNode();
                                 node.setNodeLabel(nodeLabel);
                                 node.setForeignId(nodeLabel);
-                                String assetDescription = sheet.getCell(getRelevantColumnID(sheet, PREFIX_ASSET_DESCRIPTION), row).getContents().trim();
-                                if (!assetDescription.isEmpty()) {
-                                    node.getAssets().add(new RequisitionAsset(ASSET_DESCRIPTION, assetDescription));
-                                }
-                                //adding categories
-                                node.getCategories().addAll(getCategoriesByRow(sheet, row));
                                 requisition.getNodes().add(node);
                             }
-                        }
-                        //Add interface
-                        reqInterface = getInterfaceByRow(sheet, row);
+                            //adding categories
+                            node.getCategories().addAll(getCategoriesByRow(sheet, row));
 
-                        //Add services to the interface
-                        reqInterface.getMonitoredServices().addAll(getServicesByRow(sheet, row));
-                        node.getInterfaces().add(reqInterface);
+                            //adding assets
+                            node.getAssets().addAll(getAssetsByRow(sheet, row));
+
+                            //Add interface
+                            reqInterface = getInterfaceByRow(sheet, row);
+
+                            //Add services to the interface
+                            reqInterface.getMonitoredServices().addAll(getServicesByRow(sheet, row));
+                            node.getInterfaces().add(reqInterface);
+                        }
                         row++;
                     }
                 } catch (IOException ex) {
@@ -108,33 +117,66 @@ public class XlsSource implements Source {
         return requisition;
     }
 
-    //TODO null protection
-    private Integer getRelevantColumnID(Sheet sheet, String prefix) {
-        Cell[] row = sheet.getRow(0);
-        for (Cell cell : row) {
-            if (cell.getContents().trim().toLowerCase().startsWith(prefix.toLowerCase())) {
-                return (cell.getColumn());
-            }
-        }
-        LOGGER.debug("NO Column in {} starting with {}", sheet.getName(), prefix);
-        return null;
+    private Integer getRelevantColumnID(String prefix) {
+        return requiredColumns.get(prefix);
     }
 
-    private Set<Integer> getRelevantColumnIDs(Sheet sheet, String prefix) {
-        Set<Integer> relevantColumnIDs = new TreeSet<>();
-        Cell[] row = sheet.getRow(0);
-        for (Cell cell : row) {
-            if (cell.getContents().trim().toLowerCase().startsWith(prefix.toLowerCase())) {
-                relevantColumnIDs.add(cell.getColumn());
+    private List<Integer> getRelevantColumnIDs(String prefix) {
+        return optionalMultiColumns.get(prefix);
+    }
+
+    private Map<String, Integer> initializeRequiredColumns(Sheet sheet) {
+        Map<String, Integer> result = new HashMap<>();
+        for (REQUIRED_PREFIXES prefix : REQUIRED_PREFIXES.values()) {
+            Cell[] row = sheet.getRow(0);
+            for (Cell cell : row) {
+                if (cell.getContents().trim().toLowerCase().startsWith(prefix.getPrefix().toLowerCase())) {
+                    result.put(prefix.getPrefix(), cell.getColumn());
+                }
             }
         }
-        LOGGER.debug("Found {} Columns for {} starting with {}", relevantColumnIDs.size(), sheet.getName(), prefix);
-        return relevantColumnIDs;
+        return result;
+    }
+
+    private Map<String, List<Integer>> initializeOptionalMultiColumns(Sheet sheet) {
+        Map<String, List<Integer>> result = new HashMap<>();
+        for (OPTIONAL_PREFIXES prefix : OPTIONAL_PREFIXES.values()) {
+            Cell[] row = sheet.getRow(0);
+            for (Cell cell : row) {
+                if (cell.getContents().trim().toLowerCase().startsWith(prefix.getPrefix().toLowerCase())) {
+                    if (result.containsKey(prefix.getPrefix())) {
+                        result.get(prefix.getPrefix()).add(cell.getColumn());
+                    } else {
+                        List<Integer> columnIds = new ArrayList<>();
+                        columnIds.add(cell.getColumn());
+                        result.put(prefix.getPrefix(), columnIds);
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    private Map<String, Integer> initializeAssetColumns(Sheet sheet) {
+        Map<String, Integer> result = new HashMap<>();
+        for (ASSET_FIELD prefix : ASSET_FIELD.values()) {
+            Cell[] row = sheet.getRow(0);
+            for (Cell cell : row) {
+                if (cell.getContents().trim().toLowerCase().startsWith(PREFIX_FOR_ASSETS.toLowerCase() + prefix.getFieldName().toLowerCase())) {
+                    if (result.containsKey(prefix.getFieldName())) {
+                        result.put(prefix.getFieldName(), cell.getColumn());
+                    } else {
+                        result.put(prefix.getFieldName(), cell.getColumn());
+                    }
+                }
+            }
+        }
+        return result;
     }
 
     private Set<RequisitionCategory> getCategoriesByRow(Sheet sheet, Integer rowID) {
         Set<RequisitionCategory> categories = new TreeSet<>();
-        for (Integer column : getRelevantColumnIDs(sheet, PREFIX_CATEGORY)) {
+        for (Integer column : getRelevantColumnIDs(OPTIONAL_PREFIXES.PREFIX_CATEGORY.getPrefix())) {
             String rawCategories = sheet.getCell(column, rowID).getContents().trim();
             for (String category : rawCategories.split(WITHIN_SPLITTER)) {
                 category = category.trim();
@@ -148,7 +190,7 @@ public class XlsSource implements Source {
 
     private Set<RequisitionMonitoredService> getServicesByRow(Sheet sheet, Integer rowID) {
         Set<RequisitionMonitoredService> services = new TreeSet<>();
-        for (Integer column : getRelevantColumnIDs(sheet, PREFIX_SERVICE)) {
+        for (Integer column : getRelevantColumnIDs(OPTIONAL_PREFIXES.PREFIX_SERVICE.getPrefix())) {
             String rawServices = sheet.getCell(column, rowID).getContents().trim();
             for (String service : rawServices.split(WITHIN_SPLITTER)) {
                 service = service.trim();
@@ -160,11 +202,22 @@ public class XlsSource implements Source {
         return services;
     }
 
+    private Set<RequisitionAsset> getAssetsByRow(Sheet sheet, Integer rowID) {
+        Set<RequisitionAsset> assets = new TreeSet<>();
+        for (Map.Entry<String, Integer> entry : assetColumns.entrySet()) {
+            String value = sheet.getCell(entry.getValue(), rowID).getContents().trim();
+            if (!value.isEmpty()) {
+                assets.add(new RequisitionAsset(entry.getKey(), value));
+            }
+        }
+        return assets;
+    }
+
     private RequisitionInterface getInterfaceByRow(Sheet sheet, Integer rowID) {
         RequisitionInterface reqInterface = new RequisitionInterface();
 
-        reqInterface.setIpAddr(sheet.getCell(getRelevantColumnID(sheet, PREFIX_IP_ADDRESS), rowID).getContents().trim());
-        String interfaceType = sheet.getCell(getRelevantColumnID(sheet, PREFIX_INTERFACE_TYPE), rowID).getContents().trim();
+        reqInterface.setIpAddr(sheet.getCell(getRelevantColumnID(REQUIRED_PREFIXES.PREFIX_IP_ADDRESS.getPrefix()), rowID).getContents().trim());
+        String interfaceType = sheet.getCell(getRelevantColumnID(REQUIRED_PREFIXES.PREFIX_INTERFACE_TYPE.getPrefix()), rowID).getContents().trim();
         if (interfaceType.equalsIgnoreCase(INTERFACE_TYPE_PRIMARY)) {
             reqInterface.setSnmpPrimary(PrimaryType.PRIMARY);
         } else if (interfaceType.equalsIgnoreCase(INTERFACE_TYPE_SECONDARY)) {
@@ -176,10 +229,52 @@ public class XlsSource implements Source {
     }
 
     public String getXlsFile() {
-        Path xlsFilePath = Starter.getConfigManager().getInstancePath(this.instance).resolve(this.config.getString("xls.file", null));
-        if (xlsFilePath == null) {
-            return null;
+        if (xls == null) {
+            Path xlsFilePath = Starter.getConfigManager().getInstancePath(this.instance).resolve(this.config.getString("xls.file", null));
+            if (xlsFilePath == null) {
+                return null;
+            }
+            return xlsFilePath.toString();
+        } else {
+            return xls.getAbsolutePath();
         }
-        return xlsFilePath.toString();
     }
+
+    public void setXlsFile(File xls) {
+        this.xls = xls;
+    }
+
+    private enum REQUIRED_PREFIXES {
+
+        PREFIX_NODE("Node_"),
+        PREFIX_IP_ADDRESS("IP_"),
+        PREFIX_INTERFACE_TYPE("IfType_");
+
+        private String prefix;
+
+        private REQUIRED_PREFIXES(String prefix) {
+            this.prefix = prefix;
+        }
+
+        private String getPrefix() {
+            return prefix;
+        }
+    }
+
+    private enum OPTIONAL_PREFIXES {
+
+        PREFIX_CATEGORY("cat_"),
+        PREFIX_SERVICE("svc_");
+
+        private String prefix;
+
+        private OPTIONAL_PREFIXES(String prefix) {
+            this.prefix = prefix;
+        }
+
+        private String getPrefix() {
+            return prefix;
+        }
+    }
+
 }
