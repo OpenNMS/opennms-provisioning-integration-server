@@ -10,7 +10,9 @@ import org.junit.Test;
 import org.opennms.netmgt.model.PrimaryType;
 import org.opennms.netmgt.provision.persist.requisition.Requisition;
 import org.opennms.netmgt.provision.persist.requisition.RequisitionAsset;
+import org.opennms.netmgt.provision.persist.requisition.RequisitionCategory;
 import org.opennms.netmgt.provision.persist.requisition.RequisitionInterface;
+import org.opennms.netmgt.provision.persist.requisition.RequisitionMonitoredService;
 import org.opennms.netmgt.provision.persist.requisition.RequisitionNode;
 import org.opennms.pris.ASSET_FIELD;
 
@@ -32,13 +34,16 @@ public class XlsSourceTest {
         RequisitionNode node = new RequisitionNode();
         node.setNodeLabel("TestNode");
         node.setForeignId("TestNode");
+        node.getAssets().add(new RequisitionAsset(ASSET_FIELD.city.getFieldName(), "CityA"));
         node.getAssets().add(new RequisitionAsset(ASSET_FIELD.description.getFieldName(), "Description"));
         RequisitionInterface reqInterface = new RequisitionInterface();
         reqInterface.setIpAddr("1.2.3.4");
         reqInterface.setSnmpPrimary(PrimaryType.PRIMARY);
+        RequisitionMonitoredService service = new RequisitionMonitoredService("Test");
+        reqInterface.getMonitoredServices().add(service);
         node.getInterfaces().add(reqInterface);
         goalRequisition.getNodes().add(node);
-
+        node.getCategories().add(new RequisitionCategory("Test"));
 
         goalRequisition.setDate(testDate);
         goalRequisition.setDateStamp(xMLGregorianCalendarImpl);
