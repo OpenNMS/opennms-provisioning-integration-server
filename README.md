@@ -60,7 +60,7 @@ We don't use the issue tracking from GitHub, we use instead the main OpenNMS pro
 * License: GPLv3
 * Illustrations created with [yED]
 
-[GitHub]: https://github.com/DerTak/opennms-provisioning-integration-server.git
+[GitHub]: https://github.com/OpenNMS/opennms-provisioning-integration-server.git
 [OpenJDK]: http://openjdk.java.net/
 [Oracle Java Development Kit]: http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html
 [Maven]: http://maven.apache.org/
