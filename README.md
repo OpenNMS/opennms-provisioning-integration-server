@@ -12,7 +12,7 @@ The documentation will be automatically build from Markdown to HTML and you can 
 # Structure of the git repository
 Check out the source code from [GitHub] with the following command:
 
-    git clone https://github.com/DerTak/opennms-provisioning-integration-server.git
+    https://github.com/OpenNMS/opennms-provisioning-integration-server.git
 
 You have several branches you can build now. The master branch is the latest functional release. The stable releases are tagged. To show specific releases change in to the source directory and use the command
 
