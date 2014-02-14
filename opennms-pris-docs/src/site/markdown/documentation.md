@@ -67,9 +67,10 @@ The structure of the spreadsheet has to follow this rules. The source is reading
 | `Node_`     | * | will be interpreted as nodelabel and foreignId |
 | `IP_`       | * | will be interpreted as an ipaddress as a new interface on the node |
 | `IfType_` | * | is interpreted as snmp-primary flag. Thas controlls the snmp behavior. Valid are `P`, `S` and `N`. |
-| `Asset_Description` | * | will be interpreted as the description in the asset record for the node |
 | `cat_`     | | will be interpreted as a surrvailance-category. Multiple comma seperated categories can be provided. It can be used multiple times per sheet.|
 | `svc_`     | | will be interpreted as a service on the interface of the node. Multiple comma seperated services can be provided. It can be used multiple times per sheet.|
+
+This source also supports all asset-fields by using `Asset_` as a prefix followed by the `asset-field-name`. The city field of the assets can be addressed like this: `Asset_City`. This is not case-sensitive.
 
 To add a node with multiple interfaces, add an additional sequent row with the same nodelabel (Node_). This row will be added as a new interface based on the data from the  IP_, IfType_, svc_ columns.
 
