@@ -40,6 +40,8 @@ public class XlsSource implements Source {
     private final String INTERFACE_TYPE_SECONDARY = "S";
     private final String ASSET_DESCRIPTION = "description";
 
+    private File xls = null;
+
     public static class Factory implements Source.Factory {
 
         @Override
@@ -57,7 +59,7 @@ public class XlsSource implements Source {
     public Object dump() {
         Requisition requisition = new Requisition(instance);
         if (getXlsFile() != null) {
-            File xls = new File(getXlsFile());
+            xls = new File(getXlsFile());
             if (xls.canRead()) {
                 try {
                     Workbook workbook = Workbook.getWorkbook(xls);
@@ -176,10 +178,18 @@ public class XlsSource implements Source {
     }
 
     public String getXlsFile() {
+        if (xls == null) {
         Path xlsFilePath = Starter.getConfigManager().getInstancePath(this.instance).resolve(this.config.getString("xls.file", null));
         if (xlsFilePath == null) {
             return null;
         }
-        return xlsFilePath.toString();
+            return xlsFilePath.toString();
+        } else {
+            return xls.getAbsolutePath();
+        }
+    }
+
+    public void setXlsFile(File xls) {
+        this.xls = xls;
     }
 }
