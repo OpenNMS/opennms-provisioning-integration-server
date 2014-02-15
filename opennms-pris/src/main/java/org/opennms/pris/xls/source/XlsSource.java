@@ -176,12 +176,15 @@ public class XlsSource implements Source {
 
     private Set<RequisitionCategory> getCategoriesByRow(Sheet sheet, Integer rowID) {
         Set<RequisitionCategory> categories = new TreeSet<>();
-        for (Integer column : getRelevantColumnIDs(OPTIONAL_PREFIXES.PREFIX_CATEGORY.getPrefix())) {
-            String rawCategories = sheet.getCell(column, rowID).getContents().trim();
-            for (String category : rawCategories.split(WITHIN_SPLITTER)) {
-                category = category.trim();
-                if (!category.isEmpty()) {
-                    categories.add(new RequisitionCategory(category));
+        List<Integer> relevantColumnIDs = getRelevantColumnIDs(OPTIONAL_PREFIXES.PREFIX_CATEGORY.getPrefix());
+        if (relevantColumnIDs != null) {
+            for (Integer column : relevantColumnIDs) {
+                String rawCategories = sheet.getCell(column, rowID).getContents().trim();
+                for (String category : rawCategories.split(WITHIN_SPLITTER)) {
+                    category = category.trim();
+                    if (!category.isEmpty()) {
+                        categories.add(new RequisitionCategory(category));
+                    }
                 }
             }
         }
@@ -190,12 +193,15 @@ public class XlsSource implements Source {
 
     private Set<RequisitionMonitoredService> getServicesByRow(Sheet sheet, Integer rowID) {
         Set<RequisitionMonitoredService> services = new TreeSet<>();
-        for (Integer column : getRelevantColumnIDs(OPTIONAL_PREFIXES.PREFIX_SERVICE.getPrefix())) {
-            String rawServices = sheet.getCell(column, rowID).getContents().trim();
-            for (String service : rawServices.split(WITHIN_SPLITTER)) {
-                service = service.trim();
-                if (!service.isEmpty()) {
-                    services.add(new RequisitionMonitoredService(service));
+        List<Integer> relevantColumnIDs = getRelevantColumnIDs(OPTIONAL_PREFIXES.PREFIX_SERVICE.getPrefix());
+        if (relevantColumnIDs != null) {
+            for (Integer column : relevantColumnIDs) {
+                String rawServices = sheet.getCell(column, rowID).getContents().trim();
+                for (String service : rawServices.split(WITHIN_SPLITTER)) {
+                    service = service.trim();
+                    if (!service.isEmpty()) {
+                        services.add(new RequisitionMonitoredService(service));
+                    }
                 }
             }
         }
