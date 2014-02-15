@@ -29,7 +29,7 @@ public class XlsSourceTest {
     }
 
     @Test
-    public void testDump() {
+    public void basicTest() {
         Requisition goalRequisition = new Requisition("test");
         RequisitionNode node = new RequisitionNode();
         node.setNodeLabel("TestNode");
