@@ -35,6 +35,8 @@
         <opennmsUtilVersion>1.12.1</opennmsUtilVersion>
         <postgresqlDriverVersion>9.1-901-1.jdbc4</postgresqlDriverVersion>
         <slf4jVersion>1.7.5</slf4jVersion>
+        <apacheDerbyVersion>10.10.1.1</apacheDerbyVersion>
+        
     </properties>
     <dependencies>
         <!-- Logging -->
@@ -131,6 +133,12 @@
             <version>${junitVersion}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.apache.derby</groupId>
+            <artifactId>derby</artifactId>
+            <version>${apacheDerbyVersion}</version>
+            <scope>test</scope>
+        </dependency>
         <!--
             <dependency>
                 <groupId>com.vmware</groupId>
@@ -144,12 +152,12 @@
                 <version>1.17</version>
             </dependency>
 
-            <dependency>
-                <groupId>org.sblim.wbem</groupId>
-                <artifactId>sblimCIMClient</artifactId>
-                <version>1.17</version>
-            </dependency>
-            -->
+        <dependency>
+            <groupId>org.sblim.wbem</groupId>
+            <artifactId>sblimCIMClient</artifactId>
+            <version>1.17</version>
+        </dependency>
+        -->
     </dependencies>
     <build>
         <plugins>
@@ -170,18 +178,18 @@
     <repositories>
         <!-- OpenNMS Repository Snapshot -->
         <!--
-            <repository>
-                <snapshots>
-                    <enabled>true</enabled>
-                </snapshots>
-                <releases>
-                    <enabled>false</enabled>
-                </releases>
-                <id>opennms-snapshots</id>
-                <name>OpenNMS Snapshot Maven Repository</name>
-                <url>http://maven.opennms.org/content/groups/opennms.org-snapshot/</url>
-            </repository>
-            -->
+        <repository>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <id>opennms-snapshots</id>
+            <name>OpenNMS Snapshot Maven Repository</name>
+            <url>http://maven.opennms.org/content/groups/opennms.org-snapshot/</url>
+        </repository>
+        -->
         <!-- OpenNMS Repository Release -->
         <repository>
             <snapshots>
