@@ -1,30 +1,25 @@
-/*******************************************************************************
+/**
+ * *****************************************************************************
  * This file is part of OpenNMS(R).
  *
- * Copyright (C) 2014 The OpenNMS Group, Inc.
- * OpenNMS(R) is Copyright (C) 1999-2014 The OpenNMS Group, Inc.
+ * Copyright (C) 2014 The OpenNMS Group, Inc. OpenNMS(R) is Copyright (C) 1999-2014 The OpenNMS Group, Inc.
  *
  * OpenNMS(R) is a registered trademark of The OpenNMS Group, Inc.
  *
- * OpenNMS(R) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published
- * by the Free Software Foundation, either version 3 of the License,
- * or (at your option) any later version.
+ * OpenNMS(R) is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
+ * License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later
+ * version.
  *
- * OpenNMS(R) is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * OpenNMS(R) is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with OpenNMS(R). If not, see:
+ * You should have received a copy of the GNU General Public License along with OpenNMS(R). If not, see:
  * http://www.gnu.org/licenses/
  *
- * For more information contact:
- * OpenNMS(R) Licensing <license@opennms.org>
- * http://www.opennms.org/
- * http://www.opennms.com/
- *******************************************************************************/
+ * For more information contact: OpenNMS(R) Licensing <license@opennms.org>
+ * http://www.opennms.org/ http://www.opennms.com/
+ * *****************************************************************************
+ */
 package org.opennms.pris.jdbc.source;
 
 import org.apache.commons.configuration.Configuration;
@@ -45,10 +40,11 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import org.opennms.pris.ASSET_FIELD;
 
 /**
- * A JDBC data source allows to connect to an SQL database and extract data in given
- * format. The result set is mapped to an OpenNMS requisition.
+ * A JDBC data source allows to connect to an SQL database and extract data in given format. The result set is mapped to
+ * an OpenNMS requisition.
  */
 public class JdbcSource implements Source {
 
@@ -58,19 +54,16 @@ public class JdbcSource implements Source {
     private final Configuration config;
 
     /**
-     * Columns which have to be mapped from the SQL result set to an OpenNMS
-     * requisition
+     * Columns which have to be mapped from the SQL result set to an OpenNMS requisition
      */
     private static final String COLUMN_NODE_LABEL = "Node_Label";
     private static final String COLUMN_CATEGORY = "Cat";
     private static final String COLUMN_SERVICE = "Svc";
     private static final String COLUMN_IP_ADDRESS = "Ip_Address";
     private static final String COLUMN_INTERFACE_TYPE = "If_Type";
-    private static final String COLUMN_ASSET_DESCRIPTION = "Asset_Description";
     private static final String COLUMN_FOREIGN_ID = "Foreign_Id";
     private static final String INTERFACE_TYPE_PRIMARY = "P";
     private static final String INTERFACE_TYPE_SECONDARY = "S";
-    private static final String ASSET_DESCRIPTION = "description";
 
     public static class Factory implements Source.Factory {
 
@@ -138,16 +131,6 @@ public class JdbcSource implements Source {
                         node.setNodeLabel(nodeLabel);
                     }
 
-                    String description = getString(resultSet, COLUMN_ASSET_DESCRIPTION);
-
-                    if (description != null) {
-                        if (node.getAsset(ASSET_DESCRIPTION) == null) {
-                            node.getAssets().add(new RequisitionAsset(ASSET_DESCRIPTION, description));
-                        } else {
-                            node.getAsset(ASSET_DESCRIPTION).setValue(description);
-                        }
-                    }
-
                     String ipAddress = getString(resultSet, COLUMN_IP_ADDRESS);
 
                     if (ipAddress != null) {
@@ -186,6 +169,18 @@ public class JdbcSource implements Source {
                     if (category != null) {
                         if (node.getCategory(category) == null) {
                             node.getCategories().add(new RequisitionCategory(category));
+                        }
+                    }
+
+                    for (ASSET_FIELD assetField : ASSET_FIELD.values()) {
+                        String assetValue = getString(resultSet, "Asset_" + assetField.getFieldName());
+                        if (assetValue != null) {
+                            LOGGER.info("Adding to node:{} the asset:{} with value:{}", node.getNodeLabel(), assetField.getFieldName(), assetValue);
+                            if (node.getAsset(assetField.getFieldName()) == null) {
+                                node.getAssets().add(new RequisitionAsset(assetField.getFieldName(), assetValue));
+                            } else {
+                                node.getAsset(assetField.getFieldName()).setValue(assetValue);
+                            }
                         }
                     }
                 }

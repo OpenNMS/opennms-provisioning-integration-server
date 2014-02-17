@@ -104,6 +104,8 @@ The jdbc source provides the ability to run an SQL-Query against an external sys
 | jdbc.user            |   | |
 | jdbc.password        |   | |
 
+This source also supports all asset-fields by using `Asset_` as a prefix followed by the `asset-field-name`. The city field of the assets can be addressed like this: `yourvalue AS Asset_City`. This is not case-sensitive.
+
 ### OCS Source
 OCS is handling computers and snmp-devices separately in its APIs. For that reason there are two different sources available to connect to OCS. Some parameters are part of both sources and described first.
 
