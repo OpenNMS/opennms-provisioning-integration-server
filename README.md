@@ -9,6 +9,11 @@ The project is divided in three modules:
 
 The documentation will be automatically build from Markdown to HTML and you can browse the docs in the target directory.
 
+* Example configuration and init script `opennms-pris/src/examples`
+* Recommended install path `/opt/opennms-pris`
+* http://www.opennms.org/wiki/OCS_Integration
+* http://www.opennms.eu/docs/opennms-pris/1.0.4/opennms-pris-docs/documentation.html
+
 # Compiling from source
 This guide describes how you can checkout the source code from GitHub and how you can compile from source. The following parts are required:
 
@@ -61,8 +66,6 @@ We don't use the issue tracking from GitHub, we use instead the main OpenNMS pro
 * IRC: irc://freenode.org/#opennms
 * License: GPLv3
 * Illustrations created with [yED]
-* Example configuration and init script `opennms-pris/src/examples`
-* Recommended install path `/opt/opennms-pris`
 
 [GitHub]: https://github.com/OpenNMS/opennms-provisioning-integration-server.git
 [OpenJDK]: http://openjdk.java.net/
@@ -71,8 +74,3 @@ We don't use the issue tracking from GitHub, we use instead the main OpenNMS pro
 [git-scm]: http://git-scm.com/
 [nvie]: http://nvie.com/posts/a-successful-git-branching-model/
 [yED]: http://www.yworks.com/en/products_yed_about.html
-
-# Documentation
-* http://www.opennms.org/wiki/OCS_Integration
-* http://www.opennms.eu/docs/opennms-pris/1.0.4/opennms-pris-docs/documentation.html
-
