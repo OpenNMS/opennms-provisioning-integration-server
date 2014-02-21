@@ -61,6 +61,8 @@ We don't use the issue tracking from GitHub, we use instead the main OpenNMS pro
 * IRC: irc://freenode.org/#opennms
 * License: GPLv3
 * Illustrations created with [yED]
+* Example configuration and init script `opennms-pris/src/examples`
+* Recommended install path `/opt/opennms-pris`
 
 [GitHub]: https://github.com/OpenNMS/opennms-provisioning-integration-server.git
 [OpenJDK]: http://openjdk.java.net/
