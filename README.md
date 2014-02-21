@@ -9,6 +9,23 @@ The project is divided in three modules:
 
 The documentation will be automatically build from Markdown to HTML and you can browse the docs in the target directory.
 
+# Compiling from source
+This guide describes how you can checkout the source code from GitHub and how you can compile from source. The following parts are required:
+
+* [OpenJDK] or [Oracle Java Development Kit] with javac
+* Apache [Maven]
+* [git-scm]
+* `java`, `javac`, `git` and `mvn` should be in your search path
+* Internet connection to download maven dependencies
+
+In your source directory run the command
+
+    mvn clean package
+
+It make sure cleaning everything from previous builds, compiles the code and build everything as a runnable jar in target directories.
+
+Configuration examples for different integration sources can be found in `src/examples`. If you want to use `opennms-pris` with HTTP as background daemon, you can find also an `init script` in the `src/examples` folder.  
+
 # Structure of the git repository
 Check out the source code from [GitHub] with the following command:
 
@@ -37,23 +54,6 @@ If you want to get a special tagged version you can use the command
 
 It will switch your source to the given tagged version.
 
-# Compiling from source
-This guide describes how you can checkout the source code from GitHub and how you can compile from source. The following parts are required:
-
-* [OpenJDK] or [Oracle Java Development Kit] with javac
-* Apache [Maven]
-* [git-scm]
-* `java`, `javac`, `git` and `mvn` should be in your search path
-* Internet connection to download maven dependencies
-
-In your source directory run the command
-
-    mvn clean package
-
-It make sure cleaning everything from previous builds, compiles the code and build everything as a runnable jar in target directories.
-
-Configuration examples for different integration sources can be found in `src/examples`. If you want to use `opennms-pris` with HTTP as background daemon, you can find also an `init script` in the `src/examples` folder.  
-
 # General information
 We don't use the issue tracking from GitHub, we use instead the main OpenNMS project issue tracker, cause this part is developed within the OpenNMS Project.
 
@@ -70,7 +70,7 @@ We don't use the issue tracking from GitHub, we use instead the main OpenNMS pro
 [nvie]: http://nvie.com/posts/a-successful-git-branching-model/
 [yED]: http://www.yworks.com/en/products_yed_about.html
 
-
-[old doku]
+# Documentation
 http://www.opennms.org/wiki/OCS_Integration
+http://www.opennms.eu/docs/opennms-pris/1.0.4/opennms-pris-docs/documentation.html
 
