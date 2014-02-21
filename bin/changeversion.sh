@@ -1,25 +1,60 @@
 #!/bin/bash
-# Script to change version number
 #
-# Usage:
-#   changeversion.sh -v 1.0.5-SNAPSHOT
-# 
 # Script changes the pom.xml files in the current project.
+#
+# Usage example:
+#   changeversion.sh -o 1.0.4-SNAPSHOT -n 1.0.5-SNAPSHOT
+# 
+# Created:
+#   ronny@opennms.org
+#
 
-if [ ! $# -eq "2" ];then 
+# Change to project root and save current work directory
+cd ..
+CWD=$(pwd)
+
+# Turn on debug mode
+# set -x
+
+#
+# Function print usage help text
+# 
+printUsage() {
   echo ""
   echo "Script to change the version number in pom.xml files"
   echo "for the opennms-pris project"
   echo ""
-  echo "  Usage: ${0} -v <new-version>"
-  echo "  Example: ${0} -v 1.0.5-SNAPSHOT"
+  echo "  Usage: ${0} -o <old-version> -n <new-version>"
+  echo "  Example: ${0} -o 1.0.4-SNAPSHOT -n 1.0.5-SNAPSHOT"
   echo ""
-  exit 1
+  exit 0
+}
+
+# Check if we have enough arguments
+if [ ! $# -eq 4 ];then
+    printUsage
 fi
 
-PARENT_POM="../pom.xml"
-PRIS_POM="../opennms-pris/pom.xml"
-PRIS_DOCS_POM="../opennms-pris-docs/pom.xml"
+# Evaluate arguments
+while [ $# -gt 0 ] ; do
+    case "$1" in
+    "-o")
+        OLD_VERSION=$2
+        shift 2
+        ;;
+    "-n")
+        NEW_VERSION=$2
+        shift 2
+        ;;
+    *)
+        printUsage
+        ;;
+    esac
+done
 
-find .. -name "pom.xml" -exec cat {} | sed -e 's/\<version\>.*\<\/version\>/\<version\>${2}\<\/version\>/g' > {}.new \;
+# Go through all pom.xml files and replace the given version number
+for i in $(find ${CWD} -name "pom.xml"); do 
+  cat ${i} | sed -e "s/${OLD_VERSION}/${NEW_VERSION}/g" > ${i}.new;
+  mv ${i}.new ${i};
+done
 
