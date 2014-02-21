@@ -97,6 +97,7 @@ public class HttpServerDriver implements Driver {
         baseRequest.setHandled(true);
         
         // Get the instance for the request path
+          // why substring(1)?
         final String instance = request.getPathInfo().substring(1);
 
         LOGGER.debug("Handling request for instance: {}", instance);
@@ -108,7 +109,7 @@ public class HttpServerDriver implements Driver {
         }
 
         try {
-          // Get the requisition provider for the instance
+          // create the requisition provider for the instance
           final RequisitionProvider requisitionProvider = new RequisitionProvider(instance);
 
           // Generate the requisition
@@ -117,10 +118,11 @@ public class HttpServerDriver implements Driver {
           // Marshall the requisition and write it to the response stream
           jaxbMarshaller.marshal(requisition, response.getOutputStream());
 
+            // catch (Exception ex) ok here!
         } catch (final Exception ex) {
           response.sendError(500, ex.getMessage());
-          
-          LOGGER.warn(null, ex);
+
+          LOGGER.warn(ex.getMessage(), ex);
         }
       }
     });

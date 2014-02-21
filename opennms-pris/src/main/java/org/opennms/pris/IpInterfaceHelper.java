@@ -53,6 +53,7 @@ public class IpInterfaceHelper {
     private List<String> ipBlackList = new ArrayList<>();
     private List<String> ipWhiteList = new ArrayList<>();
 
+    // please explain what it means, if null is returned
     public Network selectManagementNetworkWhiteAndBlackOnly(Computer computer) {
         List<Network> possibleNetworks = new ArrayList<>();
         for (Network network : computer.getNetworks()) {
@@ -61,10 +62,13 @@ public class IpInterfaceHelper {
                     possibleNetworks.add(network);
                 }
             } else {
+                // Log pattern differs from e.g. ConfigManager. Is it on purpose that everything is upper case?
+                // is computer != null? is computer.getHardware() != null?
                 LOGGER.debug("FOUND A NETWORK WITHOUT IPADDRESS FOR COMPUTER ID:{} NAME:{}", computer.getHardware().getId(), computer.getHardware().getName());
             }
         }
-        if (possibleNetworks.size() >= 1) {
+        // please explain this if
+        if (!possibleNetworks.isEmpty()) {
             return possibleNetworks.get(0);
         } else {
             String ocsPickedIp = computer.getHardware().getIpaddr();
@@ -84,6 +88,7 @@ public class IpInterfaceHelper {
     }
 
     public String selectIpAddressWhiteAndBlackOnly(SnmpDevice snmpDevice) {
+        // NullPointerCheck?
         String ipAddr = snmpDevice.getSNMP().getIPAddr();
         if (isIpWhiteListed(ipAddr) && !isIpBlackListed(ipAddr)) {
             return ipAddr;
@@ -91,7 +96,9 @@ public class IpInterfaceHelper {
         return null;
     }
 
+    // explain what it means if null is returned
     public String selectIpAddress(SnmpDevice snmpDevice) {
+        // NullPointerCheck?
         String ipAddr = snmpDevice.getSNMP().getIPAddr();
         if (isIpBlackListed(ipAddr)) {
             return null;
@@ -99,9 +106,11 @@ public class IpInterfaceHelper {
         return ipAddr;
     }
 
+    // explain what it means if null is returned
     public Network selectManagementNetwork(Computer computer) {
 
         List<Network> possibleNetworks = new ArrayList<>();
+        // is computer.getNetworks() never null?
         for (Network network : computer.getNetworks()) {
             //check for a whitelisted interface
             if (isIpWhiteListed(network.getIPAddress())) {
@@ -199,14 +208,17 @@ public class IpInterfaceHelper {
             Properties catMap = new Properties();
             try {
                 File categoryMap = new File(config.getString("categoryMap"));
-                catMap.load(new FileInputStream(instance + File.separator+ categoryMap));
+                catMap.load(new FileInputStream(instance + File.separator + categoryMap));
                 LOGGER.info("Loaded properties from {}", categoryMap.getAbsolutePath());
+                // why do you catch Exception? can you avoid this?
+                // Please consider not throwing RuntimeException.
             } catch (Exception e) {
                 LOGGER.error("Could not read category mappings from", e);
                 throw new RuntimeException(e);
             }
 
             for (Entry entry : myComputer.getAccountInfo().getEntries()) {
+                // Strings.isEmpty() ?
                 if ("".equals(entry.getValue())) continue;
                 LOGGER.info("On computer {} got an accountinfo entry called {} with value {}", myComputer.getHardware().getName(), entry.getName(), entry.getValue());
                 if (catMap.containsKey(entry.getName() + "." + entry.getValue())) {
@@ -219,6 +231,7 @@ public class IpInterfaceHelper {
         return categories;
     }
 
+    // add java doc
     public String assetStringCleaner(String assetString, Integer maxSize) {
         String result = "";
         if (assetString != null) {

@@ -17,7 +17,7 @@ The documentation will be automatically build from Markdown to HTML and you can 
 # Compiling from source
 This guide describes how you can checkout the source code from GitHub and how you can compile from source. The following parts are required:
 
-* [OpenJDK] or [Oracle Java Development Kit] with javac
+* [OpenJDK] or [Oracle Java Development Kit] with javac (Version?)
 * Apache [Maven]
 * [git-scm]
 * `java`, `javac`, `git` and `mvn` should be in your search path
@@ -27,6 +27,7 @@ In your source directory run the command
 
     mvn clean package
 
+Hmm, den Satz, versteh ich nicht
 It make sure cleaning everything from previous builds, compiles the code and build everything as a runnable jar in target directories.
 
 Configuration examples for different integration sources can be found in `src/examples`. If you want to use `opennms-pris` with HTTP as background daemon, you can find also an `init script` in the `src/examples` folder.  
@@ -34,12 +35,14 @@ Configuration examples for different integration sources can be found in `src/ex
 # Structure of the git repository
 Check out the source code from [GitHub] with the following command:
 
+This is a url, not a command.
     https://github.com/OpenNMS/opennms-provisioning-integration-server.git
 
 You have several branches you can build now. The master branch is the latest functional release. The stable releases are tagged. To show specific releases change in to the source directory and use the command
 
     git tag -l
 
+This seems to complicate
 It will give you a list of all tagged releases. There are several other branches which follow the [nvie] branch pattern and has the following naming convention
 
 * `master` a production-ready state
@@ -60,7 +63,7 @@ If you want to get a special tagged version you can use the command
 It will switch your source to the given tagged version.
 
 # General information
-We don't use the issue tracking from GitHub, we use instead the main OpenNMS project issue tracker, cause this part is developed within the OpenNMS Project.
+We don't use the issue tracking from GitHub, we use the main OpenNMS project issue tracker instead.
 
 * Issues: http://issues.opennms.org/browse/PRIS
 * IRC: irc://freenode.org/#opennms

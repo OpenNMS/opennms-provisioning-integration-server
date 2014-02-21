@@ -84,6 +84,7 @@ public class Starter {
    *
    * @return a config manager
    */
+  // avoid static access whenever possible, because it is very hard to test or get rid of it later
   public static ConfigManager getConfigManager() {
     return Starter.configManager;
   }

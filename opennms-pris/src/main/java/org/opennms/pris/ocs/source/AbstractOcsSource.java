@@ -33,6 +33,7 @@ import org.opennms.pris.source.Source;
 import java.util.Arrays;
 import java.util.List;
 
+// can you move this to source.ocs?
 public abstract class AbstractOcsSource implements Source {
   
   private final String instance;

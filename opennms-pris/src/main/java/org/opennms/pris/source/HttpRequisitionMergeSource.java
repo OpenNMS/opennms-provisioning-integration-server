@@ -62,6 +62,7 @@ public class HttpRequisitionMergeSource implements Source {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HttpRequisitionMergeSource.class);
 
+    // instanceName?
     private final String instance;
     private final Configuration config;
 
@@ -148,6 +149,7 @@ public class HttpRequisitionMergeSource implements Source {
                 }
             }
             if (isKeepAllA()) {
+                // can you move that to a separate method, you use it a couple of lines below again?!
                 for (RequisitionNode node : a.getNodes()) {
                     if (!mergedNodes.containsKey(node.getForeignId())) {
                         mergedNodes.put(node.getForeignId(), node);
@@ -162,6 +164,7 @@ public class HttpRequisitionMergeSource implements Source {
                 }
             }
         } else {
+            // can you please not throw RuntimeException?
             throw new RuntimeException("one or more requisitions have not been loaded correctly");
         }
 

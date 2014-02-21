@@ -47,6 +47,7 @@ import org.slf4j.LoggerFactory;
 import java.util.HashSet;
 import java.util.Set;
 
+// can you move this to mapper.ocs
 public class DefaultOcsComputerMapper implements Mapper {
 
     public static class Factory implements Mapper.Factory {

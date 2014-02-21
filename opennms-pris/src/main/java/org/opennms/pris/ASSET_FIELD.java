@@ -1,5 +1,6 @@
 package org.opennms.pris;
 
+// Java naming convention? AssetField?
 public enum ASSET_FIELD {
 
     additionalhardware("additionalhardware", "Additional hardware", "String", 0),
@@ -70,16 +71,21 @@ public enum ASSET_FIELD {
 
     private final String fieldName;
     private final String fieldDisplayName;
+
+    // can it be Class<?> or does it need to be String?
     private final String fieldType;
+
+    // comment? max length is always 0, what does that mean, unlimited? If it is always 0, do I need it anyways?
     private final Integer maxLength;
 
-    ASSET_FIELD(String fieldName, String fieldDisplayName, String fieldType, Integer maxLength) {
+    private ASSET_FIELD(String fieldName, String fieldDisplayName, String fieldType, Integer maxLength) {
         this.fieldName = fieldName;
         this.fieldDisplayName = fieldDisplayName;
         this.fieldType = fieldType;
         this.maxLength = maxLength;
     }
 
+    // you do not need this, the same can be achieved with this.name()
     public String getFieldName() {
         return this.fieldName;
     }

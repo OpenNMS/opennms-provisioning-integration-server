@@ -43,7 +43,7 @@ import java.util.Collections;
  * The configuration manager.
  * 
  * The manager provides a global configuration and a configuration for each
- * instance.
+ * instance. (What does this mean? For which instance?)
  * 
  * The configuration base path is the current working directory and can be
  * overwritten by the {@literal config} system property.
@@ -84,11 +84,6 @@ public class ConfigManager {
     }};
   }
 
-  /**
-   * Returns the global configuration.
-   * 
-   * @return global configuration
-   */
   public Configuration getGlobalConfig() {
     return this.globalConfig;
   }
