@@ -32,6 +32,8 @@ The _OpenNMS_ requisition should be provided via _HTTP_ and we use _OpenNMS Prov
 
 Providing the _OpenNMS requisition_ over _HTTP_ we create the following `global.properties`
 
+__File: global.properties__
+
     ## start an http server that provides access to requisition files
     driver = http
     host = 127.0.0.1
@@ -43,12 +45,16 @@ Providing the _OpenNMS requisition_ over _HTTP_ we create the following `global.
 
 The HTTP server is listening on localhost port 8000/TCP. We have to create two directories, each directory `myServer` and `myRouter` have a `requisition.properties` file. Both `requisition.properties` reference the main `myInventory.xls` file which contains two worksheets named _myServer_ and _myRouter_. The `requisition.properties` is for both requisitions the same. It is possible to create for each requisition different script or mapping steps.
 
+__File: requisition.properties__
+
     source = xls.source
     mapper = null.mapper
     xls.file = ../myInventory.xls
     script = ../echo.groovy
 
 The script `echo.groovy` just returns the whole requisition without any modification. If you want, you can map or enrich the [requisition model](https://github.com/OpenNMS/opennms/tree/master/opennms-provision/opennms-provision-persistence/src/main/java/org/opennms/netmgt/provision/persist/requisition) using _Groovy_.
+
+__File: echo.groovy__
 
     import org.opennms.netmgt.provision.persist.requisition.Requisition
 
@@ -176,6 +182,77 @@ The merge source allows to merge two requisitions. You can also use provided res
 | `requisition.merge.keepAllB` |          | if this parameters is present in the config all nodes from requisition B will be present in the resulting requisition. |
 
 This source is reading two already defined requisitions via _HTTP_ and merges them into one new requisition. By default the resulting requisition will contain all nodes that are present in both requisitions, identified by the `foreignId`. The A-Node (from requisition A) is enriched with the data from B-Node.
+
+## Asset field mapping
+The asset field mapping can be used in `xls.source` and `jdbc.source`.
+
+| OpenNMS requisition asset field mapping |
+|-----------------------------------------|
+| `Asset_additionalhardware` |
+| `Asset_address1` |
+| `Asset_address2` |
+| `Asset_admin` |
+| `Asset_assetNumber` |
+| `Asset_autoenable` |
+| `Asset_building` |
+| `Asset_category` |
+| `Asset_circuitId` |
+| `Asset_city` |
+| `Asset_comment` |
+| `Asset_connection` |
+| `Asset_country` |
+| `Asset_cpu` |
+| `Asset_dateInstalled` |
+| `Asset_department` |
+| `Asset_description` |
+| `Asset_displayCategory` |
+| `Asset_division` |
+| `Asset_enable` |
+| `Asset_floor` |
+| `Asset_hdd1` |
+| `Asset_hdd2` |
+| `Asset_hdd3` |
+| `Asset_hdd4` |
+| `Asset_hdd5` |
+| `Asset_hdd6` |
+| `Asset_inputpower` |
+| `Asset_latitude` |
+| `Asset_lease` |
+| `Asset_leaseExpires` |
+| `Asset_longitude` |
+| `Asset_maintContractExpiration` |
+| `Asset_maintContractNumber` |
+| `Asset_manufacturer` |
+| `Asset_modelNumber` |
+| `Asset_notifyCategory` |
+| `Asset_numpowersupplies` |
+| `Asset_operatingSystem` |
+| `Asset_password` |
+| `Asset_pollerCategory` |
+| `Asset_port` |
+| `Asset_rack` |
+| `Asset_rackunitheight` |
+| `Asset_ram` |
+| `Asset_region` |
+| `Asset_room` |
+| `Asset_serialNumber` |
+| `Asset_slot` |
+| `Asset_snmpcommunity` |
+| `Asset_state` |
+| `Asset_storagectrl` |
+| `Asset_supportPhone` |
+| `Asset_thresholdCategory` |
+| `Asset_username` |
+| `Asset_vendor` |
+| `Asset_vendorAssetNumber` |
+| `Asset_vendorFax` |
+| `Asset_vendorPhone` |
+| `Asset_vmwareManagedEntityType` |
+| `Asset_vmwareManagedObjectId` |
+| `Asset_vmwareManagementServer` |
+| `Asset_vmwareState` |
+| `Asset_vmwareTopologyInfo` |
+| `Asset_zip` |
 
 ## Mapper
 
