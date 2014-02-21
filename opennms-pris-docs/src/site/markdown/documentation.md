@@ -21,7 +21,6 @@ The _OpenNMS_ requisition should be provided via _HTTP_ and we use _OpenNMS Prov
     [root@localhost opennms-pris]# clear && pwd && tree
     /opt/opennms-pris
     .
-    ├── echo.groovy
     ├── global.properties
     ├── myInventory.xls
     ├── myRouter
@@ -48,20 +47,10 @@ The HTTP server is listening on localhost port 8000/TCP. We have to create two d
 __File: requisition.properties__
 
     source = xls.source
-    mapper = null.mapper
+    mapper = echo.mapper
     xls.file = ../myInventory.xls
-    script = ../echo.groovy
 
-The script `echo.groovy` just returns the whole requisition without any modification. If you want, you can map or enrich the [requisition model](https://github.com/OpenNMS/opennms/tree/master/opennms-provision/opennms-provision-persistence/src/main/java/org/opennms/netmgt/provision/persist/requisition) using _Groovy_.
-
-__File: echo.groovy__
-
-    import org.opennms.netmgt.provision.persist.requisition.Requisition
-
-    Requisition requisition = data
-    return requisition
-
-It is not necessary to restart the _pris_ server if you change property files, the _Groovy_ scripts or the _XLS_ file. All changes will be executed with the next request against the server. With the given configuration you see the result of the OpenNMS requisitions with the URL http://localhost:8000/myRouter and http://localhost:8000/myServer and can be used in _OpenNMS Provisiond_.
+It is not necessary to restart the _pris_ server if you change property files or the _XLS_ file. All changes will be executed with the next request against the server. With the given configuration you see the result of the OpenNMS requisitions with the URL http://localhost:8000/myRouter and http://localhost:8000/myServer and can be used in _OpenNMS Provisiond_.
 
 ![Pris output for OpenNMS Provisiond via HTTP](images/requisitions-http.png "Pris output for OpenNMS Provisiond via HTTP")
 
