@@ -52,6 +52,8 @@ In your source directory run the command
 
 It make sure cleaning everything from previous builds, compiles the code and build everything as a runnable jar in target directories.
 
+Configuration examples for different integration sources can be found in `src/examples`. If you want to use `opennms-pris` with HTTP as background daemon, you can find also an `init script` in the `src/examples` folder.  
+
 # General information
 We don't use the issue tracking from GitHub, we use instead the main OpenNMS project issue tracker, cause this part is developed within the OpenNMS Project.
 
