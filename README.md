@@ -71,6 +71,6 @@ We don't use the issue tracking from GitHub, we use instead the main OpenNMS pro
 [yED]: http://www.yworks.com/en/products_yed_about.html
 
 # Documentation
-http://www.opennms.org/wiki/OCS_Integration
-http://www.opennms.eu/docs/opennms-pris/1.0.4/opennms-pris-docs/documentation.html
+* http://www.opennms.org/wiki/OCS_Integration
+* http://www.opennms.eu/docs/opennms-pris/1.0.4/opennms-pris-docs/documentation.html
 
