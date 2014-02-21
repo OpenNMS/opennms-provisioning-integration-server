@@ -28,10 +28,12 @@
 package org.opennms.pris;
 
 import com.google.common.collect.ImmutableMap;
+import java.util.Map;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.opennms.netmgt.provision.persist.requisition.Requisition;
 import org.opennms.pris.jdbc.source.JdbcSource;
+import org.opennms.pris.mapper.EchoMapper;
 import org.opennms.pris.mapper.Mapper;
 import org.opennms.pris.mapper.NullMapper;
 import org.opennms.pris.mapper.ScriptMapper;
@@ -49,8 +51,6 @@ import org.opennms.pris.vmware.source.VmwareSource;
 import org.opennms.pris.xls.source.XlsSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Map;
 
 /**
  * Generates a requisition.
@@ -86,6 +86,7 @@ public class RequisitionProvider {
   // All known mapper implementations
   private static final Map<String, Mapper.Factory> MAPPERS = ImmutableMap.<String, Mapper.Factory>builder()
           .put("null.mapper", new NullMapper.Factory())
+          .put("echo.mapper", new EchoMapper.Factory())
           .put("default.vmware.mapper", new DefaultVmwareMapper.Factory())
           .put("default.ocs.computers", new DefaultOcsComputerMapper.Factory())
           .put("default.ocs.snmpDevices", new DefaultOcsSnmpDevicesMapper.Factory())
