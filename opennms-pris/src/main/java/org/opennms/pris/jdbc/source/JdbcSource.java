@@ -60,7 +60,7 @@ public class JdbcSource implements Source {
     private static final String COLUMN_CATEGORY = "Cat";
     private static final String COLUMN_SERVICE = "Svc";
     private static final String COLUMN_IP_ADDRESS = "Ip_Address";
-    private static final String COLUMN_INTERFACE_TYPE = "If_Type";
+    private static final String COLUMN_INTERFACE_MANGEMENT_TYPE = "MgmtType";
     private static final String COLUMN_FOREIGN_ID = "Foreign_Id";
     private static final String INTERFACE_TYPE_PRIMARY = "P";
     private static final String INTERFACE_TYPE_SECONDARY = "S";
@@ -142,7 +142,7 @@ public class JdbcSource implements Source {
                             node.getInterfaces().add(reqInterface);
                         }
 
-                        String ifType = getString(resultSet, COLUMN_INTERFACE_TYPE);
+                        String ifType = getString(resultSet, COLUMN_INTERFACE_MANGEMENT_TYPE);
 
                         if (INTERFACE_TYPE_PRIMARY.equalsIgnoreCase(ifType)) {
                             reqInterface.setSnmpPrimary(PrimaryType.PRIMARY);
@@ -161,7 +161,7 @@ public class JdbcSource implements Source {
                             }
                         }
                     } else {
-                        LOGGER.warn(COLUMN_IP_ADDRESS + " is null, ignoring " + COLUMN_INTERFACE_TYPE + " and " + COLUMN_SERVICE);
+                        LOGGER.warn(COLUMN_IP_ADDRESS + " is null, ignoring " + COLUMN_INTERFACE_MANGEMENT_TYPE + " and " + COLUMN_SERVICE);
                     }
 
                     String category = getString(resultSet, COLUMN_CATEGORY);

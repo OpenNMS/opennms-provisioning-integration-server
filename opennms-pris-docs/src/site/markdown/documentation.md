@@ -89,13 +89,13 @@ The structure of the spreadsheet has to follow this rules. The source is reading
 |-----------|:--------:|-----------------------------------:|
 | `Node_`   | * | will be interpreted as node label and `foreignId` |
 | `IP_`     | * | will be interpreted as an IP address as a new interface on the node |
-| `IfType_` | * | is interpreted as `snmp-primary` flag and controls how the interface can be used to communicate with the SNMP agent. Valid are `P` (Primary), `S` (Secondary) and `N` (None). |
+| `MgmtType_` | * | is interpreted as `snmp-primary` flag and controls how the interface can be used to communicate with the SNMP agent. Valid are `P` (Primary), `S` (Secondary) and `N` (None). |
 | `cat_`    |   | will be interpreted as a surveillance-category. Multiple comma separated categories can be provided. It can be used multiple times per sheet.|
 | `svc_`    |   | will be interpreted as a service on the interface of the node. Multiple comma separated services can be provided. It can be used multiple times per sheet.|
 
 This source also supports all asset-fields by using `Asset_` as a prefix followed by the `asset-field-name`. The city field of the assets can be addressed like this: `Asset_City`. This is not case-sensitive.
 
-To add a node with multiple interfaces, add an additional sequent row with the same nodelabel (Node_). This row will be added as a new interface based on the data from the  IP_, IfType_, svc_ columns.
+To add a node with multiple interfaces, add an additional sequent row with the same nodelabel (Node_). This row will be added as a new interface based on the data from the  IP_, MgmtType_, svc_ columns.
 
 The order in which the columns are arranged is irrelevant. Also additional columns can be present.
 
@@ -124,6 +124,7 @@ The jdbc source provides the ability to run an SQL-Query against an external sys
 | jdbc.password        |   |password for database connection |
 
 This source also supports all asset-fields by using `Asset_` as a prefix followed by the `asset-field-name`. The city field of the assets can be addressed like this: `yourvalue AS Asset_City`. This is not case-sensitive.
+TODO the list of aliases for the mapping is missing.
 
 ### OCS Source
 _OCS-Inventory NG_ is handling computers and SNMP devices separately in its APIs. For that reason there are two different sources available to import nodes from _OCS_. Some parameters are part of both sources and described first.
