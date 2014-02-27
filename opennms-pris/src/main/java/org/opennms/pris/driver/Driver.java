@@ -39,9 +39,9 @@ import org.apache.commons.configuration.Configuration;
  */
 public interface Driver {
 
-  public static interface Factory {
+  interface Factory {
 
-    public abstract Driver create(final Configuration config);
+      Driver create(final Configuration config);
   }
   
   /**
@@ -49,5 +49,5 @@ public interface Driver {
    * 
    * @throws Exception 
    */
-  public abstract void run() throws Exception;
+  void run() throws Exception;
 }

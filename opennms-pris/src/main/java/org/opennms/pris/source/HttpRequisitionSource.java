@@ -53,6 +53,7 @@ public class HttpRequisitionSource implements Source {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HttpRequisitionSource.class);
 
+    // instanceName?
     private final String instance;
     private final Configuration config;
 
@@ -63,6 +64,7 @@ public class HttpRequisitionSource implements Source {
 
     @Override
     public Object dump() throws Exception {
+        // debug level?
         LOGGER.info("HttpRequisitionSource at work....");
         Requisition requisition = null;
 

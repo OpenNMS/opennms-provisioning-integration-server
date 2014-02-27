@@ -50,8 +50,10 @@ import java.util.Collection;
  *
  * @author Dustin Frisch <fooker@lab.sh>
  */
+// formating seems to be corrupt (2 spaces vs 4 spaces?)
 public class FileDriver implements Driver {
 
+   // unused code?!
   private static final Logger LOGGER = LoggerFactory.getLogger(FileDriver.class);
 
   public static final class Factory implements Driver.Factory {
@@ -75,7 +77,7 @@ public class FileDriver implements Driver {
     final String instanceGlob = this.config.getString("requisitions", "*");
     final Collection<String> instances = Starter.getConfigManager().getInstances(instanceGlob);
     
-    // Get the target directory and ensure it exitst
+    // Get the target directory and ensure it exist
     final Path targetBase = Paths.get(this.config.getString("target"));
     Files.createDirectories(targetBase);
     

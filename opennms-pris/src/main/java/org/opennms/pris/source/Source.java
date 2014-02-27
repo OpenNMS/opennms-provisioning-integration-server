@@ -37,7 +37,7 @@ import org.apache.commons.configuration.Configuration;
 public interface Source {
   
   public static interface Factory {
-    public abstract Source create(final String instance,
+      Source create(final String instance,
                                   final Configuration config);
   }
 
@@ -51,5 +51,7 @@ public interface Source {
    * 
    * @throws Exception 
    */
-  public abstract Object dump() throws Exception;
+  // when the method should load data, why is it named dump?
+  // can you use T (generics) here? e.g. public interface Source<T> and use T dump() ?
+  Object dump() throws Exception;
 }

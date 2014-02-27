@@ -28,7 +28,6 @@
 package org.opennms.pris;
 
 import com.google.common.collect.ImmutableMap;
-import java.util.Map;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.opennms.netmgt.provision.persist.requisition.Requisition;
@@ -51,6 +50,8 @@ import org.opennms.pris.vmware.source.VmwareSource;
 import org.opennms.pris.xls.source.XlsSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Map;
 
 /**
  * Generates a requisition.
@@ -112,6 +113,7 @@ public class RequisitionProvider {
    */
   public RequisitionProvider(final String instance) throws ConfigurationException {
     // Get the configuration for the instance
+      // please do not call static config stuff
     this.config = Starter.getConfigManager().getInstanceConfig(instance);
 
     // Create the source
@@ -121,6 +123,8 @@ public class RequisitionProvider {
       this.source = sourceFactory.create(instance, this.config);
 
     } else {
+       // Objects.requireNonNull(T) instead this if
+       // you could use something like Objects.
       throw new IllegalArgumentException("Unknown source implementation: " + sourceName);
     }
     
@@ -128,6 +132,7 @@ public class RequisitionProvider {
     // specified, a default mapper for the configured source is used
     final String mapperName = this.config.getString("mapper", "default" + "." + this.config.getString("source"));
     final Mapper.Factory mapperFactory = MAPPERS.get(mapperName);
+    // Objects.requireNonNull(T) instead this if
     if (mapperFactory != null) {
       this.mapper = mapperFactory.create(instance, this.config);
       

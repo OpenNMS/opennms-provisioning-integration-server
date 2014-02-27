@@ -40,9 +40,8 @@ import org.opennms.netmgt.provision.persist.requisition.Requisition;
  */
 public interface Mapper {
   
-  public static interface Factory {
-    public abstract Mapper create(final String instance,
-                                  final Configuration config);
+  interface Factory {
+    Mapper create(final String instance, final Configuration config);
   }
   
   /**
@@ -58,5 +57,6 @@ public interface Mapper {
    * 
    * @throws Exception 
    */
-  public abstract Requisition map(final Object data, Requisition requisition) throws Exception;
+  // can you use generics (T) here?
+  Requisition map(final Object data, Requisition requisition) throws Exception;
 }

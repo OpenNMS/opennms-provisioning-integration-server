@@ -25,27 +25,19 @@ package org.opennms.pris.jdbc.source;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.lang.StringUtils;
 import org.opennms.netmgt.model.PrimaryType;
-import org.opennms.netmgt.provision.persist.requisition.Requisition;
-import org.opennms.netmgt.provision.persist.requisition.RequisitionAsset;
-import org.opennms.netmgt.provision.persist.requisition.RequisitionCategory;
-import org.opennms.netmgt.provision.persist.requisition.RequisitionInterface;
-import org.opennms.netmgt.provision.persist.requisition.RequisitionMonitoredService;
-import org.opennms.netmgt.provision.persist.requisition.RequisitionNode;
+import org.opennms.netmgt.provision.persist.requisition.*;
+import org.opennms.pris.ASSET_FIELD;
 import org.opennms.pris.source.Source;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import org.opennms.pris.ASSET_FIELD;
+import java.sql.*;
 
 /**
- * A JDBC data source allows to connect to an SQL database and extract data in given format. The result set is mapped to
+ * A JDBC data source allows to connect to an SQL database and extract data in a given format. The result set is mapped to
  * an OpenNMS requisition.
  */
+// move to org.opennms.pris.source.jdbc
 public class JdbcSource implements Source {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JdbcSource.class);
