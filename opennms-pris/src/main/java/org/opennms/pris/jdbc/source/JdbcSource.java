@@ -40,7 +40,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import org.opennms.pris.ASSET_FIELD;
+import org.opennms.pris.AssetField;
 
 /**
  * A JDBC data source allows to connect to an SQL database and extract data in given format. The result set is mapped to
@@ -172,14 +172,14 @@ public class JdbcSource implements Source {
                         }
                     }
 
-                    for (ASSET_FIELD assetField : ASSET_FIELD.values()) {
-                        String assetValue = getString(resultSet, "Asset_" + assetField.getFieldName());
+                    for (AssetField assetField : AssetField.values()) {
+                        String assetValue = getString(resultSet, "Asset_" + assetField.FIELD_NAME);
                         if (assetValue != null) {
-                            LOGGER.info("Adding to node:{} the asset:{} with value:{}", node.getNodeLabel(), assetField.getFieldName(), assetValue);
-                            if (node.getAsset(assetField.getFieldName()) == null) {
-                                node.getAssets().add(new RequisitionAsset(assetField.getFieldName(), assetValue));
+                            LOGGER.info("Adding to node:{} the asset:{} with value:{}", node.getNodeLabel(), assetField.FIELD_NAME, assetValue);
+                            if (node.getAsset(assetField.FIELD_NAME) == null) {
+                                node.getAssets().add(new RequisitionAsset(assetField.FIELD_NAME, assetValue));
                             } else {
-                                node.getAsset(assetField.getFieldName()).setValue(assetValue);
+                                node.getAsset(assetField.FIELD_NAME).setValue(assetValue);
                             }
                         }
                     }

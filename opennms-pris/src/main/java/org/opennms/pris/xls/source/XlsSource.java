@@ -43,7 +43,7 @@ import org.opennms.netmgt.provision.persist.requisition.RequisitionCategory;
 import org.opennms.netmgt.provision.persist.requisition.RequisitionInterface;
 import org.opennms.netmgt.provision.persist.requisition.RequisitionMonitoredService;
 import org.opennms.netmgt.provision.persist.requisition.RequisitionNode;
-import org.opennms.pris.ASSET_FIELD;
+import org.opennms.pris.AssetField;
 import org.opennms.pris.Starter;
 import org.opennms.pris.source.Source;
 import org.slf4j.Logger;
@@ -181,14 +181,14 @@ public class XlsSource implements Source {
 
     private Map<String, Integer> initializeAssetColumns(Sheet sheet) {
         Map<String, Integer> result = new HashMap<>();
-        for (ASSET_FIELD prefix : ASSET_FIELD.values()) {
+        for (AssetField prefix : AssetField.values()) {
             Cell[] row = sheet.getRow(0);
             for (Cell cell : row) {
-                if (cell.getContents().trim().toLowerCase().startsWith(PREFIX_FOR_ASSETS.toLowerCase() + prefix.getFieldName().toLowerCase())) {
-                    if (result.containsKey(prefix.getFieldName())) {
-                        result.put(prefix.getFieldName(), cell.getColumn());
+                if (cell.getContents().trim().toLowerCase().startsWith(PREFIX_FOR_ASSETS.toLowerCase() + prefix.FIELD_NAME.toLowerCase())) {
+                    if (result.containsKey(prefix.FIELD_NAME)) {
+                        result.put(prefix.FIELD_NAME, cell.getColumn());
                     } else {
-                        result.put(prefix.getFieldName(), cell.getColumn());
+                        result.put(prefix.FIELD_NAME, cell.getColumn());
                     }
                 }
             }

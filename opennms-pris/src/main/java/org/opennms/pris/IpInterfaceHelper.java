@@ -53,6 +53,9 @@ public class IpInterfaceHelper {
     private List<String> ipBlackList = new ArrayList<>();
     private List<String> ipWhiteList = new ArrayList<>();
 
+    /**
+     * Returns null if no Network was found that is whitelisted and not blacklisted.
+     */
     public Network selectManagementNetworkWhiteAndBlackOnly(Computer computer) {
         List<Network> possibleNetworks = new ArrayList<>();
         for (Network network : computer.getNetworks()) {

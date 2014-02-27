@@ -43,7 +43,7 @@ import java.util.Collections;
  * The configuration manager.
  * 
  * The manager provides a global configuration and a configuration for each
- * instance.
+ * instance that represents the requisition name.
  * 
  * The configuration base path is the current working directory and can be
  * overwritten by the {@literal config} system property.
@@ -84,11 +84,6 @@ public class ConfigManager {
     }};
   }
 
-  /**
-   * Returns the global configuration.
-   * 
-   * @return global configuration
-   */
   public Configuration getGlobalConfig() {
     return this.globalConfig;
   }
@@ -125,8 +120,7 @@ public class ConfigManager {
    * @throws ConfigurationException
    */
   public Collection<String> getInstances(final String glob) throws ConfigurationException {
-    try (final DirectoryStream<Path> stream = Files.newDirectoryStream(this.base,
-                                                                       glob)) {
+    try (final DirectoryStream<Path> stream = Files.newDirectoryStream(this.base, glob)) {
       
       // The list of found instances
       Collection<String> instances = new ArrayList<>();
