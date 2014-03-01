@@ -1,30 +1,28 @@
-/*******************************************************************************
+/**
+ * *****************************************************************************
  * This file is part of OpenNMS(R).
  *
- * Copyright (C) 2014 The OpenNMS Group, Inc.
- * OpenNMS(R) is Copyright (C) 1999-2014 The OpenNMS Group, Inc.
+ * Copyright (C) 2014 The OpenNMS Group, Inc. OpenNMS(R) is Copyright (C)
+ * 1999-2014 The OpenNMS Group, Inc.
  *
  * OpenNMS(R) is a registered trademark of The OpenNMS Group, Inc.
  *
- * OpenNMS(R) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published
- * by the Free Software Foundation, either version 3 of the License,
- * or (at your option) any later version.
+ * OpenNMS(R) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any later
+ * version.
  *
- * OpenNMS(R) is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * OpenNMS(R) is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with OpenNMS(R). If not, see:
- * http://www.gnu.org/licenses/
+ * You should have received a copy of the GNU General Public License along with
+ * OpenNMS(R). If not, see: http://www.gnu.org/licenses/
  *
- * For more information contact:
- * OpenNMS(R) Licensing <license@opennms.org>
- * http://www.opennms.org/
- * http://www.opennms.com/
- *******************************************************************************/
+ * For more information contact: OpenNMS(R) Licensing <license@opennms.org>
+ * http://www.opennms.org/ http://www.opennms.com/
+ * *****************************************************************************
+ */
 package org.opennms.pris;
 
 import org.apache.commons.configuration.Configuration;
@@ -54,7 +52,8 @@ public class IpInterfaceHelper {
     private List<String> ipWhiteList = new ArrayList<>();
 
     /**
-     * Returns null if no Network was found that is whitelisted and not blacklisted.
+     * Returns null if no Network was found that is whitelisted and not
+     * blacklisted.
      */
     public Network selectManagementNetworkWhiteAndBlackOnly(Computer computer) {
         List<Network> possibleNetworks = new ArrayList<>();
@@ -67,16 +66,20 @@ public class IpInterfaceHelper {
                 LOGGER.debug("FOUND A NETWORK WITHOUT IPADDRESS FOR COMPUTER ID:{} NAME:{}", computer.getHardware().getId(), computer.getHardware().getName());
             }
         }
+        //multiple networks are valid options. pick the first one.
         if (possibleNetworks.size() >= 1) {
             return possibleNetworks.get(0);
         } else {
+            //no valid network is listed. check the ip that was selected by ocs it self.
             String ocsPickedIp = computer.getHardware().getIpaddr();
             if (!ocsPickedIp.isEmpty()) {
                 if (isIpWhiteListed(ocsPickedIp) && !isIpBlackListed(ocsPickedIp)) {
+                    //the ocs selected ip is not listed in the networks. create a fake netork and return it.
                     Network fakeNetwork = new Network();
                     fakeNetwork.setIPAddress(ocsPickedIp);
                     return fakeNetwork;
                 } else {
+                    //no valid network or address found.
                     return null;
                 }
             } else {
@@ -87,19 +90,27 @@ public class IpInterfaceHelper {
     }
 
     public String selectIpAddressWhiteAndBlackOnly(SnmpDevice snmpDevice) {
-        String ipAddr = snmpDevice.getSNMP().getIPAddr();
-        if (isIpWhiteListed(ipAddr) && !isIpBlackListed(ipAddr)) {
-            return ipAddr;
+        if (snmpDevice != null) {
+            String ipAddr = snmpDevice.getSNMP().getIPAddr();
+            if (isIpWhiteListed(ipAddr) && !isIpBlackListed(ipAddr)) {
+                return ipAddr;
+            }
         }
         return null;
     }
 
+    /**
+     * return null if the ipAddress of the snmpdevice is blacklisted. And if the
+     * snmpDevice is null.
+     */
     public String selectIpAddress(SnmpDevice snmpDevice) {
-        String ipAddr = snmpDevice.getSNMP().getIPAddr();
-        if (isIpBlackListed(ipAddr)) {
-            return null;
+        if (snmpDevice != null) {
+            String ipAddr = snmpDevice.getSNMP().getIPAddr();
+            if (!isIpBlackListed(ipAddr)) {
+                return ipAddr;
+            }
         }
-        return ipAddr;
+        return null;
     }
 
     public Network selectManagementNetwork(Computer computer) {
@@ -202,15 +213,17 @@ public class IpInterfaceHelper {
             Properties catMap = new Properties();
             try {
                 File categoryMap = new File(config.getString("categoryMap"));
-                catMap.load(new FileInputStream(instance + File.separator+ categoryMap));
+                catMap.load(new FileInputStream(instance + File.separator + categoryMap));
                 LOGGER.info("Loaded properties from {}", categoryMap.getAbsolutePath());
-            } catch (Exception e) {
+            } catch (IOException e) {
                 LOGGER.error("Could not read category mappings from", e);
                 throw new RuntimeException(e);
             }
 
             for (Entry entry : myComputer.getAccountInfo().getEntries()) {
-                if ("".equals(entry.getValue())) continue;
+                if (entry.getValue().isEmpty()) {
+                    continue;
+                }
                 LOGGER.info("On computer {} got an accountinfo entry called {} with value {}", myComputer.getHardware().getName(), entry.getName(), entry.getValue());
                 if (catMap.containsKey(entry.getName() + "." + entry.getValue())) {
                     categories.add(new RequisitionCategory(catMap.get(entry.getName() + "." + entry.getValue()).toString()));

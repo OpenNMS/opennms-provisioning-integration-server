@@ -43,7 +43,7 @@ import java.sql.Statement;
 import org.opennms.pris.AssetField;
 
 /**
- * A JDBC data source allows to connect to an SQL database and extract data in given format. The result set is mapped to
+ * A JDBC data source allows to connect to an SQL database and extract data in a given format. The result set is mapped to
  * an OpenNMS requisition.
  */
 public class JdbcSource implements Source {
