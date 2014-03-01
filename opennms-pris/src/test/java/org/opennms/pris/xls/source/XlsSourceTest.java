@@ -14,7 +14,7 @@ import org.opennms.netmgt.provision.persist.requisition.RequisitionCategory;
 import org.opennms.netmgt.provision.persist.requisition.RequisitionInterface;
 import org.opennms.netmgt.provision.persist.requisition.RequisitionMonitoredService;
 import org.opennms.netmgt.provision.persist.requisition.RequisitionNode;
-import org.opennms.pris.ASSET_FIELD;
+import org.opennms.pris.AssetField;
 
 public class XlsSourceTest {
 
@@ -34,8 +34,8 @@ public class XlsSourceTest {
         RequisitionNode node = new RequisitionNode();
         node.setNodeLabel("TestNode");
         node.setForeignId("TestNode");
-        node.getAssets().add(new RequisitionAsset(ASSET_FIELD.city.getFieldName(), "CityA"));
-        node.getAssets().add(new RequisitionAsset(ASSET_FIELD.description.getFieldName(), "Description"));
+        node.getAssets().add(new RequisitionAsset(AssetField.city.FIELD_NAME, "CityA"));
+        node.getAssets().add(new RequisitionAsset(AssetField.description.FIELD_NAME, "Description"));
         RequisitionInterface reqInterface = new RequisitionInterface();
         reqInterface.setIpAddr("1.2.3.4");
         reqInterface.setSnmpPrimary(PrimaryType.PRIMARY);
