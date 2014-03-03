@@ -81,17 +81,17 @@ The `xls.source` reads a _XLS_ spreadsheet file and creates an _OpenNMS requisit
 
 | parameter  | required  | description                      |
 |------------|:---------:|---------------------------------:|
-| `xls.file` | *         | the path of the xls file to read |
+| xls.file   | *         | the path of the xls file to read |
 
 The structure of the spreadsheet has to follow this rules. The source is reading from a sheet named like the requisition you are requesting. The first row of the sheet is reserved to column-names. This column-names have to start with certain prefixes to be recognized.
 
 | prefixes  | required | description                        |
 |-----------|:--------:|-----------------------------------:|
-| `Node_`   | * | will be interpreted as node label and `foreignId` |
-| `IP_`     | * | will be interpreted as an IP address as a new interface on the node |
-| `MgmtType_` | * | is interpreted as `snmp-primary` flag and controls how the interface can be used to communicate with the SNMP agent. Valid are `P` (Primary), `S` (Secondary) and `N` (None). |
-| `cat_`    |   | will be interpreted as a surveillance-category. Multiple comma separated categories can be provided. It can be used multiple times per sheet.|
-| `svc_`    |   | will be interpreted as a service on the interface of the node. Multiple comma separated services can be provided. It can be used multiple times per sheet.|
+| Node_     | * | will be interpreted as node label and `foreignId` |
+| IP_       | * | will be interpreted as an IP address as a new interface on the node |
+| MgmtType_ | * | is interpreted as `snmp-primary` flag and controls how the interface can be used to communicate with the SNMP agent. Valid are `P` (Primary), `S` (Secondary) and `N` (None). |
+| cat_      |   | will be interpreted as a surveillance-category. Multiple comma separated categories can be provided. It can be used multiple times per sheet.|
+| svc_      |   | will be interpreted as a service on the interface of the node. Multiple comma separated services can be provided. It can be used multiple times per sheet.|
 
 This source also supports all asset-fields by using `Asset_` as a prefix followed by the `asset-field-name`. The city field of the assets can be addressed like this: `Asset_City`. This is not case-sensitive.
 
@@ -123,8 +123,20 @@ The jdbc source provides the ability to run an SQL-Query against an external sys
 | jdbc.user            |   |user name for database connection |
 | jdbc.password        |   |password for database connection |
 
+The following column-headers will be mapped from the result set to the OpenNMS requisitoin:
+
+| column-header    | required | description                        |
+|------------------|:--------:|-----------------------------------:|
+| Foreign_Id       | * | will be interpreted as `foreignId` on the node |
+| IP_Address       |   | will be interpreted as an IP address as a new interface on the node |
+| MgmtType         |   | is interpreted as `snmp-primary` flag and controls how the interface can be used to communicate with the SNMP agent. Valid are `P` (Primary), `S` (Secondary) and `N` (None). |
+| Node_Label       |   | will be interpreted as node label for the node identified by the `Foreign_Id`|
+| Cat              |   | will be interpreted as a surveillance-category for the node identified by the `Foreign_Id`.
+| Svc              |   | will be interpreted as a service on the interface of the node identified by the `Foreign_Id` and `IP_Address` field.|
+
 This source also supports all asset-fields by using `Asset_` as a prefix followed by the `asset-field-name`. The city field of the assets can be addressed like this: `yourvalue AS Asset_City`. This is not case-sensitive.
-TODO the list of aliases for the mapping is missing.
+
+Every row of the result set will be checked for the listed column-headers. The provided data will be added to the corresponding node. Multiple result rows with matching `Foreign_Id` will be added to the corresponding node.
 
 ### OCS Source
 _OCS-Inventory NG_ is handling computers and SNMP devices separately in its APIs. For that reason there are two different sources available to import nodes from _OCS_. Some parameters are part of both sources and described first.
@@ -160,16 +172,16 @@ The merge source allows to merge two requisitions. You can also use provided res
 
 | parameter                    | required | description             |
 |------------------------------|:--------:|------------------------:|
-| `requisition.A.url`          | *        |URL to the requisition A |
-| `requisition.A.username`     |          |username for access      |
-| `requisition.A.password`     |          |password for access      |
-|                              |:        :|                        :|
-| `requisition.B.url`          | *        |URL to the requisition B |
-| `requisition.B.username`     |          |username for access      |
-| `requisition.B.password`     |          |password for access      |
-|                              |:        :|                        :|
-| `requisition.merge.keepAllA` |          | if this parameters is present in the config all nodes from requisition A will be present in the resulting requisition. |
-| `requisition.merge.keepAllB` |          | if this parameters is present in the config all nodes from requisition B will be present in the resulting requisition. |
+|  requisition.A.url           | *        |URL to the requisition A |
+|  requisition.A.username      |          |username for access      |
+|  requisition.A.password      |          |password for access      |
+|                              |          |                         |
+|  requisition.B.url           | *        |URL to the requisition B |
+|  requisition.B.username      |          |username for access      |
+|  requisition.B.password      |          |password for access      |
+|                              |          |                         |
+|  requisition.merge.keepAllA  |          | if this parameters is present in the config all nodes from requisition A will be present in the resulting requisition. |
+|  requisition.merge.keepAllB  |          | if this parameters is present in the config all nodes from requisition B will be present in the resulting requisition. |
 
 This source is reading two already defined requisitions via _HTTP_ and merges them into one new requisition. By default the resulting requisition will contain all nodes that are present in both requisitions, identified by the `foreignId`. The A-Node (from requisition A) is enriched with the data from B-Node.
 
