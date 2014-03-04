@@ -274,11 +274,11 @@ public class HttpRequisitionMergeSource implements Source {
     }
 
     private boolean isKeepAllA() {
-        return this.config.getBoolean("requisition.merge.keepAllA", Boolean.FALSE);
+        return this.config.getBoolean("requisition.A.keepAll", Boolean.FALSE);
     }
 
     private boolean isKeepAllB() {
-        return this.config.getBoolean("requisition.merge.keepAllB", Boolean.FALSE);
+        return this.config.getBoolean("requisition.B.keepAll", Boolean.FALSE);
     }
 
     public static class Factory implements Source.Factory {
