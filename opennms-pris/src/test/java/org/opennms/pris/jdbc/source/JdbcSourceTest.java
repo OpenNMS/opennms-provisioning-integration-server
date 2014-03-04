@@ -1,14 +1,15 @@
 package org.opennms.pris.jdbc.source;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
 
 public class JdbcSourceTest {
 
@@ -18,15 +19,23 @@ public class JdbcSourceTest {
     private final String CONNECTION_URL_SHUTDOWN = "jdbc:derby:memory:testDB;shutdown=true;";
     private final String CONNECTION_URL_DROP = "jdbc:derby:memory:testDB;drop=true";
 
-    private final String SQL_CREATE_ALL = "CREATE TABLE node ("
-            + "id INT NOT NULL, "
-            + "name VARCHAR(20) NOT NULL, "
-            + "PRIMARY KEY (id))";
+    private final String SQL_CREATE_ALL = "CREATE TABLE node (" +
+            "foreignId INT," +
+            "nodeLabel VARCHAR(255)," +
+            "ipAddress VARCHAR(255)," +
+            "ifType CHAR(1)," +
+            "description VARCHAR(255)," +
+            "city VARCHAR(255)," +
+            "state VARCHAR(255)," +
+            "serviceName VARCHAR(255)," +
+            "categoryName VARCHAR(255)," +
+            "PRIMARY KEY (foreignId))";
 
     @BeforeClass
     public static void setUpClass() {
         System.setProperty("derby.stream.error.field", "DerbyUtil.DEV_NULL");
     }
+
 
     @Before
     public void setUp() throws ClassNotFoundException, SQLException {
@@ -34,8 +43,15 @@ public class JdbcSourceTest {
         connection = DriverManager.getConnection(CONNECTION_URL_CREATE);
         Statement stmnt = connection.createStatement();
         stmnt.executeUpdate(SQL_CREATE_ALL);
-        String DML = "INSERT INTO node VALUES (1, 'test data')";
-        stmnt = connection.createStatement();
+
+        insertRow("1", "node1", "192.168.0.1", "P", "description1", "city1", "state1", "service1", "category1");
+        insertRow("2", "node2", "192.168.0.2", "P", "description2", "city2", "state2", "service2", "category2");
+        insertRow("3", "node3", "192.168.0.3", "P", "description3", "city3", "state3", "service3", "category3");
+    }
+
+    private void insertRow(String foreignId, String nodeLabel, String ipAddress, String ifType, String description, String city, String state, String serviceName, String categoryName) throws SQLException {
+        String DML = "INSERT INTO node (foreignId, nodeLabel, ipAddress, ifType, description, city, state, serviceName, categoryName) VALUES (" + foreignId + ", '" + nodeLabel + "', '" + ipAddress + "', '" + ifType + "', '" + description + "', '" + city + "', '" + state + "', '" + serviceName + "', '" + categoryName + "')";
+        Statement stmnt = connection.createStatement();
         stmnt.executeUpdate(DML);
     }
 
@@ -53,9 +69,17 @@ public class JdbcSourceTest {
     public void testDB() throws SQLException {
         System.out.println("testDB");
         Statement selectAll = connection.createStatement();
-        ResultSet selectAllResult = selectAll.executeQuery("SELECT * FROM node");
+        ResultSet selectAllResult = selectAll.executeQuery("SELECT foreignId AS Foreign_Id, " +
+                "nodelabel AS Node_Label," +
+                "ipAddress AS IP_Address," +
+                "ifType AS If_Type," +
+                "description AS Asset_Description," +
+                "city AS Asset_City," +
+                "state AS Asset_State," +
+                "serviceName AS Svc," +
+                "categoryName AS Cat FROM node");
         while (selectAllResult.next()) {
-            System.out.println("Reulst: " + selectAllResult.getString("id") + " " + selectAllResult.getString("name"));
+            System.out.println("Results: " + selectAllResult.getString("Foreign_Id") + " " + selectAllResult.getString("Node_Label"));
         }
     }
 
