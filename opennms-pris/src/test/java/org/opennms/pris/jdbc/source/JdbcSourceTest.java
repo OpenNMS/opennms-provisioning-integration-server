@@ -1,15 +1,19 @@
 package org.opennms.pris.jdbc.source;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import org.apache.commons.configuration.Configuration;
+import org.apache.commons.configuration.ConfigurationException;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.opennms.netmgt.provision.persist.requisition.Requisition;
+import org.opennms.pris.ConfigManager;
 
 public class JdbcSourceTest {
 
@@ -19,23 +23,34 @@ public class JdbcSourceTest {
     private final String CONNECTION_URL_SHUTDOWN = "jdbc:derby:memory:testDB;shutdown=true;";
     private final String CONNECTION_URL_DROP = "jdbc:derby:memory:testDB;drop=true";
 
-    private final String SQL_CREATE_ALL = "CREATE TABLE node (" +
-            "foreignId INT," +
-            "nodeLabel VARCHAR(255)," +
-            "ipAddress VARCHAR(255)," +
-            "ifType CHAR(1)," +
-            "description VARCHAR(255)," +
-            "city VARCHAR(255)," +
-            "state VARCHAR(255)," +
-            "serviceName VARCHAR(255)," +
-            "categoryName VARCHAR(255)," +
-            "PRIMARY KEY (foreignId))";
+    private final String INSTANCE = "Test-Instance";
+    
+    private final String SQL_CREATE_ALL = "CREATE TABLE node ("
+            + "foreignId INT,"
+            + "nodeLabel VARCHAR(255),"
+            + "ipAddress VARCHAR(255),"
+            + "ifType CHAR(1),"
+            + "description VARCHAR(255),"
+            + "city VARCHAR(255),"
+            + "state VARCHAR(255),"
+            + "serviceName VARCHAR(255),"
+            + "categoryName VARCHAR(255),"
+            + "PRIMARY KEY (foreignId))";
+
+    private final String SQL_SELECT_STATEMENT_TEST_1 = "SELECT foreignId AS Foreign_Id, "
+            + "nodelabel AS Node_Label,"
+            + "ipAddress AS IP_Address,"
+            + "ifType AS If_Type,"
+            + "description AS Asset_Description,"
+            + "city AS Asset_City,"
+            + "state AS Asset_State,"
+            + "serviceName AS Svc,"
+            + "categoryName AS Cat FROM node";
 
     @BeforeClass
     public static void setUpClass() {
         System.setProperty("derby.stream.error.field", "DerbyUtil.DEV_NULL");
     }
-
 
     @Before
     public void setUp() throws ClassNotFoundException, SQLException {
@@ -69,22 +84,24 @@ public class JdbcSourceTest {
     public void testDB() throws SQLException {
         System.out.println("testDB");
         Statement selectAll = connection.createStatement();
-        ResultSet selectAllResult = selectAll.executeQuery("SELECT foreignId AS Foreign_Id, " +
-                "nodelabel AS Node_Label," +
-                "ipAddress AS IP_Address," +
-                "ifType AS If_Type," +
-                "description AS Asset_Description," +
-                "city AS Asset_City," +
-                "state AS Asset_State," +
-                "serviceName AS Svc," +
-                "categoryName AS Cat FROM node");
+        ResultSet selectAllResult = selectAll.executeQuery(SQL_SELECT_STATEMENT_TEST_1);
         while (selectAllResult.next()) {
             System.out.println("Results: " + selectAllResult.getString("Foreign_Id") + " " + selectAllResult.getString("Node_Label"));
         }
     }
 
     @Test
-    public void testDump() {
-        System.out.println("dump");
+    public void testDump() throws ConfigurationException {
+        Configuration config = new ConfigManager().getGlobalConfig();
+        config.setProperty("jdbc.driver", DRIVER);
+        config.setProperty("jdbc.url", CONNECTION_URL_CREATE);
+        config.setProperty("jdbc.user", "");
+        config.setProperty("jdbc.password", "");
+        config.setProperty("jdbc.selectStatement", SQL_SELECT_STATEMENT_TEST_1);
+
+        JdbcSource jdbcSource = new JdbcSource(INSTANCE, config);
+        Requisition requisition = (Requisition) jdbcSource.dump();
+        Assert.assertEquals(INSTANCE, requisition.getForeignSource());
+        Assert.assertEquals(3, requisition.getNodes().size());
     }
 }
