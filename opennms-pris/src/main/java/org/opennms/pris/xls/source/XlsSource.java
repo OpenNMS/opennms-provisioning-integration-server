@@ -247,10 +247,13 @@ public class XlsSource implements Source {
         return assets;
     }
 
-    private RequisitionInterface getInterfaceByRow(Sheet sheet, Integer rowID) {
+    private RequisitionInterface getInterfaceByRow(Sheet sheet, Integer rowID) throws InvalidInterfaceException {
         RequisitionInterface reqInterface = new RequisitionInterface();
-
-        reqInterface.setIpAddr(sheet.getCell(getRelevantColumnID(REQUIRED_PREFIXES.PREFIX_IP_ADDRESS.PREFIX), rowID).getContents().trim());
+        try {
+            reqInterface.setIpAddr(sheet.getCell(getRelevantColumnID(REQUIRED_PREFIXES.PREFIX_IP_ADDRESS.PREFIX), rowID).getContents().trim());
+        } catch (IllegalArgumentException ex) {
+            throw new InvalidInterfaceException("Invalid IP-Address for node '" + sheet.getCell(getRelevantColumnID(REQUIRED_PREFIXES.PREFIX_NODE.PREFIX), rowID).getContents().trim() + "' at row '" + rowID + "' and IP '" + sheet.getCell(getRelevantColumnID(REQUIRED_PREFIXES.PREFIX_IP_ADDRESS.PREFIX), rowID).getContents().trim() + "'" , ex);
+        }
         String interfaceType = sheet.getCell(getRelevantColumnID(REQUIRED_PREFIXES.PREFIX_INTERFACE_MANGEMENT_TYPE.PREFIX), rowID).getContents().trim();
         if (interfaceType.equalsIgnoreCase(INTERFACE_TYPE_PRIMARY)) {
             reqInterface.setSnmpPrimary(PrimaryType.PRIMARY);
