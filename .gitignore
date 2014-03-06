@@ -6,6 +6,6 @@ target/
 *.war
 *.ear
 *.iml
-/nbactions.xml
+**/*nbactions.xml
 *.iws
 *.ipr

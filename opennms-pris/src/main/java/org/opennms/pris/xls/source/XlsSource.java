@@ -1,3 +1,28 @@
+/**
+ * *****************************************************************************
+ * This file is part of OpenNMS(R).
+ *
+ * Copyright (C) 2014 The OpenNMS Group, Inc. OpenNMS(R) is Copyright (C)
+ * 1999-2014 The OpenNMS Group, Inc.
+ *
+ * OpenNMS(R) is a registered trademark of The OpenNMS Group, Inc.
+ *
+ * OpenNMS(R) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * OpenNMS(R) is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * OpenNMS(R). If not, see: http://www.gnu.org/licenses/
+ *
+ * For more information contact: OpenNMS(R) Licensing <license@opennms.org>
+ * http://www.opennms.org/ http://www.opennms.com/
+ * *****************************************************************************
+ */
 package org.opennms.pris.xls.source;
 
 import java.io.File;
@@ -21,7 +46,7 @@ import org.opennms.netmgt.provision.persist.requisition.RequisitionCategory;
 import org.opennms.netmgt.provision.persist.requisition.RequisitionInterface;
 import org.opennms.netmgt.provision.persist.requisition.RequisitionMonitoredService;
 import org.opennms.netmgt.provision.persist.requisition.RequisitionNode;
-import org.opennms.pris.ASSET_FIELD;
+import org.opennms.pris.AssetField;
 import org.opennms.pris.Starter;
 import org.opennms.pris.source.Source;
 import org.slf4j.Logger;
@@ -58,7 +83,7 @@ public class XlsSource implements Source {
     }
 
     @Override
-    public Object dump() {
+    public Object dump() throws MissingRequiredColumnHeaderException, Exception {
         Requisition requisition = new Requisition(instance);
         if (getXlsFile() != null) {
             xls = new File(getXlsFile());
@@ -80,9 +105,9 @@ public class XlsSource implements Source {
                     Integer row = 1;
                     while (row < sheet.getRows()) {
                         //TODO clean this if
-                        if (!sheet.getCell(getRelevantColumnID(REQUIRED_PREFIXES.PREFIX_NODE.getPrefix()), row).getContents().trim().isEmpty()) {
-                            if (row.equals(1) || !sheet.getCell(getRelevantColumnID(REQUIRED_PREFIXES.PREFIX_NODE.getPrefix()), row).getContents().trim().equalsIgnoreCase(sheet.getCell(getRelevantColumnID(REQUIRED_PREFIXES.PREFIX_NODE.getPrefix()), row - 1).getContents().trim())) {
-                                String nodeLabel = sheet.getCell(getRelevantColumnID(REQUIRED_PREFIXES.PREFIX_NODE.getPrefix()), row).getContents().trim();
+                        if (!sheet.getCell(getRelevantColumnID(REQUIRED_PREFIXES.PREFIX_NODE.PREFIX), row).getContents().trim().isEmpty()) {
+                            if (row.equals(1) || !sheet.getCell(getRelevantColumnID(REQUIRED_PREFIXES.PREFIX_NODE.PREFIX), row).getContents().trim().equalsIgnoreCase(sheet.getCell(getRelevantColumnID(REQUIRED_PREFIXES.PREFIX_NODE.PREFIX), row - 1).getContents().trim())) {
+                                String nodeLabel = sheet.getCell(getRelevantColumnID(REQUIRED_PREFIXES.PREFIX_NODE.PREFIX), row).getContents().trim();
                                 node = new RequisitionNode();
                                 node.setNodeLabel(nodeLabel);
                                 node.setForeignId(nodeLabel);
@@ -125,14 +150,17 @@ public class XlsSource implements Source {
         return optionalMultiColumns.get(prefix);
     }
 
-    private Map<String, Integer> initializeRequiredColumns(Sheet sheet) {
+    private Map<String, Integer> initializeRequiredColumns(Sheet sheet) throws MissingRequiredColumnHeaderException {
         Map<String, Integer> result = new HashMap<>();
         for (REQUIRED_PREFIXES prefix : REQUIRED_PREFIXES.values()) {
             Cell[] row = sheet.getRow(0);
             for (Cell cell : row) {
-                if (cell.getContents().trim().toLowerCase().startsWith(prefix.getPrefix().toLowerCase())) {
-                    result.put(prefix.getPrefix(), cell.getColumn());
+                if (cell.getContents().trim().toLowerCase().startsWith(prefix.PREFIX.toLowerCase())) {
+                    result.put(prefix.PREFIX, cell.getColumn());
                 }
+            }
+            if (!result.containsKey(prefix.PREFIX)) {
+                throw new MissingRequiredColumnHeaderException(prefix.PREFIX);
             }
         }
         return result;
@@ -143,13 +171,13 @@ public class XlsSource implements Source {
         for (OPTIONAL_PREFIXES prefix : OPTIONAL_PREFIXES.values()) {
             Cell[] row = sheet.getRow(0);
             for (Cell cell : row) {
-                if (cell.getContents().trim().toLowerCase().startsWith(prefix.getPrefix().toLowerCase())) {
-                    if (result.containsKey(prefix.getPrefix())) {
-                        result.get(prefix.getPrefix()).add(cell.getColumn());
+                if (cell.getContents().trim().toLowerCase().startsWith(prefix.PREFIX.toLowerCase())) {
+                    if (result.containsKey(prefix.PREFIX)) {
+                        result.get(prefix.PREFIX).add(cell.getColumn());
                     } else {
                         List<Integer> columnIds = new ArrayList<>();
                         columnIds.add(cell.getColumn());
-                        result.put(prefix.getPrefix(), columnIds);
+                        result.put(prefix.PREFIX, columnIds);
                     }
                 }
             }
@@ -159,14 +187,14 @@ public class XlsSource implements Source {
 
     private Map<String, Integer> initializeAssetColumns(Sheet sheet) {
         Map<String, Integer> result = new HashMap<>();
-        for (ASSET_FIELD prefix : ASSET_FIELD.values()) {
+        for (AssetField prefix : AssetField.values()) {
             Cell[] row = sheet.getRow(0);
             for (Cell cell : row) {
-                if (cell.getContents().trim().toLowerCase().startsWith(PREFIX_FOR_ASSETS.toLowerCase() + prefix.getFieldName().toLowerCase())) {
-                    if (result.containsKey(prefix.getFieldName())) {
-                        result.put(prefix.getFieldName(), cell.getColumn());
+                if (cell.getContents().trim().toLowerCase().startsWith(PREFIX_FOR_ASSETS.toLowerCase() + prefix.FIELD_NAME.toLowerCase())) {
+                    if (result.containsKey(prefix.FIELD_NAME)) {
+                        result.put(prefix.FIELD_NAME, cell.getColumn());
                     } else {
-                        result.put(prefix.getFieldName(), cell.getColumn());
+                        result.put(prefix.FIELD_NAME, cell.getColumn());
                     }
                 }
             }
@@ -176,7 +204,7 @@ public class XlsSource implements Source {
 
     private Set<RequisitionCategory> getCategoriesByRow(Sheet sheet, Integer rowID) {
         Set<RequisitionCategory> categories = new TreeSet<>();
-        List<Integer> relevantColumnIDs = getRelevantColumnIDs(OPTIONAL_PREFIXES.PREFIX_CATEGORY.getPrefix());
+        List<Integer> relevantColumnIDs = getRelevantColumnIDs(OPTIONAL_PREFIXES.PREFIX_CATEGORY.PREFIX);
         if (relevantColumnIDs != null) {
             for (Integer column : relevantColumnIDs) {
                 String rawCategories = sheet.getCell(column, rowID).getContents().trim();
@@ -193,7 +221,7 @@ public class XlsSource implements Source {
 
     private Set<RequisitionMonitoredService> getServicesByRow(Sheet sheet, Integer rowID) {
         Set<RequisitionMonitoredService> services = new TreeSet<>();
-        List<Integer> relevantColumnIDs = getRelevantColumnIDs(OPTIONAL_PREFIXES.PREFIX_SERVICE.getPrefix());
+        List<Integer> relevantColumnIDs = getRelevantColumnIDs(OPTIONAL_PREFIXES.PREFIX_SERVICE.PREFIX);
         if (relevantColumnIDs != null) {
             for (Integer column : relevantColumnIDs) {
                 String rawServices = sheet.getCell(column, rowID).getContents().trim();
@@ -222,8 +250,8 @@ public class XlsSource implements Source {
     private RequisitionInterface getInterfaceByRow(Sheet sheet, Integer rowID) {
         RequisitionInterface reqInterface = new RequisitionInterface();
 
-        reqInterface.setIpAddr(sheet.getCell(getRelevantColumnID(REQUIRED_PREFIXES.PREFIX_IP_ADDRESS.getPrefix()), rowID).getContents().trim());
-        String interfaceType = sheet.getCell(getRelevantColumnID(REQUIRED_PREFIXES.PREFIX_INTERFACE_TYPE.getPrefix()), rowID).getContents().trim();
+        reqInterface.setIpAddr(sheet.getCell(getRelevantColumnID(REQUIRED_PREFIXES.PREFIX_IP_ADDRESS.PREFIX), rowID).getContents().trim());
+        String interfaceType = sheet.getCell(getRelevantColumnID(REQUIRED_PREFIXES.PREFIX_INTERFACE_MANGEMENT_TYPE.PREFIX), rowID).getContents().trim();
         if (interfaceType.equalsIgnoreCase(INTERFACE_TYPE_PRIMARY)) {
             reqInterface.setSnmpPrimary(PrimaryType.PRIMARY);
         } else if (interfaceType.equalsIgnoreCase(INTERFACE_TYPE_SECONDARY)) {
@@ -254,16 +282,12 @@ public class XlsSource implements Source {
 
         PREFIX_NODE("Node_"),
         PREFIX_IP_ADDRESS("IP_"),
-        PREFIX_INTERFACE_TYPE("IfType_");
+        PREFIX_INTERFACE_MANGEMENT_TYPE("MgmtType_");
 
-        private String prefix;
+        private final String PREFIX;
 
         private REQUIRED_PREFIXES(String prefix) {
-            this.prefix = prefix;
-        }
-
-        private String getPrefix() {
-            return prefix;
+            this.PREFIX = prefix;
         }
     }
 
@@ -272,15 +296,10 @@ public class XlsSource implements Source {
         PREFIX_CATEGORY("cat_"),
         PREFIX_SERVICE("svc_");
 
-        private String prefix;
+        private final String PREFIX;
 
         private OPTIONAL_PREFIXES(String prefix) {
-            this.prefix = prefix;
-        }
-
-        private String getPrefix() {
-            return prefix;
+            this.PREFIX = prefix;
         }
     }
-
 }

@@ -37,6 +37,7 @@
     <opennmsUtilVersion>1.12.1</opennmsUtilVersion>
     <postgresqlDriverVersion>9.1-901-1.jdbc4</postgresqlDriverVersion>
     <slf4jVersion>1.7.5</slf4jVersion>
+    <apacheDerbyVersion>10.10.1.1</apacheDerbyVersion>
   </properties>
   <dependencies>
     <!-- Logging -->
@@ -133,6 +134,13 @@
       <version>${junitVersion}</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+	<groupId>org.apache.derby</groupId>
+	<artifactId>derby</artifactId>
+	<version>${apacheDerbyVersion}</version>
+        <scope>test</scope>
+    </dependency>
+            
     <!--
             <dependency>
                 <groupId>com.vmware</groupId>

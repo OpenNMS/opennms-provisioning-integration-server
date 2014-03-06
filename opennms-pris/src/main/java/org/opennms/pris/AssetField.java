@@ -1,6 +1,6 @@
 package org.opennms.pris;
 
-public enum ASSET_FIELD {
+public enum AssetField {
 
     additionalhardware("additionalhardware", "Additional hardware", "String", 0),
     address1("address1", "Address 1", "String", 0),
@@ -67,33 +67,32 @@ public enum ASSET_FIELD {
     vmwareState("vmwareState", "VMware state", "String", 0),
     vmwareTopologyInfo("vmwareTopologyInfo", "VMware Topology Info", "String", 0),
     zip("zip", "", "String", 0);
+    
+    /**
+     * Name of the AssetFiled in the system. Used in the database and in requisitions.
+     */
+    public final String FIELD_NAME;
+    
+    /**
+     * Nice name for the AssetFiled to display in the webUI for example.
+     */
+    public final String FIELD_DISPLAY_NAME;
+    
+    //TODO Class<?> vs String?
+    /**
+     * Type of the AssetFiled, like string or Integer
+     */
+    public final String FIELD_TYPE;
+    
+    /**
+     * The maximal length that the filed can hold. 0 for unknowen, -1 for unlimited.
+     */
+    public final Integer MAX_LENGTH;
 
-    private final String fieldName;
-    private final String fieldDisplayName;
-    private final String fieldType;
-    private final Integer maxLength;
-
-    ASSET_FIELD(String fieldName, String fieldDisplayName, String fieldType, Integer maxLength) {
-        this.fieldName = fieldName;
-        this.fieldDisplayName = fieldDisplayName;
-        this.fieldType = fieldType;
-        this.maxLength = maxLength;
+    private AssetField(String fieldName, String fieldDisplayName, String fieldType, Integer maxLength) {
+        this.FIELD_NAME = fieldName;
+        this.FIELD_DISPLAY_NAME = fieldDisplayName;
+        this.FIELD_TYPE = fieldType;
+        this.MAX_LENGTH = maxLength;
     }
-
-    public String getFieldName() {
-        return this.fieldName;
-    }
-
-    public String getFieldDisplayName() {
-        return this.fieldDisplayName;
-    }
-
-    public String getFieldType() {
-        return this.fieldType;
-    }
-
-    public Integer getMaxLength() {
-        return maxLength;
-    }
-
 }
