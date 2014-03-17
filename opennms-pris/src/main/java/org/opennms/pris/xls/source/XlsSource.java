@@ -29,6 +29,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +38,7 @@ import java.util.TreeSet;
 import jxl.Cell;
 import jxl.Sheet;
 import jxl.Workbook;
+import jxl.WorkbookSettings;
 import jxl.read.biff.BiffException;
 import org.apache.commons.configuration.Configuration;
 import org.opennms.netmgt.model.PrimaryType;
@@ -67,6 +69,7 @@ public class XlsSource implements Source {
     private Map<String, List<Integer>> optionalMultiColumns;
     private Map<String, Integer> assetColumns;
 
+    private final String ENCODING;
     private File xls = null;
 
     public static class Factory implements Source.Factory {
@@ -80,6 +83,7 @@ public class XlsSource implements Source {
     public XlsSource(final String instance, final Configuration config) {
         this.instance = instance;
         this.config = config;
+        this.ENCODING = config.getString("xls.encoding", "ISO-8859-1");
     }
 
     @Override
@@ -89,11 +93,18 @@ public class XlsSource implements Source {
             xls = new File(getXlsFile());
             if (xls.canRead()) {
                 try {
-                    Workbook workbook = Workbook.getWorkbook(xls);
+                    WorkbookSettings workbookSettings = new WorkbookSettings();
+                    workbookSettings.setEncoding(ENCODING);
+                    Workbook workbook = Workbook.getWorkbook(xls, workbookSettings);
+                    List<String> sheetNames = Arrays.asList(workbook.getSheetNames());
+                    if (!sheetNames.contains(instance)) {
+                        LOGGER.error("can not find sheet {} in workbook from file {}", instance, xls.getAbsolutePath());
+                        throw new RuntimeException("can not find sheet " + instance + " in workbook from file " + xls.getAbsolutePath());    
+                    }
                     Sheet sheet = workbook.getSheet(instance);
                     if (sheet == null) {
-                        LOGGER.error("can not find sheet {} in workbook from file {}", instance, xls.getAbsolutePath());
-                        throw new RuntimeException("reading sheet " + instance + " from " + xls.getAbsolutePath() + " failed. Dose the file contain a sheet called " + instance + "?");
+                        LOGGER.error("can not read sheet {} in workbook from file {} check the configured encoding {}", instance, xls.getAbsolutePath(), ENCODING);
+                        throw new RuntimeException("can not read sheet " + instance + " from file " + xls.getAbsolutePath() + " check the encoding " + ENCODING + ".");
                     }
 
                     requiredColumns = initializeRequiredColumns(sheet);
