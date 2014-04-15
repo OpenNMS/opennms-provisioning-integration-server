@@ -40,10 +40,10 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import org.opennms.pris.ASSET_FIELD;
+import org.opennms.pris.AssetField;
 
 /**
- * A JDBC data source allows to connect to an SQL database and extract data in given format. The result set is mapped to
+ * A JDBC data source allows to connect to an SQL database and extract data in a given format. The result set is mapped to
  * an OpenNMS requisition.
  */
 public class JdbcSource implements Source {
@@ -60,7 +60,7 @@ public class JdbcSource implements Source {
     private static final String COLUMN_CATEGORY = "Cat";
     private static final String COLUMN_SERVICE = "Svc";
     private static final String COLUMN_IP_ADDRESS = "Ip_Address";
-    private static final String COLUMN_INTERFACE_TYPE = "If_Type";
+    private static final String COLUMN_INTERFACE_MANGEMENT_TYPE = "MgmtType";
     private static final String COLUMN_FOREIGN_ID = "Foreign_Id";
     private static final String INTERFACE_TYPE_PRIMARY = "P";
     private static final String INTERFACE_TYPE_SECONDARY = "S";
@@ -142,7 +142,7 @@ public class JdbcSource implements Source {
                             node.getInterfaces().add(reqInterface);
                         }
 
-                        String ifType = getString(resultSet, COLUMN_INTERFACE_TYPE);
+                        String ifType = getString(resultSet, COLUMN_INTERFACE_MANGEMENT_TYPE);
 
                         if (INTERFACE_TYPE_PRIMARY.equalsIgnoreCase(ifType)) {
                             reqInterface.setSnmpPrimary(PrimaryType.PRIMARY);
@@ -161,7 +161,7 @@ public class JdbcSource implements Source {
                             }
                         }
                     } else {
-                        LOGGER.warn(COLUMN_IP_ADDRESS + " is null, ignoring " + COLUMN_INTERFACE_TYPE + " and " + COLUMN_SERVICE);
+                        LOGGER.warn(COLUMN_IP_ADDRESS + " is null, ignoring " + COLUMN_INTERFACE_MANGEMENT_TYPE + " and " + COLUMN_SERVICE);
                     }
 
                     String category = getString(resultSet, COLUMN_CATEGORY);
@@ -172,14 +172,14 @@ public class JdbcSource implements Source {
                         }
                     }
 
-                    for (ASSET_FIELD assetField : ASSET_FIELD.values()) {
-                        String assetValue = getString(resultSet, "Asset_" + assetField.getFieldName());
+                    for (AssetField assetField : AssetField.values()) {
+                        String assetValue = getString(resultSet, "Asset_" + assetField.FIELD_NAME);
                         if (assetValue != null) {
-                            LOGGER.info("Adding to node:{} the asset:{} with value:{}", node.getNodeLabel(), assetField.getFieldName(), assetValue);
-                            if (node.getAsset(assetField.getFieldName()) == null) {
-                                node.getAssets().add(new RequisitionAsset(assetField.getFieldName(), assetValue));
+                            LOGGER.info("Adding to node:{} the asset:{} with value:{}", node.getNodeLabel(), assetField.FIELD_NAME, assetValue);
+                            if (node.getAsset(assetField.FIELD_NAME) == null) {
+                                node.getAssets().add(new RequisitionAsset(assetField.FIELD_NAME, assetValue));
                             } else {
-                                node.getAsset(assetField.getFieldName()).setValue(assetValue);
+                                node.getAsset(assetField.FIELD_NAME).setValue(assetValue);
                             }
                         }
                     }

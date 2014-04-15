@@ -1,30 +1,28 @@
-/*******************************************************************************
+/**
+ * *****************************************************************************
  * This file is part of OpenNMS(R).
  *
- * Copyright (C) 2014 The OpenNMS Group, Inc.
- * OpenNMS(R) is Copyright (C) 1999-2014 The OpenNMS Group, Inc.
+ * Copyright (C) 2014 The OpenNMS Group, Inc. OpenNMS(R) is Copyright (C)
+ * 1999-2014 The OpenNMS Group, Inc.
  *
  * OpenNMS(R) is a registered trademark of The OpenNMS Group, Inc.
  *
- * OpenNMS(R) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published
- * by the Free Software Foundation, either version 3 of the License,
- * or (at your option) any later version.
+ * OpenNMS(R) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any later
+ * version.
  *
- * OpenNMS(R) is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * OpenNMS(R) is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with OpenNMS(R). If not, see:
- * http://www.gnu.org/licenses/
+ * You should have received a copy of the GNU General Public License along with
+ * OpenNMS(R). If not, see: http://www.gnu.org/licenses/
  *
- * For more information contact:
- * OpenNMS(R) Licensing <license@opennms.org>
- * http://www.opennms.org/
- * http://www.opennms.com/
- *******************************************************************************/
+ * For more information contact: OpenNMS(R) Licensing <license@opennms.org>
+ * http://www.opennms.org/ http://www.opennms.com/
+ * *****************************************************************************
+ */
 package org.opennms.pris.source;
 
 import org.apache.commons.configuration.Configuration;
@@ -51,17 +49,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Source to merge two requisitions (A and B) provided via HTTP. The merge behavior is configurable and allows
- * the following configuration:
+ * Source to merge two requisitions (A and B) provided via HTTP. The merge
+ * behavior is configurable and allows the following configuration:
  *
- * Default: natural join between A and B
- * keepAllA: is similar like an outer left join between A and B
- * keepAllB: is similar like an outer right join between A and B
+ * Default: natural join between A and B keepAllA: is similar like an outer left
+ * join between A and B keepAllB: is similar like an outer right join between A
+ * and B
  */
 public class HttpRequisitionMergeSource implements Source {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HttpRequisitionMergeSource.class);
 
+    /**
+     * the name of the merged requisition
+     */
     private final String instance;
     private final Configuration config;
 
@@ -162,6 +163,7 @@ public class HttpRequisitionMergeSource implements Source {
                 }
             }
         } else {
+            //TODO RuntimeException refactor
             throw new RuntimeException("one or more requisitions have not been loaded correctly");
         }
 
@@ -272,11 +274,11 @@ public class HttpRequisitionMergeSource implements Source {
     }
 
     private boolean isKeepAllA() {
-        return this.config.containsKey("requisition.merge.keepAllA");
+        return this.config.getBoolean("requisition.A.keepAll", Boolean.FALSE);
     }
 
     private boolean isKeepAllB() {
-        return this.config.containsKey("requisition.merge.keepAllB");
+        return this.config.getBoolean("requisition.B.keepAll", Boolean.FALSE);
     }
 
     public static class Factory implements Source.Factory {

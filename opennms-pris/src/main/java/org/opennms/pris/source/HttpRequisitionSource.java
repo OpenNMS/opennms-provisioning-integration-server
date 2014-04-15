@@ -1,30 +1,28 @@
-/*******************************************************************************
+/**
+ * *****************************************************************************
  * This file is part of OpenNMS(R).
  *
- * Copyright (C) 2014 The OpenNMS Group, Inc.
- * OpenNMS(R) is Copyright (C) 1999-2014 The OpenNMS Group, Inc.
+ * Copyright (C) 2014 The OpenNMS Group, Inc. OpenNMS(R) is Copyright (C)
+ * 1999-2014 The OpenNMS Group, Inc.
  *
  * OpenNMS(R) is a registered trademark of The OpenNMS Group, Inc.
  *
- * OpenNMS(R) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published
- * by the Free Software Foundation, either version 3 of the License,
- * or (at your option) any later version.
+ * OpenNMS(R) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any later
+ * version.
  *
- * OpenNMS(R) is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * OpenNMS(R) is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with OpenNMS(R). If not, see:
- * http://www.gnu.org/licenses/
+ * You should have received a copy of the GNU General Public License along with
+ * OpenNMS(R). If not, see: http://www.gnu.org/licenses/
  *
- * For more information contact:
- * OpenNMS(R) Licensing <license@opennms.org>
- * http://www.opennms.org/
- * http://www.opennms.com/
- *******************************************************************************/
+ * For more information contact: OpenNMS(R) Licensing <license@opennms.org>
+ * http://www.opennms.org/ http://www.opennms.com/
+ ******************************************************************************
+ */
 package org.opennms.pris.source;
 
 import org.apache.commons.configuration.Configuration;
@@ -53,6 +51,9 @@ public class HttpRequisitionSource implements Source {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HttpRequisitionSource.class);
 
+    /**
+     * the name of the resulting requisition
+     */
     private final String instance;
     private final Configuration config;
 
@@ -63,7 +64,7 @@ public class HttpRequisitionSource implements Source {
 
     @Override
     public Object dump() throws Exception {
-        LOGGER.info("HttpRequisitionSource at work....");
+        LOGGER.debug("HttpRequisitionSource at work....");
         Requisition requisition = null;
 
         if (getUrl() != null) {
