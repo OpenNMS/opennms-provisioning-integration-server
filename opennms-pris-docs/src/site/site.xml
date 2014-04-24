@@ -1,32 +1,29 @@
 <project name="opennms-pris-docs">
     <body>
         <menu name="Overview">
-            <item name="Overview" href="overview.html" />
+            <item name="Overview" href="index.html" />
+            <item name="Quickstart example" href="quickstart.html" />
         </menu>
         <menu name="Driver">
-            <item name="Driver" href="driver.html" />
-            <item name="File driver" href="file.driver.html" />
-            <item name="HTTP driver" href="http.driver.html" />
+            <item name="Driver" href="drivers.html" />
+            <item name="File driver" href="driver.file.html" />
+            <item name="HTTP driver" href="driver.http.html" />
         </menu>
         <menu name="Sources">
             <item name="Sources" href="sources.html" />
-            <item name="XLS Source" href="xls.source.html" />
-            <item name="JDBC Source" href="jdbc.source.html" />
-            <item name="OpenNMS Requisition Source" href="opennms.requisition.source.html" />
-            <item name="OCS Inventory Source" href="ocs.source.html" />
-            <item name="Merge Source" href="merge.source.html" />
+            <item name="XLS Source" href="source.xls.html" />
+            <item name="JDBC Source" href="source.jdbc.html" />
+            <item name="OpenNMS Requisition Source" href="source.opennms.requisition.html" />
+            <item name="Merge Source" href="source.merge.html" />
+            <item name="OCS Inventory Source" href="source.ocs.html" />
         </menu>
         <menu name="Mapper">
-            <item name="Mapper" href="mapper.html" />
-            <item name="OCS Mapper" href="ocs.mapper.html"/>
-            <item name="Asset field mapping" href="assetfield.mapping.html" />
+            <item name="Mapper" href="mappers.html" />
+            <item name="OCS Mapper" href="mapper.ocs.html"/>
+            <item name="Asset field mapping" href="mapping.assetfield.html" />
         </menu>
         <menu name="Scripts">
             <item name="Scripts" href="scripts.html" />
-            <!--
-            <item name="Mapper Scripts" href="mapper.scripts.html" />
-            <item name="Custom Scripts" href="custom.scripts.html" />
-            -->
         </menu>
     </body>
     <skin>
