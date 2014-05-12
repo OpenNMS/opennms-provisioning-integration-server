@@ -45,6 +45,8 @@ public class XlsSourceTest {
         node.getAssets().add(new RequisitionAsset(AssetField.city.FIELD_NAME, "Braunschweig"));
         node.getAssets().add(new RequisitionAsset(AssetField.comment.FIELD_NAME, "Died in Göttingen"));
         node.getAssets().add(new RequisitionAsset(AssetField.description.FIELD_NAME, "POB: Johann Carl Friedrich Gauß"));
+        node.getAssets().add(new RequisitionAsset(AssetField.vendor.FIELD_NAME, "Vater"));
+        node.getAssets().add(new RequisitionAsset(AssetField.vendorPhone.FIELD_NAME, "123"));
         RequisitionInterface reqInterface = new RequisitionInterface();
         reqInterface.setIpAddr("1.2.3.4");
         reqInterface.setSnmpPrimary(PrimaryType.PRIMARY);

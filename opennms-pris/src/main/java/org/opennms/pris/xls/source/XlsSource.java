@@ -201,7 +201,7 @@ public class XlsSource implements Source {
         for (AssetField prefix : AssetField.values()) {
             Cell[] row = sheet.getRow(0);
             for (Cell cell : row) {
-                if (cell.getContents().trim().toLowerCase().startsWith(PREFIX_FOR_ASSETS.toLowerCase() + prefix.FIELD_NAME.toLowerCase())) {
+                if (cell.getContents().trim().toLowerCase().equalsIgnoreCase(PREFIX_FOR_ASSETS + prefix.FIELD_NAME)) {
                     if (result.containsKey(prefix.FIELD_NAME)) {
                         result.put(prefix.FIELD_NAME, cell.getColumn());
                     } else {
