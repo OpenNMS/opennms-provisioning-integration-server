@@ -18,6 +18,7 @@ The following column-headers will be mapped from the result set to the OpenNMS r
 | Foreign_Id       | * | will be interpreted as `foreignId` on the node |
 | IP_Address       |   | will be interpreted as an IP address as a new interface on the node |
 | MgmtType         |   | is interpreted as `snmp-primary` flag and controls how the interface can be used to communicate with the SNMP agent. Valid are `P` (Primary), `S` (Secondary) and `N` (None). |
+| InterfaceStatus  |   | will be interpreted as Interface Status. Value has to be an integer. Use `1` for monitored and `3` for not monitored. |
 | Node_Label       |   | will be interpreted as node label for the node identified by the `Foreign_Id`|
 | Cat              |   | will be interpreted as a surveillance-category for the node identified by the `Foreign_Id`.
 | Svc              |   | will be interpreted as a service on the interface of the node identified by the `Foreign_Id` and `IP_Address` field.|

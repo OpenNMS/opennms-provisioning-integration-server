@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.opennms</groupId>
   <artifactId>pris-parent</artifactId>
-  <version>1.0.5</version>
+  <version>1.0.6</version>
   <packaging>pom</packaging>
   <name>OpenNMS :: Provisioning Integration Server :: Parent</name>
   <modules>
@@ -22,7 +22,7 @@
     <commonsConfigurationVersion>1.9</commonsConfigurationVersion>
     <commonsIoVersion>2.4</commonsIoVersion>
     <doxiaModuleMarkdownVersion>1.4</doxiaModuleMarkdownVersion>
-    <groovyVersion>2.1.6</groovyVersion>
+    <groovyVersion>2.2.2</groovyVersion>
     <guavaVersion>15.0</guavaVersion>
     <httpClientVersion>4.3.1</httpClientVersion>
     <httpCoreVersion>4.3</httpCoreVersion>
@@ -33,8 +33,8 @@
     <mavenWagonSshVersion>2.6</mavenWagonSshVersion>
     <mysqlConnectorVersion>5.1.28</mysqlConnectorVersion>
     <ocsInventoryClientVersion>1.0</ocsInventoryClientVersion>
-    <opennmsProvisionPersistenceVersion>1.12.1</opennmsProvisionPersistenceVersion>
-    <opennmsUtilVersion>1.12.1</opennmsUtilVersion>
+    <opennmsProvisionPersistenceVersion>1.12.5</opennmsProvisionPersistenceVersion>
+    <opennmsUtilVersion>1.12.5</opennmsUtilVersion>
     <postgresqlDriverVersion>9.1-901-1.jdbc4</postgresqlDriverVersion>
     <slf4jVersion>1.7.5</slf4jVersion>
     <apacheDerbyVersion>10.10.1.1</apacheDerbyVersion>
@@ -186,7 +186,7 @@
         <enabled>true</enabled>
       </releases>
       <id>opennms-release</id>
-      <name>OpenNMS Snapshot Maven Repository</name>
+      <name>OpenNMS Release Maven Repository</name>
       <url>http://maven.opennms.org/content/groups/opennms.org-release/</url>
     </repository>
   </repositories>
