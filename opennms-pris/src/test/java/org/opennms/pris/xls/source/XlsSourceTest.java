@@ -50,6 +50,7 @@ public class XlsSourceTest {
         RequisitionInterface reqInterface = new RequisitionInterface();
         reqInterface.setIpAddr("1.2.3.4");
         reqInterface.setSnmpPrimary(PrimaryType.PRIMARY);
+        reqInterface.setStatus(1);
         RequisitionMonitoredService service = new RequisitionMonitoredService("Test");
         reqInterface.getMonitoredServices().add(service);
         node.getInterfaces().add(reqInterface);

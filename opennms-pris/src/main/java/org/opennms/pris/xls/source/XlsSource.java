@@ -67,6 +67,7 @@ public class XlsSource implements Source {
 
     private Map<String, Integer> requiredColumns;
     private Map<String, List<Integer>> optionalMultiColumns;
+    private Map<String, Integer> optionalUniquHeaders;
     private Map<String, Integer> assetColumns;
 
     private final String ENCODING;
@@ -99,7 +100,7 @@ public class XlsSource implements Source {
                     List<String> sheetNames = Arrays.asList(workbook.getSheetNames());
                     if (!sheetNames.contains(instance)) {
                         LOGGER.error("can not find sheet {} in workbook from file {}", instance, xls.getAbsolutePath());
-                        throw new RuntimeException("can not find sheet " + instance + " in workbook from file " + xls.getAbsolutePath());    
+                        throw new RuntimeException("can not find sheet " + instance + " in workbook from file " + xls.getAbsolutePath());
                     }
                     Sheet sheet = workbook.getSheet(instance);
                     if (sheet == null) {
@@ -109,6 +110,7 @@ public class XlsSource implements Source {
 
                     requiredColumns = initializeRequiredColumns(sheet);
                     optionalMultiColumns = initializeOptionalMultiColumns(sheet);
+                    optionalUniquHeaders = initializeOptionalUniquHeaders(sheet);
                     assetColumns = initializeAssetColumns(sheet);
 
                     RequisitionNode node = new RequisitionNode();
@@ -116,9 +118,9 @@ public class XlsSource implements Source {
                     Integer row = 1;
                     while (row < sheet.getRows()) {
                         //TODO clean this if
-                        if (!sheet.getCell(getRelevantColumnID(REQUIRED_PREFIXES.PREFIX_NODE.PREFIX), row).getContents().trim().isEmpty()) {
-                            if (row.equals(1) || !sheet.getCell(getRelevantColumnID(REQUIRED_PREFIXES.PREFIX_NODE.PREFIX), row).getContents().trim().equalsIgnoreCase(sheet.getCell(getRelevantColumnID(REQUIRED_PREFIXES.PREFIX_NODE.PREFIX), row - 1).getContents().trim())) {
-                                String nodeLabel = sheet.getCell(getRelevantColumnID(REQUIRED_PREFIXES.PREFIX_NODE.PREFIX), row).getContents().trim();
+                        if (!sheet.getCell(getRelevantColumnID(REQUIRED_UNIQUE_PREFIXES.PREFIX_NODE), row).getContents().trim().isEmpty()) {
+                            if (row.equals(1) || !sheet.getCell(getRelevantColumnID(REQUIRED_UNIQUE_PREFIXES.PREFIX_NODE), row).getContents().trim().equalsIgnoreCase(sheet.getCell(getRelevantColumnID(REQUIRED_UNIQUE_PREFIXES.PREFIX_NODE), row - 1).getContents().trim())) {
+                                String nodeLabel = sheet.getCell(getRelevantColumnID(REQUIRED_UNIQUE_PREFIXES.PREFIX_NODE), row).getContents().trim();
                                 node = new RequisitionNode();
                                 node.setNodeLabel(nodeLabel);
                                 node.setForeignId(nodeLabel);
@@ -153,17 +155,21 @@ public class XlsSource implements Source {
         return requisition;
     }
 
-    private Integer getRelevantColumnID(String prefix) {
-        return requiredColumns.get(prefix);
+    private Integer getRelevantColumnID(REQUIRED_UNIQUE_PREFIXES prefix) {
+        return requiredColumns.get(prefix.PREFIX);
     }
 
-    private List<Integer> getRelevantColumnIDs(String prefix) {
-        return optionalMultiColumns.get(prefix);
+    private Integer getRelevantColumnID(OPTIONAL_UNIQUE_HEADERS header) {
+        return optionalUniquHeaders.get(header.HEADER);
+    }
+
+    private List<Integer> getRelevantColumnIDs(OPTIONAL_MULTIPLE_SPLITCONTENT_PREFIXES prefix) {
+        return optionalMultiColumns.get(prefix.PREFIX);
     }
 
     private Map<String, Integer> initializeRequiredColumns(Sheet sheet) throws MissingRequiredColumnHeaderException {
         Map<String, Integer> result = new HashMap<>();
-        for (REQUIRED_PREFIXES prefix : REQUIRED_PREFIXES.values()) {
+        for (REQUIRED_UNIQUE_PREFIXES prefix : REQUIRED_UNIQUE_PREFIXES.values()) {
             Cell[] row = sheet.getRow(0);
             for (Cell cell : row) {
                 if (cell.getContents().trim().toLowerCase().startsWith(prefix.PREFIX.toLowerCase())) {
@@ -177,9 +183,22 @@ public class XlsSource implements Source {
         return result;
     }
 
+    private Map<String, Integer> initializeOptionalUniquHeaders(Sheet sheet) {
+        Map<String, Integer> result = new HashMap<>();
+        for (OPTIONAL_UNIQUE_HEADERS header : OPTIONAL_UNIQUE_HEADERS.values()) {
+            Cell[] row = sheet.getRow(0);
+            for (Cell cell : row) {
+                if (cell.getContents().trim().equalsIgnoreCase(header.HEADER)) {
+                    result.put(header.HEADER, cell.getColumn());
+                }
+            }
+        }
+        return result;
+    }
+
     private Map<String, List<Integer>> initializeOptionalMultiColumns(Sheet sheet) {
         Map<String, List<Integer>> result = new HashMap<>();
-        for (OPTIONAL_PREFIXES prefix : OPTIONAL_PREFIXES.values()) {
+        for (OPTIONAL_MULTIPLE_SPLITCONTENT_PREFIXES prefix : OPTIONAL_MULTIPLE_SPLITCONTENT_PREFIXES.values()) {
             Cell[] row = sheet.getRow(0);
             for (Cell cell : row) {
                 if (cell.getContents().trim().toLowerCase().startsWith(prefix.PREFIX.toLowerCase())) {
@@ -215,7 +234,7 @@ public class XlsSource implements Source {
 
     private Set<RequisitionCategory> getCategoriesByRow(Sheet sheet, Integer rowID) {
         Set<RequisitionCategory> categories = new TreeSet<>();
-        List<Integer> relevantColumnIDs = getRelevantColumnIDs(OPTIONAL_PREFIXES.PREFIX_CATEGORY.PREFIX);
+        List<Integer> relevantColumnIDs = getRelevantColumnIDs(OPTIONAL_MULTIPLE_SPLITCONTENT_PREFIXES.PREFIX_CATEGORY);
         if (relevantColumnIDs != null) {
             for (Integer column : relevantColumnIDs) {
                 String rawCategories = sheet.getCell(column, rowID).getContents().trim();
@@ -232,7 +251,7 @@ public class XlsSource implements Source {
 
     private Set<RequisitionMonitoredService> getServicesByRow(Sheet sheet, Integer rowID) {
         Set<RequisitionMonitoredService> services = new TreeSet<>();
-        List<Integer> relevantColumnIDs = getRelevantColumnIDs(OPTIONAL_PREFIXES.PREFIX_SERVICE.PREFIX);
+        List<Integer> relevantColumnIDs = getRelevantColumnIDs(OPTIONAL_MULTIPLE_SPLITCONTENT_PREFIXES.PREFIX_SERVICE);
         if (relevantColumnIDs != null) {
             for (Integer column : relevantColumnIDs) {
                 String rawServices = sheet.getCell(column, rowID).getContents().trim();
@@ -261,17 +280,24 @@ public class XlsSource implements Source {
     private RequisitionInterface getInterfaceByRow(Sheet sheet, Integer rowID) throws InvalidInterfaceException {
         RequisitionInterface reqInterface = new RequisitionInterface();
         try {
-            reqInterface.setIpAddr(sheet.getCell(getRelevantColumnID(REQUIRED_PREFIXES.PREFIX_IP_ADDRESS.PREFIX), rowID).getContents().trim());
+            reqInterface.setIpAddr(sheet.getCell(getRelevantColumnID(REQUIRED_UNIQUE_PREFIXES.PREFIX_IP_ADDRESS), rowID).getContents().trim());
         } catch (IllegalArgumentException ex) {
-            throw new InvalidInterfaceException("Invalid IP-Address for node '" + sheet.getCell(getRelevantColumnID(REQUIRED_PREFIXES.PREFIX_NODE.PREFIX), rowID).getContents().trim() + "' at row '" + rowID + "' and IP '" + sheet.getCell(getRelevantColumnID(REQUIRED_PREFIXES.PREFIX_IP_ADDRESS.PREFIX), rowID).getContents().trim() + "'" , ex);
+            throw new InvalidInterfaceException("Invalid IP-Address for node '" + sheet.getCell(getRelevantColumnID(REQUIRED_UNIQUE_PREFIXES.PREFIX_NODE), rowID).getContents().trim() + "' at row '" + rowID + "' and IP '" + sheet.getCell(getRelevantColumnID(REQUIRED_UNIQUE_PREFIXES.PREFIX_IP_ADDRESS), rowID).getContents().trim() + "'", ex);
         }
-        String interfaceType = sheet.getCell(getRelevantColumnID(REQUIRED_PREFIXES.PREFIX_INTERFACE_MANGEMENT_TYPE.PREFIX), rowID).getContents().trim();
+        String interfaceType = sheet.getCell(getRelevantColumnID(REQUIRED_UNIQUE_PREFIXES.PREFIX_INTERFACE_MANGEMENT_TYPE), rowID).getContents().trim();
         if (interfaceType.equalsIgnoreCase(INTERFACE_TYPE_PRIMARY)) {
             reqInterface.setSnmpPrimary(PrimaryType.PRIMARY);
         } else if (interfaceType.equalsIgnoreCase(INTERFACE_TYPE_SECONDARY)) {
             reqInterface.setSnmpPrimary(PrimaryType.SECONDARY);
         } else {
             reqInterface.setSnmpPrimary(PrimaryType.NOT_ELIGIBLE);
+        }
+        if (getRelevantColumnID(OPTIONAL_UNIQUE_HEADERS.PREFIX_INTERFACE_STATUS) != null) {
+            try {
+                reqInterface.setStatus(Integer.parseInt(sheet.getCell(getRelevantColumnID(OPTIONAL_UNIQUE_HEADERS.PREFIX_INTERFACE_STATUS), rowID).getContents()));
+            } catch (NumberFormatException ex) {
+                LOGGER.error("{} at row {} is not a valid Integer. Value '{}' ignored.", OPTIONAL_UNIQUE_HEADERS.PREFIX_INTERFACE_STATUS.HEADER, rowID, sheet.getCell(getRelevantColumnID(OPTIONAL_UNIQUE_HEADERS.PREFIX_INTERFACE_STATUS), rowID).getContents());
+            }
         }
         return reqInterface;
     }
@@ -292,7 +318,10 @@ public class XlsSource implements Source {
         this.xls = xls;
     }
 
-    private enum REQUIRED_PREFIXES {
+    /*
+     This header-prefixes are required. Can just be used for one column.
+     */
+    private enum REQUIRED_UNIQUE_PREFIXES {
 
         PREFIX_NODE("Node_"),
         PREFIX_IP_ADDRESS("IP_"),
@@ -300,20 +329,37 @@ public class XlsSource implements Source {
 
         private final String PREFIX;
 
-        private REQUIRED_PREFIXES(String prefix) {
+        private REQUIRED_UNIQUE_PREFIXES(String prefix) {
             this.PREFIX = prefix;
         }
     }
 
-    private enum OPTIONAL_PREFIXES {
+    /*
+     This header-prefixes are optional. Can be used at multiple columns. Can contain splitted values.
+     */
+    private enum OPTIONAL_MULTIPLE_SPLITCONTENT_PREFIXES {
 
         PREFIX_CATEGORY("cat_"),
         PREFIX_SERVICE("svc_");
 
         private final String PREFIX;
 
-        private OPTIONAL_PREFIXES(String prefix) {
+        private OPTIONAL_MULTIPLE_SPLITCONTENT_PREFIXES(String prefix) {
             this.PREFIX = prefix;
+        }
+    }
+
+    /*
+     This headers are optional. Can just be used for one column.
+     */
+    private enum OPTIONAL_UNIQUE_HEADERS {
+
+        PREFIX_INTERFACE_STATUS("InterfaceStatus");
+
+        private final String HEADER;
+
+        private OPTIONAL_UNIQUE_HEADERS(String header) {
+            this.HEADER = header;
         }
     }
 }

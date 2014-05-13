@@ -27,7 +27,6 @@ package org.opennms.pris;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;
-import java.util.Objects;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.opennms.netmgt.provision.persist.requisition.Requisition;
