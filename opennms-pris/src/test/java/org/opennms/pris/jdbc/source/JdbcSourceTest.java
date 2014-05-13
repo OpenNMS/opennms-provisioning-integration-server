@@ -30,6 +30,7 @@ public class JdbcSourceTest {
             + "nodeLabel VARCHAR(255),"
             + "ipAddress VARCHAR(255),"
             + "ifType CHAR(1),"
+            + "ifStatus VARCHAR(255),"
             + "description VARCHAR(255),"
             + "city VARCHAR(255),"
             + "state VARCHAR(255),"
@@ -41,6 +42,7 @@ public class JdbcSourceTest {
             + "nodelabel AS Node_Label,"
             + "ipAddress AS IP_Address,"
             + "ifType AS If_Type,"
+            + "ifStatus AS InterfaceStatus,"
             + "description AS Asset_Description,"
             + "city AS Asset_City,"
             + "state AS Asset_State,"
@@ -59,13 +61,13 @@ public class JdbcSourceTest {
         Statement stmnt = connection.createStatement();
         stmnt.executeUpdate(SQL_CREATE_ALL);
 
-        insertRow("1", "node1", "192.168.0.1", "P", "description1", "city1", "state1", "service1", "category1");
-        insertRow("2", "node2", "192.168.0.2", "P", "description2", "city2", "state2", "service2", "category2");
-        insertRow("3", "node3", "192.168.0.3", "P", "description3", "city3", "state3", "service3", "category3");
+        insertRow("1", "node1", "192.168.0.1", "P", "1", "description1", "city1", "state1", "service1", "category1");
+        insertRow("2", "node2", "192.168.0.2", "P", "3", "description2", "city2", "state2", "service2", "category2");
+        insertRow("3", "node3", "192.168.0.3", "P", "1", "description3", "city3", "state3", "service3", "category3");
     }
 
-    private void insertRow(String foreignId, String nodeLabel, String ipAddress, String ifType, String description, String city, String state, String serviceName, String categoryName) throws SQLException {
-        String DML = "INSERT INTO node (foreignId, nodeLabel, ipAddress, ifType, description, city, state, serviceName, categoryName) VALUES (" + foreignId + ", '" + nodeLabel + "', '" + ipAddress + "', '" + ifType + "', '" + description + "', '" + city + "', '" + state + "', '" + serviceName + "', '" + categoryName + "')";
+    private void insertRow(String foreignId, String nodeLabel, String ipAddress, String ifType, String ifStatus, String description, String city, String state, String serviceName, String categoryName) throws SQLException {
+        String DML = "INSERT INTO node (foreignId, nodeLabel, ipAddress, ifType, ifStatus, description, city, state, serviceName, categoryName) VALUES (" + foreignId + ", '" + nodeLabel + "', '" + ipAddress + "', '" + ifType + "', '" + ifStatus + "', '" + description + "', '" + city + "', '" + state + "', '" + serviceName + "', '" + categoryName + "')";
         Statement stmnt = connection.createStatement();
         stmnt.executeUpdate(DML);
     }

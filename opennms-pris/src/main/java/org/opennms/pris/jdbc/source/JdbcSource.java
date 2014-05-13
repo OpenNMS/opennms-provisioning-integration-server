@@ -61,6 +61,7 @@ public class JdbcSource implements Source {
     private static final String COLUMN_SERVICE = "Svc";
     private static final String COLUMN_IP_ADDRESS = "Ip_Address";
     private static final String COLUMN_INTERFACE_MANGEMENT_TYPE = "MgmtType";
+    private static final String COLUMN_INTERFACE_STATUS = "InterfaceStatus";
     private static final String COLUMN_FOREIGN_ID = "Foreign_Id";
     private static final String INTERFACE_TYPE_PRIMARY = "P";
     private static final String INTERFACE_TYPE_SECONDARY = "S";
@@ -142,8 +143,16 @@ public class JdbcSource implements Source {
                             node.getInterfaces().add(reqInterface);
                         }
 
+                        String ifStatus = getString(resultSet, COLUMN_INTERFACE_STATUS);
+                        if (ifStatus != null) {
+                            try {
+                                reqInterface.setStatus(Integer.parseInt(ifStatus));
+                            } catch (NumberFormatException ex) {
+                                LOGGER.warn("'{}' for IP '{}' is not a valid integer, ignoring value '{}'", COLUMN_INTERFACE_STATUS, ipAddress, ifStatus, ex);
+                            }
+                        }
+                        
                         String ifType = getString(resultSet, COLUMN_INTERFACE_MANGEMENT_TYPE);
-
                         if (INTERFACE_TYPE_PRIMARY.equalsIgnoreCase(ifType)) {
                             reqInterface.setSnmpPrimary(PrimaryType.PRIMARY);
                         } else {
