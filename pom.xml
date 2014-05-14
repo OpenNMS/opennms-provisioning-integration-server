@@ -10,6 +10,7 @@
   <modules>
     <module>opennms-pris</module>
     <module>opennms-pris-docs</module>
+    <module>opennms-pris-dist</module>
   </modules>
   <properties>
     <!-- build settings -->
