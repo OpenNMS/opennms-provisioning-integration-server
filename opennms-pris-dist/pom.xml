@@ -10,7 +10,7 @@
     <artifactId>opennms-pris-dist</artifactId>
     <packaging>jar</packaging>
     <name>OpenNMS :: Provisioning Integration Server :: Distribution</name>
-  
+
     <dependencies>
         <dependency>
             <groupId>org.opennms</groupId>
@@ -25,9 +25,35 @@
             <type>jar</type>
         </dependency>
     </dependencies>
-  
+
     <build>
         <plugins>
+          <plugin>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>copy</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>copy</goal>
+                </goals>
+                <configuration>
+                  <artifactItems>
+                    <artifactItem>
+                      <groupId>org.opennms</groupId>
+                      <artifactId>opennms-pris</artifactId>
+                      <version>${project.version}</version>
+                      <classifier>jar-with-dependencies</classifier>
+                      <type>jar</type>
+                      <overWrite>true</overWrite>
+                      <outputDirectory>target</outputDirectory>
+                      <destFileName>PRIS.jar</destFileName>
+                    </artifactItem>
+                  </artifactItems>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>

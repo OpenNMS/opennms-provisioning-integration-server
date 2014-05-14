@@ -6,13 +6,12 @@
         <format>zip</format>
         <format>tar.gz</format>
     </formats>
-    
     <fileSets>
         <fileSet>
             <includes>
-                <include>*with-dependencies.jar</include>
+                <include>PRIS.jar</include>
             </includes>
-            <directory>${project.basedir}/../opennms-pris/target</directory>
+            <directory>${project.basedir}/target</directory>
             <outputDirectory>./</outputDirectory>
         </fileSet>
         <fileSet>
