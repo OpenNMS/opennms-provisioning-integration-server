@@ -124,7 +124,7 @@ public class HttpRequisitionMergeSource implements Source {
 
     @Override
     public Object dump() throws Exception {
-        LOGGER.info("HttpRequisitionMergeSource at work....");
+        LOGGER.info("HttpRequisitionMergeSource started for requisition '{}'", instance);
         Requisition a = getRequisition(getAUrl(), getAUserName(), getAPassword());
         Requisition b = getRequisition(getBUrl(), getBUserName(), getBPassword());
         Map<String, RequisitionNode> nodesByForeignIdA = new HashMap<>();
@@ -171,7 +171,7 @@ public class HttpRequisitionMergeSource implements Source {
         for (RequisitionNode node : mergedNodes.values()) {
             result.insertNode(node);
         }
-
+        LOGGER.info("HttpRequisitionMergeSource delivered for requisition '{}' '{}'", instance, result.getNodes().size());
         return result;
     }
 

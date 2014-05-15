@@ -81,7 +81,8 @@ public class JdbcSource implements Source {
 
     @Override
     public Object dump() {
-
+        
+        LOGGER.info("JDBC-Source started for requisition '{}'", instance);
         Requisition requisition = new Requisition(instance);
 
         Statement statement;
@@ -200,7 +201,7 @@ public class JdbcSource implements Source {
         } catch (SQLException ex) {
             LOGGER.error("SQL problem", ex);
         }
-
+        LOGGER.info("JDBC-Source delivered for requisition '{}' '{}'", instance, requisition.getNodes().size());
         return requisition;
     }
 
