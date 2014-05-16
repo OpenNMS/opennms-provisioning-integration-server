@@ -41,6 +41,7 @@ import org.opennms.pris.ocs.source.OcsComputersReplaySource;
 import org.opennms.pris.ocs.source.OcsComputersSource;
 import org.opennms.pris.ocs.source.OcsSnmpDevicesReplaySource;
 import org.opennms.pris.ocs.source.OcsSnmpDevicesSource;
+import org.opennms.pris.source.FileRequisitionSource;
 import org.opennms.pris.source.HttpRequisitionMergeSource;
 import org.opennms.pris.source.HttpRequisitionSource;
 import org.opennms.pris.source.Source;
@@ -75,6 +76,7 @@ public class RequisitionProvider {
             .put("xls.source", new XlsSource.Factory())
             .put("jdbc.source", new JdbcSource.Factory())
             .put("requisitionMerge.source", new HttpRequisitionMergeSource.Factory())
+            .put("file.source", new FileRequisitionSource.Factory())
             .put("ocs.computers", new OcsComputersSource.Factory())
             .put("ocs.snmpDevices", new OcsSnmpDevicesSource.Factory())
             .put("ocs.computers.replay", new OcsComputersReplaySource.Factory())
