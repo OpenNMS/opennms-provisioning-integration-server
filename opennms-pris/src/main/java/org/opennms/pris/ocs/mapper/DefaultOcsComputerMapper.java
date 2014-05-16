@@ -123,7 +123,7 @@ public class DefaultOcsComputerMapper implements Mapper {
         requisitionNode.getAssets().add(new RequisitionAsset("operatingSystem", ipInterfaceHelper.assetStringCleaner(computer.getHardware().getOsname(), 64)));
         requisitionNode.getAssets().add(new RequisitionAsset("cpu", ipInterfaceHelper.assetStringCleaner(computer.getHardware().getProcessort(), 64)));
 
-        final String ocsComputerLink = "<a href=" + this.config.getString("ocs.url") + "/index.php?function=computer&head=1&systemid=" + computer.getHardware().getId() + ">OCS-Inventory</a>";
+        final String ocsComputerLink = "<a href=" + this.config.getString("ocs.url") + "/ocsreports/index.php?function=computer&head=1&systemid=" + computer.getHardware().getId() + ">OCS-Inventory</a>";
         requisitionNode.getAssets().add(new RequisitionAsset("comment", ocsComputerLink));
 
         return requisitionNode;
