@@ -94,7 +94,7 @@ public class DefaultOcsSnmpDevicesMapper implements Mapper {
     } else {
         LOGGER.warn("snmpDevice '{}' named '{}' whith ipAddress '{}', is not valid follworing black- and whitelists.", snmpDevice.getSNMP().getId(), snmpDevice.getSNMP().getName(), snmpDevice.getSNMP().getIPAddr());
     }
-    final String ocsSnmpDeviceLink = "<a href=" + this.config.getString("ocs.url") + "/index.php?function=snmp_detail&head=1&id=" + snmpDevice.getSNMP().getId() + ">OCS-Inventory</a>";
+    final String ocsSnmpDeviceLink = "<a href=" + this.config.getString("ocs.url") + "/ocsreports/index.php?function=snmp_detail&head=1&id=" + snmpDevice.getSNMP().getId() + ">OCS-Inventory</a>";
     requisitionNode.getAssets().add(new RequisitionAsset("comment", ocsSnmpDeviceLink));
 
 

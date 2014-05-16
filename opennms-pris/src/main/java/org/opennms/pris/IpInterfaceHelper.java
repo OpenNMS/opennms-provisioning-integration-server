@@ -209,7 +209,7 @@ public class IpInterfaceHelper {
     public List<RequisitionCategory> populateCategories(Computer myComputer, Configuration config, String instance) {
         List<RequisitionCategory> categories = new ArrayList<>();
 
-        if (!config.getString("categoryMap").isEmpty()) {
+        if (config.getString("categoryMap") != null && !config.getString("categoryMap").isEmpty()) {
             Properties catMap = new Properties();
             try {
                 File categoryMap = new File(config.getString("categoryMap"));
