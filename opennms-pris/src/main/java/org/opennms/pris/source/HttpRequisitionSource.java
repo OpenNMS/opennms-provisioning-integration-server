@@ -64,7 +64,7 @@ public class HttpRequisitionSource implements Source {
 
     @Override
     public Object dump() throws Exception {
-        LOGGER.debug("HttpRequisitionSource at work....");
+        LOGGER.info("HttpRequisitionSource started for requisition '{}'", instance);
         Requisition requisition = null;
 
         if (getUrl() != null) {
@@ -106,6 +106,11 @@ public class HttpRequisitionSource implements Source {
         } else {
             LOGGER.error("Parameter requisition.url is missing in requisition.properties");
         }
+        if (requisition == null) {
+            LOGGER.error("Requisition is null for unkown reasons");
+            return null;
+        }
+        LOGGER.info("HttpRequisitionSource delivered for requisition '{}' '{}'", instance, requisition.getNodes().size());
         return requisition;
     }
 

@@ -89,6 +89,7 @@ public class XlsSource implements Source {
 
     @Override
     public Object dump() throws MissingRequiredColumnHeaderException, Exception {
+        LOGGER.info("xls source started for requisition '{}'", instance);
         Requisition requisition = new Requisition(instance);
         if (getXlsFile() != null) {
             xls = new File(getXlsFile());
@@ -152,6 +153,7 @@ public class XlsSource implements Source {
         } else {
             throw new RuntimeException("no xls.file defined");
         }
+        LOGGER.info("xls source delivered for requisition '{}' '{}' nodes", instance, requisition.getNodes().size());
         return requisition;
     }
 
