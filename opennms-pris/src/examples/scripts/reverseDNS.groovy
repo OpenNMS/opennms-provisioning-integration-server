@@ -1,3 +1,10 @@
+/**
+* This script step sets the nodelabel based on a reverse dns lookup of the ip interfaces.
+* It reverse dns lookups all interfaces for each node until it findes a dns name for a node.
+* If a dns name was found it is set as nodelabel and no other interface of the nodes will be checked.
+* If no dns name was found the nodelabel will be changed.
+*/
+
 import org.opennms.netmgt.provision.persist.requisition.Requisition
 import org.opennms.netmgt.provision.persist.requisition.RequisitionNode
 import org.opennms.netmgt.provision.persist.requisition.RequisitionInterface
