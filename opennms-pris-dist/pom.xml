@@ -47,7 +47,7 @@
                       <type>jar</type>
                       <overWrite>true</overWrite>
                       <outputDirectory>target</outputDirectory>
-                      <destFileName>PRIS.jar</destFileName>
+                      <destFileName>opennms-pris.jar</destFileName>
                     </artifactItem>
                   </artifactItems>
                 </configuration>

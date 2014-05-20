@@ -9,7 +9,7 @@
     <fileSets>
         <fileSet>
             <includes>
-                <include>PRIS.jar</include>
+                <include>opennms-pris.jar</include>
             </includes>
             <directory>${project.basedir}/target</directory>
             <outputDirectory>./</outputDirectory>
