@@ -83,7 +83,7 @@ private RequisitionNode getRequisitionNode(Computer computer, Properties catMap)
 
 
 public void populateCommentLinks(Computer myComputer, RequisitionNode myRequisitionNode, String ocsUrl) {
-    String ocsComputerLink = "<a href=" + ocsUrl + "/index.php?function=computer&head=1&systemid=" + myComputer.getHardware().getId() + ">OCS-Inventory</a>";
+    String ocsComputerLink = "<a href=" + ocsUrl + "/ocsreports/index.php?function=computer&head=1&systemid=" + myComputer.getHardware().getId() + ">OCS-Inventory</a>";
     myRequisitionNode.getAssets().add(new RequisitionAsset("comment", ocsComputerLink));
 }
 
