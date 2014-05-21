@@ -40,16 +40,13 @@ public class OcsComputersSource extends AbstractOcsSource {
   public static class Factory implements Source.Factory {
 
     @Override
-    public Source create(final String instance,
-                         final Configuration config) {
+    public Source create(final String instance, final Configuration config) {
       return new OcsComputersSource(instance, config);
     }
   }
 
-  public OcsComputersSource(final String instance,
-                            final Configuration config) {
-    super(instance,
-          config);
+  public OcsComputersSource(final String instance, final Configuration config) {
+    super(instance, config);
   }
 
   @Override
@@ -63,6 +60,5 @@ public class OcsComputersSource extends AbstractOcsSource {
                    this.getTags());
 
     return ocsClient.getComputers();
-
   }
 }

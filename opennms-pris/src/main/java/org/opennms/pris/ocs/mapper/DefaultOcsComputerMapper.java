@@ -28,6 +28,8 @@
 package org.opennms.pris.ocs.mapper;
 
 import com.google.common.collect.Sets;
+import java.util.HashSet;
+import java.util.Set;
 import org.apache.commons.configuration.Configuration;
 import org.opennms.netmgt.model.PrimaryType;
 import org.opennms.netmgt.provision.persist.requisition.Requisition;
@@ -35,6 +37,7 @@ import org.opennms.netmgt.provision.persist.requisition.RequisitionAsset;
 import org.opennms.netmgt.provision.persist.requisition.RequisitionInterface;
 import org.opennms.netmgt.provision.persist.requisition.RequisitionMonitoredService;
 import org.opennms.netmgt.provision.persist.requisition.RequisitionNode;
+import org.opennms.ocs.inventory.client.response.Bios;
 import org.opennms.ocs.inventory.client.response.Computer;
 import org.opennms.ocs.inventory.client.response.Computers;
 import org.opennms.ocs.inventory.client.response.Entry;
@@ -43,9 +46,6 @@ import org.opennms.pris.IpInterfaceHelper;
 import org.opennms.pris.mapper.Mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.HashSet;
-import java.util.Set;
 
 public class DefaultOcsComputerMapper implements Mapper {
 
@@ -122,10 +122,18 @@ public class DefaultOcsComputerMapper implements Mapper {
 
         requisitionNode.getAssets().add(new RequisitionAsset("operatingSystem", ipInterfaceHelper.assetStringCleaner(computer.getHardware().getOsname(), 64)));
         requisitionNode.getAssets().add(new RequisitionAsset("cpu", ipInterfaceHelper.assetStringCleaner(computer.getHardware().getProcessort(), 64)));
-
+        requisitionNode.getAssets().add(new RequisitionAsset("ram", ipInterfaceHelper.assetStringCleaner(computer.getHardware().getMemory() + " MB", 10)));
+        
+        Bios biosData = computer.getBios();
+            if (biosData != null) {
+                requisitionNode.getAssets().add(new RequisitionAsset("manufacturer", ipInterfaceHelper.assetStringCleaner(biosData.getSManufacturer(), 64)));
+                requisitionNode.getAssets().add(new RequisitionAsset("modelNumber",  ipInterfaceHelper.assetStringCleaner(biosData.getSModel(), 64)));
+                requisitionNode.getAssets().add(new RequisitionAsset("serialNumber", ipInterfaceHelper.assetStringCleaner(biosData.getSSN(), 64)));
+        }
+        
         final String ocsComputerLink = "<a href=" + this.config.getString("ocs.url") + "/ocsreports/index.php?function=computer&head=1&systemid=" + computer.getHardware().getId() + ">OCS-Inventory</a>";
         requisitionNode.getAssets().add(new RequisitionAsset("comment", ocsComputerLink));
-
+            
         return requisitionNode;
     }
 }
