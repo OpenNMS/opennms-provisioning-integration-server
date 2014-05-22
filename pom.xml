@@ -33,7 +33,7 @@
     <mavenSitePluginVersion>3.3</mavenSitePluginVersion>
     <mavenWagonSshVersion>2.6</mavenWagonSshVersion>
     <mysqlConnectorVersion>5.1.28</mysqlConnectorVersion>
-    <ocsInventoryClientVersion>1.0</ocsInventoryClientVersion>
+    <ocsInventoryClientVersion>1.0.1</ocsInventoryClientVersion>
     <opennmsProvisionPersistenceVersion>1.12.5</opennmsProvisionPersistenceVersion>
     <opennmsUtilVersion>1.12.5</opennmsUtilVersion>
     <postgresqlDriverVersion>9.1-901-1.jdbc4</postgresqlDriverVersion>

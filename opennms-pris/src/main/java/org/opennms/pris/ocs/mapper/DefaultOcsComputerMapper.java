@@ -177,7 +177,7 @@ public class DefaultOcsComputerMapper implements Mapper {
         
         List<Sound> sounds = computer.getSounds();
         for (Sound sound : sounds) {
-            sound.getDESCRIPTION();
+            sound.getDescription();
         }
         final String ocsComputerLink = "<a href=" + this.config.getString("ocs.url") + "/ocsreports/index.php?function=computer&head=1&systemid=" + computer.getHardware().getId() + ">OCS-Inventory</a>";
         requisitionNode.getAssets().add(new RequisitionAsset("comment", ocsComputerLink));
