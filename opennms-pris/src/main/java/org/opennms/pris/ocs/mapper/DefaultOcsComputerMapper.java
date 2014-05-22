@@ -1,34 +1,33 @@
-/*******************************************************************************
+/**
+ * *****************************************************************************
  * This file is part of OpenNMS(R).
  *
- * Copyright (C) 2014 The OpenNMS Group, Inc.
- * OpenNMS(R) is Copyright (C) 1999-2014 The OpenNMS Group, Inc.
+ * Copyright (C) 2014 The OpenNMS Group, Inc. OpenNMS(R) is Copyright (C)
+ * 1999-2014 The OpenNMS Group, Inc.
  *
  * OpenNMS(R) is a registered trademark of The OpenNMS Group, Inc.
  *
- * OpenNMS(R) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published
- * by the Free Software Foundation, either version 3 of the License,
- * or (at your option) any later version.
+ * OpenNMS(R) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any later
+ * version.
  *
- * OpenNMS(R) is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * OpenNMS(R) is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with OpenNMS(R). If not, see:
- * http://www.gnu.org/licenses/
+ * You should have received a copy of the GNU General Public License along with
+ * OpenNMS(R). If not, see: http://www.gnu.org/licenses/
  *
- * For more information contact:
- * OpenNMS(R) Licensing <license@opennms.org>
- * http://www.opennms.org/
- * http://www.opennms.com/
- *******************************************************************************/
+ * For more information contact: OpenNMS(R) Licensing <license@opennms.org>
+ * http://www.opennms.org/ http://www.opennms.com/
+ * *****************************************************************************
+ */
 package org.opennms.pris.ocs.mapper;
 
 import com.google.common.collect.Sets;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import org.apache.commons.configuration.Configuration;
 import org.opennms.netmgt.model.PrimaryType;
@@ -40,8 +39,12 @@ import org.opennms.netmgt.provision.persist.requisition.RequisitionNode;
 import org.opennms.ocs.inventory.client.response.Bios;
 import org.opennms.ocs.inventory.client.response.Computer;
 import org.opennms.ocs.inventory.client.response.Computers;
+import org.opennms.ocs.inventory.client.response.Drive;
 import org.opennms.ocs.inventory.client.response.Entry;
 import org.opennms.ocs.inventory.client.response.Network;
+import org.opennms.ocs.inventory.client.response.Sound;
+import org.opennms.ocs.inventory.client.response.Storage;
+import org.opennms.ocs.inventory.client.response.Video;
 import org.opennms.pris.IpInterfaceHelper;
 import org.opennms.pris.mapper.Mapper;
 import org.slf4j.Logger;
@@ -53,7 +56,7 @@ public class DefaultOcsComputerMapper implements Mapper {
 
         @Override
         public Mapper create(final String instance,
-                             final Configuration config) {
+                final Configuration config) {
             return new DefaultOcsComputerMapper(instance, config);
         }
     }
@@ -123,17 +126,62 @@ public class DefaultOcsComputerMapper implements Mapper {
         requisitionNode.getAssets().add(new RequisitionAsset("operatingSystem", ipInterfaceHelper.assetStringCleaner(computer.getHardware().getOsname(), 64)));
         requisitionNode.getAssets().add(new RequisitionAsset("cpu", ipInterfaceHelper.assetStringCleaner(computer.getHardware().getProcessort(), 64)));
         requisitionNode.getAssets().add(new RequisitionAsset("ram", ipInterfaceHelper.assetStringCleaner(computer.getHardware().getMemory() + " MB", 10)));
-        
+
         Bios biosData = computer.getBios();
-            if (biosData != null) {
-                requisitionNode.getAssets().add(new RequisitionAsset("manufacturer", ipInterfaceHelper.assetStringCleaner(biosData.getSManufacturer(), 64)));
-                requisitionNode.getAssets().add(new RequisitionAsset("modelNumber",  ipInterfaceHelper.assetStringCleaner(biosData.getSModel(), 64)));
-                requisitionNode.getAssets().add(new RequisitionAsset("serialNumber", ipInterfaceHelper.assetStringCleaner(biosData.getSSN(), 64)));
+        if (biosData != null) {
+            requisitionNode.getAssets().add(new RequisitionAsset("manufacturer", ipInterfaceHelper.assetStringCleaner(biosData.getSManufacturer(), 64)));
+            requisitionNode.getAssets().add(new RequisitionAsset("modelNumber", ipInterfaceHelper.assetStringCleaner(biosData.getSModel(), 64)));
+            requisitionNode.getAssets().add(new RequisitionAsset("serialNumber", ipInterfaceHelper.assetStringCleaner(biosData.getSSN(), 64)));
+        }
+
+        List<Drive> drives = computer.getDrives();
+        if (drives != null) {
+
+            int i = 1;
+            for (Drive drive : drives) {
+
+                LOGGER.debug("drive '{}'", drive);
+                String hddAsset = "";
+
+                // Windows drives
+                if (drive.getType().equalsIgnoreCase("Hard Drive")) {
+                    hddAsset = drive.getLetter() + " is " + drive.getFilesystem() + " as " + drive.getVolumn() + " " + drive.getFree() + "/" + drive.getTotal() + "MB";
+                } // Linxu/Unix drives
+                else if (drive.getType().startsWith("/")) {
+                    hddAsset = drive.getType() + " is " + drive.getFilesystem() + " " + drive.getFree() + "/" + drive.getTotal() + "MB";
+                }
+
+                if (i <= 6 && !hddAsset.isEmpty()) {
+                    LOGGER.debug("Adding Asset hdd{} to Node '{}' as '{}'", i, requisitionNode.getNodeLabel(), hddAsset);
+                    requisitionNode.getAssets().add(new RequisitionAsset("hdd" + i, ipInterfaceHelper.assetStringCleaner(hddAsset, 64)));
+                } else {
+                    LOGGER.debug("node {} ignorring drive {} as hdd{} - string is empty or no hdd asset filed left", requisitionNode.getNodeLabel(), drive.toString(), i);
+                }
+                i++;
+            }
+        }
+
+        List<Storage> storages = computer.getStorages();
+        if (storages != null) {
+            for (Storage storage : storages) {
+                LOGGER.debug("Node '{}' Storage '{}'", requisitionNode.getNodeLabel(), storage.toString());
+            }
         }
         
+        List<Video> videos = computer.getVideos();
+        if (videos != null) {
+            for (Video video : videos) {
+                LOGGER.debug("Node '{}' Video '{}'", requisitionNode.getNodeLabel(), video.toString());
+            }
+        }
+        
+        List<Sound> sounds = computer.getSounds();
+        for (Sound sound : sounds) {
+            sound.getDESCRIPTION();
+        }
         final String ocsComputerLink = "<a href=" + this.config.getString("ocs.url") + "/ocsreports/index.php?function=computer&head=1&systemid=" + computer.getHardware().getId() + ">OCS-Inventory</a>";
         requisitionNode.getAssets().add(new RequisitionAsset("comment", ocsComputerLink));
-            
+
         return requisitionNode;
     }
 }
