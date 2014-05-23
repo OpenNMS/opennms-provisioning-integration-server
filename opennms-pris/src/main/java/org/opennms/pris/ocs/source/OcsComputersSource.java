@@ -27,8 +27,13 @@
  *******************************************************************************/
 package org.opennms.pris.ocs.source;
 
+import java.io.File;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import org.apache.commons.configuration.Configuration;
 import org.opennms.ocs.inventory.client.request.logic.GetComputersLogic;
+import org.opennms.ocs.inventory.client.response.Computers;
 import org.opennms.pris.source.Source;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,6 +64,24 @@ public class OcsComputersSource extends AbstractOcsSource {
                    this.getChecksum(),
                    this.getTags());
 
-    return ocsClient.getComputers();
+    Computers computers = ocsClient.getComputers();
+    
+    //** dump the computers into a file as xml
+    if (this.getConfig().containsKey("ocs.source.dump")) {
+        File dumpComputers = new File(this.getConfig().getString("ocs.source.dump"));
+        if (dumpComputers.createNewFile()) {
+             try {
+		JAXBContext jaxbContext = JAXBContext.newInstance(Computers.class);
+		Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+		jaxbMarshaller.marshal(computers, dumpComputers);
+	      } catch (JAXBException ex) {
+                  LOGGER.error("Dumping computers to file '{}' has failed.", dumpComputers, ex);
+              }
+        } else {
+            LOGGER.error("Can not dump computers to file '{}'", dumpComputers);
+        }
+    }
+    return computers;
   }
 }

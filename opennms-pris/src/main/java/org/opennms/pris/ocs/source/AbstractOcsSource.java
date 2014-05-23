@@ -50,21 +50,21 @@ public abstract class AbstractOcsSource implements Source {
           
   public final String  getUrl() {
     return this.config.getString("ocs.url");
-  };
+  }
   
   public final String  getUsername() {
     return this.config.getString("ocs.username");
-  };
+  }
   
   public final String  getPassword() {
     return this.config.getString("ocs.password");
-  };
+  }
   
   public final String  getChecksum() {
     return this.config.getString("ocs.checksum");
-  };
+  }
   
   public final List<String>  getTags() {
     return Arrays.asList(this.config.getStringArray("ocs.tags"));
-  };
+  }
 }
