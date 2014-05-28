@@ -48,6 +48,7 @@ import org.opennms.pris.source.Source;
 import org.opennms.pris.vmware.mapper.DefaultVmwareMapper;
 import org.opennms.pris.vmware.source.VmwareSource;
 import org.opennms.pris.xls.source.XlsSource;
+import org.opennms.pris.source.ScriptSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -81,6 +82,7 @@ public class RequisitionProvider {
             .put("ocs.snmpDevices", new OcsSnmpDevicesSource.Factory())
             .put("ocs.computers.replay", new OcsComputersReplaySource.Factory())
             .put("ocs.snmpDevices.replay", new OcsSnmpDevicesReplaySource.Factory())
+            .put("script.source", new ScriptSource.Factory())
             .build();
 
     // All known mapper implementations
