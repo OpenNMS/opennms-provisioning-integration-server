@@ -17,6 +17,7 @@
             <item name="Merge Source" href="source.merge.html" />
             <item name="File Source" href="source.file.html" />
             <item name="OCS Inventory Source" href="source.ocs.html" />
+            <item name="Script Source" href="source.script.html" />
         </menu>
         <menu name="Mapper">
             <item name="Mapper" href="mappers.html" />
