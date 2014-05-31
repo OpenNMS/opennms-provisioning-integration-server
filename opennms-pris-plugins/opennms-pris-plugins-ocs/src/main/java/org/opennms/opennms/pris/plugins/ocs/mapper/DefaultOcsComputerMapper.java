@@ -170,7 +170,8 @@ public class DefaultOcsComputerMapper implements Mapper {
         for (Sound sound : sounds) {
             sound.getDescription();
         }
-        final String ocsComputerLink = "<a href=" + this.config.getString("ocs.url") + "/ocsreports/index.php?function=computer&head=1&systemid=" + computer.getHardware().getId() + ">OCS-Inventory</a>";
+        
+	final String ocsComputerLink = "<a href=" + this.config.getString("ocs.url") + "/ocsreports/index.php?function=computer&head=1&systemid=" + computer.getHardware().getId() + ">OCS-Inventory</a>";
         requisitionNode.getAssets().add(new RequisitionAsset("comment", ocsComputerLink));
 
         return requisitionNode;
@@ -180,7 +181,7 @@ public class DefaultOcsComputerMapper implements Mapper {
     public static class Factory implements Mapper.Factory {
 
         @Override
-        public String getMapperIdentifier() {
+        public String getIdentifier() {
             return "ocs.computers";
         }
 

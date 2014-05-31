@@ -1,8 +1,8 @@
 /*******************************************************************************
  * This file is part of OpenNMS(R).
  *
- * Copyright (C) 2014 The OpenNMS Group, Inc.
- * OpenNMS(R) is Copyright (C) 1999-2014 The OpenNMS Group, Inc.
+ * Copyright (C) 2010-2012 The OpenNMS Group, Inc.
+ * OpenNMS(R) is Copyright (C) 1999-2011 The OpenNMS Group, Inc.
  *
  * OpenNMS(R) is a registered trademark of The OpenNMS Group, Inc.
  *
@@ -13,22 +13,21 @@
  *
  * OpenNMS(R) is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with OpenNMS(R). If not, see:
- * http://www.gnu.org/licenses/
+ * along with OpenNMS(R).  If not, see:
+ *      http://www.gnu.org/licenses/
  *
  * For more information contact:
- * OpenNMS(R) Licensing <license@opennms.org>
- * http://www.opennms.org/
- * http://www.opennms.com/
+ *     OpenNMS(R) Licensing <license@opennms.org>
+ *     http://www.opennms.org/
+ *     http://www.opennms.com/
  *******************************************************************************/
-package org.opennms.opennms.pris.plugins.script;
+package org.opennms.opennms.pris.plugins.script.source;
 
 import org.apache.commons.io.FilenameUtils;
-import org.opennms.netmgt.provision.persist.requisition.Requisition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,32 +39,31 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import org.kohsuke.MetaInfServices;
+import org.opennms.pris.api.Configuration;
 import org.opennms.pris.api.InstanceConfiguration;
-import org.opennms.pris.api.Mapper;
+import org.opennms.pris.api.Source;
 
 /**
- * A mapper passing the data to a script.
+ * <p>ScriptSource class.</p>
  *
- * The mapper implementation creates a requisition by passing the data from the source to a script. The Script has to
- * create the requisition.
- *
- * @author Dustin Frisch <fooker@lab.sh>
+ * @author <a href="mailto:ronny@opennms.org">Ronny Trommer</a>
+ * @version $Id: $
+ * @since 1.0-SNAPSHOT
  */
-public class ScriptMapper implements Mapper {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(ScriptMapper.class);
+public class ScriptSource implements Source {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ScriptSource.class);
 
     private static final ScriptEngineManager SCRIPT_ENGINE_MANAGER = new ScriptEngineManager();
 
-    // The instance configuration
     private final InstanceConfiguration config;
 
-    private ScriptMapper(final InstanceConfiguration config) {
+    public ScriptSource(final InstanceConfiguration config) {
         this.config = config;
     }
 
     @Override
-    public Requisition map(Object data, Requisition requisition) throws Exception {
+    public Object dump() throws Exception {
+        String scriptName = this.config.getString("file");
 
         // Get the path to the script
         final Path script = this.getFile();
@@ -79,21 +77,19 @@ public class ScriptMapper implements Mapper {
         // Create some bindings for values available in the script
         final Bindings scriptBindings = scriptEngine.createBindings();
         scriptBindings.put("script", script);
-        scriptBindings.put("data", data);
         scriptBindings.put("logger", LoggerFactory.getLogger(script.toString()));
         scriptBindings.put("config", this.config);
+        scriptBindings.put("instance", this.config.getInstanceIdentifier());
         // TODO (fooker): Rewrite the Helper to be not OCS-dependent and re-add
 //        scriptBindings.put("ipInterfaceHelper", new IpInterfaceHelper());
-        scriptBindings.put("requisition", requisition);
 
         // Evaluate the script and return the requisition created in the script
         try (final Reader scriptReader = Files.newBufferedReader(script, StandardCharsets.UTF_8)) {
-            LOGGER.debug("Start Script {}", script);
-            requisition = (Requisition) scriptEngine.eval(scriptReader, scriptBindings);
-            LOGGER.debug("Done  Script {}", script);
+            LOGGER.debug("Start Script {}", scriptName);
+            final Object data = scriptEngine.eval(scriptReader, scriptBindings);
+            LOGGER.debug("Done  Script {}", scriptName);
+            return data;
         }
-        
-        return requisition;
     }
     
     public Path getFile() {
@@ -101,16 +97,16 @@ public class ScriptMapper implements Mapper {
     }
 
     @MetaInfServices
-    public static class Factory implements Mapper.Factory {
+    public static class Factory implements Source.Factory {
 
         @Override
-        public String getMapperIdentifier() {
+        public String getIdentifier() {
             return "script";
         }
-
+        
         @Override
-        public Mapper create(InstanceConfiguration config) {
-            return new ScriptMapper(config);
+        public Source create(final InstanceConfiguration config) {
+            return new ScriptSource(config);
         }
     }
 }

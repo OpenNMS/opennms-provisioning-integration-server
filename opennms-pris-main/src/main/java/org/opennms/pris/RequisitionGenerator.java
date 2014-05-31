@@ -64,19 +64,27 @@ public class RequisitionGenerator {
     private static final Map<String, Mapper.Factory> MAPPERS = new HashMap<>();
     
     static {
+        LOGGER.debug("Loading plugins...");
+        
         for (final Source.Factory factory : ServiceLoader.load(Source.Factory.class)) {
             if (SOURCES.containsKey(factory.getIdentifier())) {
-                LOGGER.warn("Duplicated source identifier: '{}'", factory.getIdentifier());
+                LOGGER.warn("Duplicated source: '{}'", factory.getIdentifier());
             }
+            
+            LOGGER.debug("Register source: '{}'", factory.getIdentifier());
+            
             SOURCES.put(factory.getIdentifier(),
                         factory);
         }
         
         for (final Mapper.Factory factory : ServiceLoader.load(Mapper.Factory.class)) {
-            if (MAPPERS.containsKey(factory.getMapperIdentifier())) {
-                LOGGER.warn("Duplicated mapper identifier: '{}'", factory.getMapperIdentifier());
+            if (MAPPERS.containsKey(factory.getIdentifier())) {
+                LOGGER.warn("Duplicated mapper: '{}'", factory.getIdentifier());
             }
-            MAPPERS.put(factory.getMapperIdentifier(),
+            
+            LOGGER.debug("Register mapper: '{}'", factory.getIdentifier());
+            
+            MAPPERS.put(factory.getIdentifier(),
                         factory);
         }
     }

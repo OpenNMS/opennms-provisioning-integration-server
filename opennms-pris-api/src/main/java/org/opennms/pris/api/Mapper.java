@@ -40,7 +40,7 @@ public interface Mapper {
          *
          * @return the identifier string
          */
-        String getMapperIdentifier();
+        String getIdentifier();
 
         /**
          * Creates a mapper.

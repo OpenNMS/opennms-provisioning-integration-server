@@ -54,7 +54,7 @@ public class DefaultVmwareMapper implements Mapper {
     public static class Factory implements Mapper.Factory {
 
         @Override
-        public String getMapperIdentifier() {
+        public String getIdentifier() {
             return "vmware";
         }
 
