@@ -13,9 +13,9 @@
             <item name="Sources" href="sources.html" />
             <item name="XLS Source" href="source.xls.html" />
             <item name="JDBC Source" href="source.jdbc.html" />
-            <item name="OpenNMS Requisition Source" href="source.opennms.requisition.html" />
+            <item name="HTTP Requisition Source" href="source.http.html" />
+            <item name="File Requisition Source" href="source.file.html" />
             <item name="Merge Source" href="source.merge.html" />
-            <item name="File Source" href="source.file.html" />
             <item name="OCS Inventory Source" href="source.ocs.html" />
         </menu>
         <menu name="Mapper">
