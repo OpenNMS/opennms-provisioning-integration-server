@@ -33,4 +33,13 @@
             <outputDirectory>documentation</outputDirectory>
         </fileSet>
     </fileSets>
+    
+    <dependencySets>
+        <dependencySet>
+            <outputDirectory>lib</outputDirectory>
+            <includes>
+                <include>${project.groupId}:opennms-pris-plugins-*:jar:jar-with-dependencies</include>
+            </includes>
+        </dependencySet>
+    </dependencySets>
 </assembly>

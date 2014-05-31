@@ -6,7 +6,7 @@
     
     <parent>
         <groupId>org.opennms</groupId>
-        <artifactId>pris-parent</artifactId>
+        <artifactId>opennms-pris-parent</artifactId>
         <version>1.0.8-SNAPSHOT</version>
     </parent>
     
@@ -33,4 +33,30 @@
         <module>opennms-pris-plugins-vmware</module>
         <module>opennms-pris-plugins-xls</module>
     </modules>
+    
+    <build>
+        <pluginManagement>
+            <plugins>
+                <!-- Build fat JAR -->
+                <plugin>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <version>2.4</version>
+                    <configuration>
+                        <descriptorRefs>
+                            <descriptorRef>jar-with-dependencies</descriptorRef>
+                        </descriptorRefs>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>make-assembly</id>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>single</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 </project>

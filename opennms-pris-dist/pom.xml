@@ -6,7 +6,7 @@
     
     <parent>
         <groupId>org.opennms</groupId>
-        <artifactId>pris-parent</artifactId>
+        <artifactId>opennms-pris-parent</artifactId>
         <version>1.0.8-SNAPSHOT</version>
     </parent>
     
@@ -21,6 +21,7 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>opennms-pris-docs</artifactId>
             <version>${project.version}</version>
+            <type>pom</type>
         </dependency>
     
         <dependency>
@@ -33,31 +34,37 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>opennms-pris-plugins-defaults</artifactId>
             <version>${project.version}</version>
+            <classifier>jar-with-dependencies</classifier>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>opennms-pris-plugins-jdbc</artifactId>
             <version>${project.version}</version>
+            <classifier>jar-with-dependencies</classifier>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>opennms-pris-plugins-ocs</artifactId>
             <version>${project.version}</version>
+            <classifier>jar-with-dependencies</classifier>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>opennms-pris-plugins-script</artifactId>
             <version>${project.version}</version>
+            <classifier>jar-with-dependencies</classifier>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>opennms-pris-plugins-vmware</artifactId>
             <version>${project.version}</version>
+            <classifier>jar-with-dependencies</classifier>
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>opennms-pris-plugins-xls</artifactId>
             <version>${project.version}</version>
+            <classifier>jar-with-dependencies</classifier>
         </dependency>
     </dependencies>
 
