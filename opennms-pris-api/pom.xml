@@ -1,24 +1,30 @@
 <?xml version="1.0"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
   
-  <parent>
-    <groupId>org.opennms</groupId>
-    <artifactId>pris-parent</artifactId>
-    <version>1.0.8-SNAPSHOT</version>
-  </parent>
-  
-  <artifactId>opennms-pris-api</artifactId>
-  
-  <packaging>jar</packaging>
-  
-  <name>OpenNMS :: Provisioning Integration Server :: API</name>
-  
-  <dependencies>
-      <dependency>
+    <parent>
         <groupId>org.opennms</groupId>
-        <artifactId>opennms-provision-persistence</artifactId>
-      </dependency>
-  </dependencies>
+        <artifactId>pris-parent</artifactId>
+        <version>1.0.8-SNAPSHOT</version>
+    </parent>
+  
+    <artifactId>opennms-pris-api</artifactId>
+  
+    <packaging>jar</packaging>
+  
+    <name>OpenNMS :: Provisioning Integration Server :: API</name>
+  
+    <dependencies>
+        <dependency>
+            <groupId>org.opennms</groupId>
+            <artifactId>opennms-provision-persistence</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>slf4j-log4j12</artifactId>
+                    <groupId>org.slf4j</groupId>
+                </exclusion> 
+            </exclusions>
+        </dependency>
+    </dependencies>
 </project>
