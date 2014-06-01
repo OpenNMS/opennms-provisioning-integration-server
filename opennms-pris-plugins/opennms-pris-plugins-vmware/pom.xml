@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.opennms</groupId>
+        <artifactId>opennms-pris-plugins</artifactId>
+        <version>1.0.8-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>opennms-pris-plugins-vmware</artifactId>
+    <packaging>jar</packaging>
+
+    <name>OpenNMS :: Provisioning Integration Server :: Plugins :: VMware</name>
+
+    <properties>
+        <vijavaVersion>520110926</vijavaVersion>
+        <sblimSlpClientVersion>1.17</sblimSlpClientVersion>
+        <sblimCimClientVersion>1.17</sblimCimClientVersion>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>opennms-pris-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- Dependencies for VMware integration -->
+        <dependency>
+            <groupId>com.vmware</groupId>
+            <artifactId>vijava</artifactId>
+            <version>${vijavaVersion}</version>
+        </dependency>
+
+        <!-- Dependencies for CIM communication -->
+        <dependency>
+            <groupId>org.sblim.slp</groupId>
+            <artifactId>sblimSLPClient</artifactId>
+            <version>${sblimSlpClientVersion}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.sblim.wbem</groupId>
+            <artifactId>sblimCIMClient</artifactId>
+            <version>${sblimCimClientVersion}</version>
+        </dependency>
+
+        <!-- SPI -->
+        <dependency>
+            <groupId>org.kohsuke.metainf-services</groupId>
+            <artifactId>metainf-services</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- Build fat JAR -->
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+</project>
