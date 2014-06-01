@@ -22,12 +22,6 @@
     </properties>
     
     <dependencies>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>opennms-pris-api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
         <!-- Database Drivers -->
         <dependency>
             <groupId>postgresql</groupId>
@@ -40,19 +34,19 @@
             <version>${mysqlConnectorVersion}</version>
         </dependency>
         
-        <!-- SPI -->
-        <dependency>
-            <groupId>org.kohsuke.metainf-services</groupId>
-            <artifactId>metainf-services</artifactId>
-        </dependency>
-        
         <!-- Tests -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>opennms-pris-api</artifactId>
+            <classifier>tests</classifier>
+        </dependency>
         <dependency>
             <groupId>org.apache.derby</groupId>
             <artifactId>derby</artifactId>
             <version>${apacheDerbyVersion}</version>
             <scope>test</scope>
         </dependency>
+        
     </dependencies>
     
     <build>

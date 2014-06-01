@@ -1,5 +1,5 @@
 import org.opennms.netmgt.model.PrimaryType
-import org.opennms.netmgt.provision.persist.requisition.*
+import org.opennms.pris.model.*
 
 /**
  * <p>myGroovySource class.</p>

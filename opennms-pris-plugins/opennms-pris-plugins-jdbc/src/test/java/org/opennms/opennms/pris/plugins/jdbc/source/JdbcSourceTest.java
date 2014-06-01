@@ -10,7 +10,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.opennms.netmgt.provision.persist.requisition.Requisition;
+import org.opennms.pris.api.MockInstanceConfiguration;
+import org.opennms.pris.model.Requisition;
 
 public class JdbcSourceTest {
 

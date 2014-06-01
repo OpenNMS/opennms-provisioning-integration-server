@@ -25,6 +25,7 @@
  */
 package org.opennms.opennms.pris.plugins.defaults.source;
 
+import org.opennms.pris.util.RequisitionUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -33,8 +34,8 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.opennms.netmgt.model.PrimaryType;
-import org.opennms.netmgt.provision.persist.requisition.*;
+import org.opennms.pris.model.PrimaryType;
+import org.opennms.pris.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -162,9 +163,10 @@ public class HttpRequisitionMergeSource implements Source {
             throw new RuntimeException("one or more requisitions have not been loaded correctly");
         }
 
-        Requisition result = new Requisition(this.config.getInstanceIdentifier());
+        Requisition result = new Requisition();
+        result.setForeignSource(this.config.getInstanceIdentifier());
         for (RequisitionNode node : mergedNodes.values()) {
-            result.insertNode(node);
+            result.getNodes().add(node);
         }
         
         LOGGER.info("HttpRequisitionMergeSource delivered for requisition '{}'", result.getNodes().size());
@@ -175,26 +177,26 @@ public class HttpRequisitionMergeSource implements Source {
     private RequisitionNode mergeNodes(RequisitionNode nodeA, RequisitionNode nodeB) {
         //Add all nodeB categories to nodeA, do not duplicate
         for (RequisitionCategory category : nodeB.getCategories()) {
-            if (nodeA.getCategory(category.getName()) == null) {
+            if (RequisitionUtils.findCategory(nodeA, category.getName()) == null) {
                 nodeA.getCategories().add(category);
             }
         }
 
         //Add all nodeB assets to nodeA, do not duplicate
         for (RequisitionAsset asset : nodeB.getAssets()) {
-            if (nodeA.getAsset(asset.getName()) == null) {
+            if (RequisitionUtils.findAsset(nodeA, asset.getName()) == null) {
                 nodeA.getAssets().add(asset);
             }
         }
 
         //Add all Interfaces and Services from nodeB to nodeA
         for (RequisitionInterface interfaceB : nodeB.getInterfaces()) {
-            if (nodeA.getInterface(interfaceB.getIpAddr()) == null) {
+            RequisitionInterface interfaceA = RequisitionUtils.findInterface(nodeA, interfaceB.getIpAddr());
+            if (interfaceA == null) {
                 //Interface dose not exist on nodeA, add entire interfaceB to nodeA
                 nodeA.getInterfaces().add(interfaceB);
             } else {
                 //get interface information from interfaceB if interfaceA has non
-                RequisitionInterface interfaceA = nodeA.getInterface(interfaceB.getIpAddr());
                 if (interfaceA.getDescr() != null && interfaceB.getDescr() != null) {
                     if (interfaceA.getDescr().isEmpty() && !interfaceB.getDescr().isEmpty()) {
                         interfaceA.setDescr(interfaceB.getDescr());
@@ -207,12 +209,12 @@ public class HttpRequisitionMergeSource implements Source {
 
                 //Interface exists on both requisitions, add all interfaceB services to interfaceA
                 Map<String, RequisitionMonitoredService> servicesA = new HashMap<>();
-                for (RequisitionMonitoredService serviceA : nodeA.getInterface(interfaceB.getIpAddr()).getMonitoredServices()) {
+                for (RequisitionMonitoredService serviceA : interfaceA.getMonitoredServices()) {
                     servicesA.put(serviceA.getServiceName(), serviceA);
                 }
                 for (RequisitionMonitoredService serviceB : interfaceB.getMonitoredServices()) {
                     if (!servicesA.containsKey(serviceB.getServiceName())) {
-                        nodeA.getInterface(interfaceB.getIpAddr()).getMonitoredServices().add(serviceB);
+                        interfaceA.getMonitoredServices().add(serviceB);
                     }
                 }
 

@@ -1,4 +1,4 @@
-package org.opennms.pris.api;
+package org.opennms.pris.model;
 
 public enum AssetField {
 

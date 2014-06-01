@@ -3,8 +3,8 @@
 * If newBuilding is set to true, each node gets the newName set as building
 */
 
-import org.opennms.netmgt.provision.persist.requisition.Requisition
-import org.opennms.netmgt.provision.persist.requisition.RequisitionNode
+import org.opennms.pris.model.Requisition
+import org.opennms.pris.model.RequisitionNode
 
 logger.info("starting requisitionRename.groovy")
 

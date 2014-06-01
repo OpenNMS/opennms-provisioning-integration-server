@@ -5,9 +5,9 @@
 * If no dns name was found the nodelabel will be changed.
 */
 
-import org.opennms.netmgt.provision.persist.requisition.Requisition
-import org.opennms.netmgt.provision.persist.requisition.RequisitionNode
-import org.opennms.netmgt.provision.persist.requisition.RequisitionInterface
+import org.opennms.pris.model.Requisition
+import org.opennms.pris.model.RequisitionNode
+import org.opennms.pris.model.RequisitionInterface
 
 logger.info("starting reverseDNS.groovy")
 

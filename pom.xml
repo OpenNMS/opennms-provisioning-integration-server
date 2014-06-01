@@ -12,20 +12,21 @@
     <name>OpenNMS :: Provisioning Integration Server :: Parent</name>
   
     <modules>
+        <module>opennms-pris-model</module>
+        <module>opennms-pris-api</module>
         <module>opennms-pris-main</module>
         <module>opennms-pris-docs</module>
         <module>opennms-pris-dist</module>
         <module>opennms-pris-plugins</module>
-        <module>opennms-pris-api</module>
     </modules>
   
     <properties>
-        <!-- build settings -->
+        <!-- Build settings -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <github.global.server>github</github.global.server>
     
-        <!-- global version settings -->
+        <!-- Version settings -->
         <chQosLogbackVersion>1.0.13</chQosLogbackVersion>
         <commonsConfigurationVersion>1.9</commonsConfigurationVersion>
         <commonsIoVersion>2.4</commonsIoVersion>
@@ -36,11 +37,31 @@
         <mavenSitePluginVersion>3.3</mavenSitePluginVersion>
         <mavenWagonSshVersion>2.6</mavenWagonSshVersion>
         <metainfServicesVersion>1.5</metainfServicesVersion>
-        <opennmsProvisionPersistenceVersion>1.12.5</opennmsProvisionPersistenceVersion>
+        <opennmsVersion>1.12.5</opennmsVersion>
         <slf4jVersion>1.7.5</slf4jVersion>
     </properties>
     
     <dependencies>
+        <!-- Logging -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4jVersion}</version>
+        </dependency>
+      
+        <!-- Helper APIs -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guavaVersion}</version>
+        </dependency>
+            
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${commonsIoVersion}</version>
+        </dependency>
+        
         <!-- Tests -->
         <dependency>
             <groupId>junit</groupId>
@@ -48,17 +69,11 @@
             <version>${junitVersion}</version>
             <scope>test</scope>
         </dependency>
-        
-        <!-- Logging -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4jVersion}</version>
-        </dependency>
     </dependencies>
   
     <dependencyManagement>
         <dependencies>
+            <!-- Logging -->
             <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
@@ -72,36 +87,52 @@
                 <version>${commonsConfigurationVersion}</version>
             </dependency>
       
-            <!-- OpenNMS Dependencies -->
+            <!-- OpenNMS -->
             <dependency>
                 <groupId>org.opennms</groupId>
-                <artifactId>opennms-provision-persistence</artifactId>
-                <version>${opennmsProvisionPersistenceVersion}</version>
+                <artifactId>opennms-import</artifactId>
+                <version>${opennmsVersion}</version>
+                <classifier>xsds</classifier>
+                <scope>compile</scope>
             </dependency>
-<!--            <dependency>
+            
+            <dependency>
                 <groupId>org.opennms</groupId>
                 <artifactId>opennms-util</artifactId>
-                <version>${opennmsUtilVersion}</version>
-            </dependency>-->
+                <version>${opennmsVersion}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.opennms.dependencies</groupId>
+                        <artifactId>spring-dependencies</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.opennms.core</groupId>
+                        <artifactId>org.opennms.core.lib</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.opennms.dependencies</groupId>
+                        <artifactId>jaxb-dependencies</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.opennms.dependencies</groupId>
+                        <artifactId>dnsjava-dependencies</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>commons-io</groupId>
+                        <artifactId>commons-io</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>xalan</groupId>
+                        <artifactId>serializer</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
       
             <!-- Web-Server -->
             <dependency>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-server</artifactId>
                 <version>${jettyServerVersion}</version>
-            </dependency>
-      
-            <!-- Helper APIs -->
-            <dependency>
-                <groupId>com.google.guava</groupId>
-                <artifactId>guava</artifactId>
-                <version>${guavaVersion}</version>
-            </dependency>
-            
-            <dependency>
-                <groupId>commons-io</groupId>
-                <artifactId>commons-io</artifactId>
-                <version>${commonsIoVersion}</version>
             </dependency>
             
             <!-- SPI -->

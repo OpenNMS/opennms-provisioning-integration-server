@@ -21,15 +21,15 @@
 package org.opennms.opennms.pris.plugins.ocs.mapper;
 
 import org.kohsuke.MetaInfServices;
-import org.opennms.netmgt.model.PrimaryType;
-import org.opennms.netmgt.provision.persist.requisition.Requisition;
-import org.opennms.netmgt.provision.persist.requisition.RequisitionAsset;
-import org.opennms.netmgt.provision.persist.requisition.RequisitionInterface;
-import org.opennms.netmgt.provision.persist.requisition.RequisitionMonitoredService;
-import org.opennms.netmgt.provision.persist.requisition.RequisitionNode;
+import org.opennms.pris.model.PrimaryType;
+import org.opennms.pris.model.Requisition;
+import org.opennms.pris.model.RequisitionAsset;
+import org.opennms.pris.model.RequisitionInterface;
+import org.opennms.pris.model.RequisitionMonitoredService;
+import org.opennms.pris.model.RequisitionNode;
 import org.opennms.ocs.inventory.client.response.snmp.SnmpDevice;
 import org.opennms.ocs.inventory.client.response.snmp.SnmpDevices;
-import org.opennms.opennms.pris.plugins.ocs.IpInterfaceHelper;
+import org.opennms.opennms.pris.plugins.ocs.util.OcsInterfaceUtils;
 import org.opennms.pris.api.Mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,10 +41,11 @@ public class DefaultOcsSnmpDevicesMapper implements Mapper {
 
     private final InstanceConfiguration config;
 
-    private final IpInterfaceHelper ipInterfaceHelper = new IpInterfaceHelper();
+    private final OcsInterfaceUtils interfaceUtils;
 
     public DefaultOcsSnmpDevicesMapper(final InstanceConfiguration config) {
         this.config = config;
+        this.interfaceUtils = new OcsInterfaceUtils(config);
     }
 
     @Override
@@ -66,15 +67,15 @@ public class DefaultOcsSnmpDevicesMapper implements Mapper {
         requisitionNode.setForeignId(snmpDevice.getSNMP().getName());
         requisitionNode.setNodeLabel(snmpDevice.getSNMP().getName());
 
-        String ipAddress = this.ipInterfaceHelper.selectIpAddress(snmpDevice);
+        String ipAddress = this.interfaceUtils.selectIpAddress(snmpDevice);
         if (ipAddress != null) {
             final RequisitionInterface requisitionInterface = new RequisitionInterface();
             requisitionInterface.setIpAddr(ipAddress);
             requisitionInterface.setDescr("OCS");
             requisitionInterface.setSnmpPrimary(PrimaryType.PRIMARY);
             requisitionInterface.setStatus(1);
-            requisitionInterface.insertMonitoredService(new RequisitionMonitoredService("SNMP"));
-            requisitionInterface.insertMonitoredService(new RequisitionMonitoredService("ICMP"));
+            requisitionInterface.getMonitoredServices().add(new RequisitionMonitoredService().withServiceName("SNMP"));
+            requisitionInterface.getMonitoredServices().add(new RequisitionMonitoredService().withServiceName("ICMP"));
             requisitionNode.getInterfaces().add(requisitionInterface);
         } else {
             LOGGER.warn("snmpDevice '{}' named '{}' whith ipAddress '{}', is not valid follworing black- and whitelists.", snmpDevice.getSNMP().getId(), snmpDevice.getSNMP().getName(), snmpDevice

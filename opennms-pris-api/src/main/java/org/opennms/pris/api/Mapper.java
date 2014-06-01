@@ -19,7 +19,7 @@
  */
 package org.opennms.pris.api;
 
-import org.opennms.netmgt.provision.persist.requisition.Requisition;
+import org.opennms.pris.model.Requisition;
 
 /**
  * A mapper to map information to a requisition.

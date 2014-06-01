@@ -25,21 +25,21 @@
  * http://www.opennms.org/
  * http://www.opennms.com/
  *******************************************************************************/
-package org.opennms.opennms.pris.plugins.ocs;
+package org.opennms.opennms.pris.plugins.ocs.util;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.opennms.core.utils.IPLike;
 import org.opennms.ocs.inventory.client.response.Computer;
 import org.opennms.ocs.inventory.client.response.Computers;
 import org.opennms.ocs.inventory.client.response.Hardware;
 import org.opennms.ocs.inventory.client.response.Network;
 
 import static org.junit.Assert.*;
+import org.opennms.pris.api.MockInstanceConfiguration;
 
-public class IpInterfaceHelperTest {
+public class OcsInterfaceUtilsTest {
 
-    private IpInterfaceHelper helper;
+    private OcsInterfaceUtils helper;
     
     private Computers computers;
     private Computer computerWhite;
@@ -59,26 +59,9 @@ public class IpInterfaceHelperTest {
 
     @Before
     public void setup() {
-        helper = new IpInterfaceHelper();
+        helper = new OcsInterfaceUtils(new MockInstanceConfiguration("test"));
         generateNetworks();
         generateComputers();
-    }
-
-    @Test
-    public void ipLikeTest() {
-        String ip = "1.1.1.1";
-        
-        String goodPatternA = "1.*.1.1";
-        assertTrue(IPLike.matches(ip, goodPatternA));
-        
-        String goodPatternB = "1.1-2.1.1";
-        assertTrue(IPLike.matches(ip, goodPatternB));
-                
-        String badPatternA = "1.2.1.1";
-        assertFalse(IPLike.matches(ip, badPatternA));
-        
-        String badPatternB = "1.2-3.1.1";
-        assertFalse(IPLike.matches(ip, badPatternB));        
     }
     
     @Test

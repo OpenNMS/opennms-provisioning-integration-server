@@ -17,7 +17,7 @@
  * For more information contact: OpenNMS(R) Licensing <license@opennms.org>
  * http://www.opennms.org/ http://www.opennms.com/ *****************************************************************************
  */
-package org.opennms.opennms.pris.plugins.jdbc.source;
+package org.opennms.pris.api;
 
 import java.nio.file.Path;
 import java.util.HashMap;

@@ -5,15 +5,15 @@ import org.opennms.ocs.inventory.client.response.snmp.Snmp;
 
 import org.opennms.ocs.inventory.client.response.snmp.SnmpDevice;
 import org.opennms.ocs.inventory.client.response.snmp.SnmpDevices;
-import org.opennms.netmgt.provision.persist.requisition.RequisitionAsset;
+import org.opennms.pris.model.RequisitionAsset;
 
 //FIXME: Unused import
-import org.opennms.netmgt.provision.persist.requisition.RequisitionCategory;
+import org.opennms.pris.model.RequisitionCategory;
 
-import org.opennms.netmgt.provision.persist.requisition.RequisitionNode;
-import org.opennms.netmgt.provision.persist.requisition.RequisitionInterface;
-import org.opennms.netmgt.provision.persist.requisition.RequisitionMonitoredService;
-import org.opennms.netmgt.provision.persist.requisition.Requisition
+import org.opennms.pris.model.RequisitionNode;
+import org.opennms.pris.model.RequisitionInterface;
+import org.opennms.pris.model.RequisitionMonitoredService;
+import org.opennms.pris.model.Requisition
 import org.opennms.netmgt.model.PrimaryType;
 
 String foreignSource;
