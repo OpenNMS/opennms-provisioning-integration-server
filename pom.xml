@@ -37,7 +37,6 @@
         <mavenWagonSshVersion>2.6</mavenWagonSshVersion>
         <metainfServicesVersion>1.5</metainfServicesVersion>
         <opennmsProvisionPersistenceVersion>1.12.5</opennmsProvisionPersistenceVersion>
-        <opennmsUtilVersion>1.12.5</opennmsUtilVersion>
         <slf4jVersion>1.7.5</slf4jVersion>
     </properties>
   
@@ -68,11 +67,11 @@
                 <artifactId>opennms-provision-persistence</artifactId>
                 <version>${opennmsProvisionPersistenceVersion}</version>
             </dependency>
-            <dependency>
+<!--            <dependency>
                 <groupId>org.opennms</groupId>
                 <artifactId>opennms-util</artifactId>
                 <version>${opennmsUtilVersion}</version>
-            </dependency>
+            </dependency>-->
       
             <!-- Web-Server -->
             <dependency>
