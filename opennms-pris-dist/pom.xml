@@ -56,12 +56,6 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>opennms-pris-plugins-vmware</artifactId>
-            <version>${project.version}</version>
-            <classifier>jar-with-dependencies</classifier>
-        </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
             <artifactId>opennms-pris-plugins-xls</artifactId>
             <version>${project.version}</version>
             <classifier>jar-with-dependencies</classifier>

@@ -10,16 +10,22 @@
         <version>1.0.8-SNAPSHOT</version>
     </parent>
     
-    <artifactId>opennms-pris-plugins-vmware</artifactId>
+    <artifactId>opennms-pris-plugins-dns</artifactId>
     <packaging>jar</packaging>
     
-    <name>OpenNMS :: Provisioning Integration Server :: Plugins :: VMware</name>
+    <name>OpenNMS :: Provisioning Integration Server :: Plugins :: DNS</name>
     
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>opennms-pris-api</artifactId>
             <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>dnsjava</groupId>
+            <artifactId>dnsjava</artifactId>
+            <version>2.1.6</version>
         </dependency>
         
         <!-- SPI -->
@@ -28,13 +34,4 @@
             <artifactId>metainf-services</artifactId>
         </dependency>
     </dependencies>
-    
-    <build>
-        <plugins>
-            <!-- Build fat JAR -->
-            <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
 </project>
