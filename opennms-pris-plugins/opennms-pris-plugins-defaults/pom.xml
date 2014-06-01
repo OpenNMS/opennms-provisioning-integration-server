@@ -25,7 +25,7 @@
             <artifactId>opennms-pris-api</artifactId>
             <version>${project.version}</version>
         </dependency>
-        
+                
         <!-- HTTP Client -->
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>

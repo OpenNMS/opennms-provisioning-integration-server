@@ -39,15 +39,26 @@
         <opennmsProvisionPersistenceVersion>1.12.5</opennmsProvisionPersistenceVersion>
         <slf4jVersion>1.7.5</slf4jVersion>
     </properties>
+    
+    <dependencies>
+        <!-- Tests -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junitVersion}</version>
+            <scope>test</scope>
+        </dependency>
+        
+        <!-- Logging -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4jVersion}</version>
+        </dependency>
+    </dependencies>
   
     <dependencyManagement>
         <dependencies>
-            <!-- Logging -->
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-api</artifactId>
-                <version>${slf4jVersion}</version>
-            </dependency>
             <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
@@ -86,6 +97,7 @@
                 <artifactId>guava</artifactId>
                 <version>${guavaVersion}</version>
             </dependency>
+            
             <dependency>
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
@@ -98,14 +110,6 @@
                 <artifactId>metainf-services</artifactId>
                 <version>${metainfServicesVersion}</version>
                 <scope>compile</scope>
-            </dependency>
-      
-            <!-- Tests -->
-            <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>${junitVersion}</version>
-                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>

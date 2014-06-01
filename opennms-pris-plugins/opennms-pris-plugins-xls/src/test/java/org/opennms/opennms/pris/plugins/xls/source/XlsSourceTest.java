@@ -16,9 +16,9 @@ import org.opennms.netmgt.provision.persist.requisition.RequisitionMonitoredServ
 import org.opennms.netmgt.provision.persist.requisition.RequisitionNode;
 import org.opennms.pris.api.AssetField;
 
+
 public class XlsSourceTest {
 
-    
     private XlsSource xlsSource;
     
     private final Date TEST_DATE = new Date();
