@@ -32,6 +32,7 @@ NAME="opennms-pris"
 
 PROG="opennms-pris.jar"
 PROG_DIR="/opt/opennms-pris"
+PROG_MAIN="org.opennms.pris.Starter"
 
 PID_FILE="/var/run/opennms-pris.pid"
 
@@ -75,7 +76,7 @@ start() {
       exit 4
    else
       cd ${PROG_DIR}
-      ${JAVA_BIN} -classpath ${PROG_DIR}/lib -jar ${PROG_DIR}/${PROG} &>${LOG_FILE} &
+      ${JAVA_BIN} -cp ${PROG_DIR}/lib/*:${PROG_DIR}/${PROG} ${PROG_MAIN} &>${LOG_FILE} &
       if [ ! $? -eq 0 ]; then
         echo "FAILED"
         exit 5

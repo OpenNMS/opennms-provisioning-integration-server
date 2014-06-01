@@ -19,6 +19,15 @@
         
         <fileSet>
             <includes>
+                <include>opennms-pris.sh</include>
+            </includes>
+            <directory>${project.basedir}/src/main/resources</directory>
+            <outputDirectory>./</outputDirectory>
+            <fileMode>0755</fileMode>
+        </fileSet>
+        
+        <fileSet>
+            <includes>
                 <include>**</include>
             </includes>
             <directory>${project.basedir}/src/examples/</directory>
