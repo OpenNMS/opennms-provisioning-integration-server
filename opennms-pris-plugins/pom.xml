@@ -31,6 +31,7 @@
         <module>opennms-pris-plugins-ocs</module>
         <module>opennms-pris-plugins-script</module>
         <module>opennms-pris-plugins-xls</module>
+        <module>opennms-pris-plugins-vmware</module>
     </modules>
     
     <build>
