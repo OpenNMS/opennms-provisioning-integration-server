@@ -30,7 +30,7 @@ import org.opennms.pris.api.Mapper;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ServiceLoader;
-import org.opennms.netmgt.provision.persist.requisition.Requisition;
+import org.opennms.pris.model.Requisition;
 import org.opennms.pris.api.InstanceConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -149,7 +149,10 @@ public class RequisitionGenerator {
 
         // Get the data from the source
         final Object data = this.source.dump();
-        Requisition requisition = new Requisition(instance);
+        
+        // Create the requisition to fill
+        Requisition requisition = new Requisition();
+        requisition.setForeignSource(instance);
 
         // Map the data to a requisition with the configured mapper
         requisition = this.mapper.map(data, requisition);

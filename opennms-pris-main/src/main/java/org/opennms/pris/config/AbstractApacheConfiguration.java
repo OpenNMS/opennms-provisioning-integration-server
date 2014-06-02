@@ -67,8 +67,11 @@ public abstract class AbstractApacheConfiguration implements Configuration {
     @Override
     public Path getPath(final String key,
                         final Path defaultValue) {
-        return Paths.get(this.config.getString(key,
-                                               defaultValue.toString()));
+        if (!this.config.containsKey(key)) {
+            return defaultValue;
+        }
+        
+        return Paths.get(this.config.getString(key));
     }
 
     @Override

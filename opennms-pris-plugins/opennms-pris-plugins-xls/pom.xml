@@ -20,12 +20,6 @@
     </properties>
     
     <dependencies>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>opennms-pris-api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
         <!-- XLS -->
         <dependency>
             <groupId>net.sourceforge.jexcelapi</groupId>
@@ -33,10 +27,11 @@
             <version>${jexcelApiVersion}</version>
         </dependency>
         
-        <!-- SPI -->
+        <!-- Tests -->
         <dependency>
-            <groupId>org.kohsuke.metainf-services</groupId>
-            <artifactId>metainf-services</artifactId>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>opennms-pris-api</artifactId>
+            <classifier>tests</classifier>
         </dependency>
     </dependencies>
     

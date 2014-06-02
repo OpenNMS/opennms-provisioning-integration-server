@@ -28,7 +28,7 @@
 package org.opennms.opennms.pris.plugins.defaults.mapper;
 
 import org.kohsuke.MetaInfServices;
-import org.opennms.netmgt.provision.persist.requisition.Requisition;
+import org.opennms.pris.model.Requisition;
 import org.opennms.pris.api.Mapper;
 import org.opennms.pris.api.InstanceConfiguration;
 

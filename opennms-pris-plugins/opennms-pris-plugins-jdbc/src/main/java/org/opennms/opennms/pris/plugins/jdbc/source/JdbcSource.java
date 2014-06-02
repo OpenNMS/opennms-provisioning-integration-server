@@ -19,13 +19,13 @@
  */
 package org.opennms.opennms.pris.plugins.jdbc.source;
 
-import org.opennms.netmgt.model.PrimaryType;
-import org.opennms.netmgt.provision.persist.requisition.Requisition;
-import org.opennms.netmgt.provision.persist.requisition.RequisitionAsset;
-import org.opennms.netmgt.provision.persist.requisition.RequisitionCategory;
-import org.opennms.netmgt.provision.persist.requisition.RequisitionInterface;
-import org.opennms.netmgt.provision.persist.requisition.RequisitionMonitoredService;
-import org.opennms.netmgt.provision.persist.requisition.RequisitionNode;
+import org.opennms.pris.model.PrimaryType;
+import org.opennms.pris.model.Requisition;
+import org.opennms.pris.model.RequisitionAsset;
+import org.opennms.pris.model.RequisitionCategory;
+import org.opennms.pris.model.RequisitionInterface;
+import org.opennms.pris.model.RequisitionMonitoredService;
+import org.opennms.pris.model.RequisitionNode;
 import org.opennms.pris.api.Source;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +36,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import org.kohsuke.MetaInfServices;
-import org.opennms.pris.api.AssetField;
+import org.opennms.pris.model.AssetField;
+import org.opennms.pris.util.RequisitionUtils;
 
 /**
  * A JDBC data source allows to connect to an SQL database and extract data in a given format. The result set is mapped to an OpenNMS requisition.
@@ -66,7 +67,8 @@ public class JdbcSource implements Source {
 
     @Override
     public Object dump() {
-        Requisition requisition = new Requisition(this.config.getInstanceIdentifier());
+        Requisition requisition = new Requisition();
+        requisition.setForeignSource(this.config.getInstanceIdentifier());
 
         Statement statement;
         ResultSet resultSet;
@@ -100,7 +102,7 @@ public class JdbcSource implements Source {
                         continue;
                     }
 
-                    RequisitionNode node = requisition.getNode(foreignId);
+                    RequisitionNode node = RequisitionUtils.findNode(requisition, foreignId);
 
                     if (node == null) {
                         node = new RequisitionNode();
@@ -119,7 +121,7 @@ public class JdbcSource implements Source {
                     String ipAddress = getString(resultSet, COLUMN_IP_ADDRESS);
 
                     if (ipAddress != null) {
-                        RequisitionInterface reqInterface = node.getInterface(ipAddress);
+                        RequisitionInterface reqInterface = RequisitionUtils.findInterface(node, ipAddress);
 
                         if (reqInterface == null) {
                             reqInterface = new RequisitionInterface();
@@ -149,8 +151,11 @@ public class JdbcSource implements Source {
                         String service = getString(resultSet, COLUMN_SERVICE);
 
                         if (service != null) {
-                            if (reqInterface.getMonitoredService(service) == null) {
-                                reqInterface.getMonitoredServices().add(new RequisitionMonitoredService(service));
+                            if (RequisitionUtils.findMonitoredService(reqInterface, service) == null) {
+                                RequisitionMonitoredService monitoredService = new RequisitionMonitoredService();
+                                monitoredService.setServiceName(service);
+                                
+                                reqInterface.getMonitoredServices().add(monitoredService);
                             }
                         }
                     } else {
@@ -160,7 +165,7 @@ public class JdbcSource implements Source {
                     String category = getString(resultSet, COLUMN_CATEGORY);
 
                     if (category != null) {
-                        if (node.getCategory(category) == null) {
+                        if (RequisitionUtils.findCategory(node, category) == null) {
                             node.getCategories().add(new RequisitionCategory(category));
                         }
                     }
@@ -169,11 +174,12 @@ public class JdbcSource implements Source {
                         String assetValue = getString(resultSet, "Asset_" + assetField.name);
                         if (assetValue != null) {
                             LOGGER.info("Adding to node:{} the asset:{} with value:{}", node.getNodeLabel(), assetField.name, assetValue);
-                            if (node.getAsset(assetField.name) == null) {
-                                node.getAssets().add(new RequisitionAsset(assetField.name, assetValue));
-                            } else {
-                                node.getAsset(assetField.name).setValue(assetValue);
+                            RequisitionAsset asset = RequisitionUtils.findAsset(node, assetField.name);
+                            if (asset == null) {
+                                node.getAssets().add(asset = new RequisitionAsset().withName(assetField.name));
                             }
+                            
+                            asset.setValue(assetValue);
                         }
                     }
                 }

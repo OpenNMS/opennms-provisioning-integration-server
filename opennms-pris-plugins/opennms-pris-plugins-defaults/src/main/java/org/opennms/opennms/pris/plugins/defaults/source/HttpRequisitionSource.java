@@ -33,7 +33,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.opennms.netmgt.provision.persist.requisition.Requisition;
+import org.opennms.pris.model.Requisition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

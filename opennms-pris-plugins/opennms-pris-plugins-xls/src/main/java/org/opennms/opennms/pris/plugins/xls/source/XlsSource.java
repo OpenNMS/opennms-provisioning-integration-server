@@ -27,6 +27,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -37,14 +38,14 @@ import jxl.Workbook;
 import jxl.WorkbookSettings;
 import jxl.read.biff.BiffException;
 import org.kohsuke.MetaInfServices;
-import org.opennms.netmgt.model.PrimaryType;
-import org.opennms.netmgt.provision.persist.requisition.Requisition;
-import org.opennms.netmgt.provision.persist.requisition.RequisitionAsset;
-import org.opennms.netmgt.provision.persist.requisition.RequisitionCategory;
-import org.opennms.netmgt.provision.persist.requisition.RequisitionInterface;
-import org.opennms.netmgt.provision.persist.requisition.RequisitionMonitoredService;
-import org.opennms.netmgt.provision.persist.requisition.RequisitionNode;
-import org.opennms.pris.api.AssetField;
+import org.opennms.pris.model.PrimaryType;
+import org.opennms.pris.model.Requisition;
+import org.opennms.pris.model.RequisitionAsset;
+import org.opennms.pris.model.RequisitionCategory;
+import org.opennms.pris.model.RequisitionInterface;
+import org.opennms.pris.model.RequisitionMonitoredService;
+import org.opennms.pris.model.RequisitionNode;
+import org.opennms.pris.model.AssetField;
 import org.opennms.pris.api.InstanceConfiguration;
 import org.opennms.pris.api.Source;
 import org.slf4j.Logger;
@@ -82,7 +83,7 @@ public class XlsSource implements Source {
                                 Exception {
         final String instance = this.config.getInstanceIdentifier();
 
-        Requisition requisition = new Requisition(instance);
+        Requisition requisition = new Requisition().withForeignSource(instance);
         if (getXlsFile() != null) {
             xls = new File(getXlsFile());
             if (xls.canRead()) {
@@ -229,7 +230,7 @@ public class XlsSource implements Source {
 
     private Set<RequisitionCategory> getCategoriesByRow(Sheet sheet,
                                                         Integer rowID) {
-        Set<RequisitionCategory> categories = new TreeSet<>();
+        Set<RequisitionCategory> categories = new HashSet<>();
         List<Integer> relevantColumnIDs = getRelevantColumnIDs(OPTIONAL_MULTIPLE_SPLITCONTENT_PREFIXES.PREFIX_CATEGORY);
         if (relevantColumnIDs != null) {
             for (Integer column : relevantColumnIDs) {
@@ -247,7 +248,7 @@ public class XlsSource implements Source {
 
     private Set<RequisitionMonitoredService> getServicesByRow(Sheet sheet,
                                                               Integer rowID) {
-        Set<RequisitionMonitoredService> services = new TreeSet<>();
+        Set<RequisitionMonitoredService> services = new HashSet<>();
         List<Integer> relevantColumnIDs = getRelevantColumnIDs(OPTIONAL_MULTIPLE_SPLITCONTENT_PREFIXES.PREFIX_SERVICE);
         if (relevantColumnIDs != null) {
             for (Integer column : relevantColumnIDs) {
@@ -255,7 +256,7 @@ public class XlsSource implements Source {
                 for (String service : rawServices.split(WITHIN_SPLITTER)) {
                     service = service.trim();
                     if (!service.isEmpty()) {
-                        services.add(new RequisitionMonitoredService(service));
+                        services.add(new RequisitionMonitoredService().withServiceName(service));
                     }
                 }
             }
@@ -265,7 +266,7 @@ public class XlsSource implements Source {
 
     private Set<RequisitionAsset> getAssetsByRow(Sheet sheet,
                                                  Integer rowID) {
-        Set<RequisitionAsset> assets = new TreeSet<>();
+        Set<RequisitionAsset> assets = new HashSet<>();
         for (Map.Entry<String, Integer> entry : assetColumns.entrySet()) {
             String value = sheet.getCell(entry.getValue(), rowID).getContents().trim();
             if (!value.isEmpty()) {

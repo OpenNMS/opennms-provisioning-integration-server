@@ -23,34 +23,31 @@
  * http://www.opennms.org/ http://www.opennms.com/
  * *****************************************************************************
  */
-package org.opennms.opennms.pris.plugins.ocs;
+package org.opennms.opennms.pris.plugins.ocs.util;
 
-import org.opennms.core.utils.IPLike;
-import org.opennms.netmgt.provision.persist.requisition.RequisitionCategory;
+import org.opennms.pris.util.InterfaceUtils;
+import org.opennms.pris.model.RequisitionCategory;
 import org.opennms.ocs.inventory.client.response.Computer;
 import org.opennms.ocs.inventory.client.response.Entry;
 import org.opennms.ocs.inventory.client.response.Network;
 import org.opennms.ocs.inventory.client.response.snmp.SnmpDevice;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import org.opennms.pris.api.InstanceConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class IpInterfaceHelper {
+public class OcsInterfaceUtils extends InterfaceUtils {
+    private static final Logger LOGGER = LoggerFactory.getLogger(OcsInterfaceUtils.class);
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(IpInterfaceHelper.class);
-    private List<String> ipBlackList = new ArrayList<>();
-    private List<String> ipWhiteList = new ArrayList<>();
-
+    public OcsInterfaceUtils(final InstanceConfiguration config) {
+        super(config);
+    }
+    
     /**
      * Returns null if no Network was found that is whitelisted and not
      * blacklisted.
@@ -114,7 +111,6 @@ public class IpInterfaceHelper {
     }
 
     public Network selectManagementNetwork(Computer computer) {
-
         List<Network> possibleNetworks = new ArrayList<>();
         for (Network network : computer.getNetworks()) {
             //check for a whitelisted interface
@@ -142,70 +138,6 @@ public class IpInterfaceHelper {
         }
     }
 
-    private Boolean isIpBlackListed(String ipAddress) {
-        for (String blackedIp : ipBlackList) {
-            if (IPLike.matches(ipAddress, blackedIp)) {
-                LOGGER.debug("IpAddress Black: {} \t vs \t {} \t OK", ipAddress, blackedIp);
-                return true;
-            } else {
-                LOGGER.debug("IpAddress Black: {} \t vs \t {} \t no", ipAddress, blackedIp);
-            }
-        }
-        return false;
-    }
-
-    private Boolean isIpWhiteListed(String ipAddress) {
-        for (String whiteIp : ipWhiteList) {
-            if (IPLike.matches(ipAddress, whiteIp)) {
-                LOGGER.debug("IpAddress White: {} \t vs \t {} \t OK", ipAddress, whiteIp);
-                return true;
-            } else {
-                LOGGER.debug("IpAddress White: {} \t vs \t {} \t no", ipAddress, whiteIp);
-            }
-        }
-        return false;
-    }
-
-    public void addIpWhite(String ip) {
-        try {
-            //This check forces valid IPLike syntax
-            IPLike.matches("1.1.1.1", ip);
-            ipWhiteList.add(ip);
-        } catch (Exception ex) {
-            LOGGER.error("WhiteList rejected illegal entry {}", ip, ex);
-        }
-    }
-
-    public void addIpBlack(String ip) {
-        try {
-            //This check forces valid IPLike syntax
-            IPLike.matches("1.1.1.1", ip);
-            ipBlackList.add(ip);
-        } catch (Exception ex) {
-            LOGGER.error("BlackList rejected illegal entry {}", ip, ex);
-        }
-    }
-
-    public void initListsFromConfigs() {
-        try {
-            List<String> rawBlackedList = Files.readAllLines(Paths.get("./", "blackList.properties"), Charset.forName("UTF-8"));
-            for (String rawBlacked : rawBlackedList) {
-                addIpBlack(rawBlacked);
-            }
-
-            List<String> rawWhiteList = Files.readAllLines(Paths.get("./", "whiteList.properties"), Charset.forName("UTF-8"));
-            for (String rawWhite : rawWhiteList) {
-                addIpWhite(rawWhite);
-            }
-
-        } catch (IOException ex) {
-            LOGGER.error("blackList and or whiteList could not be read from files, using empty lists.", ex);
-            ipBlackList = new ArrayList<>();
-            ipWhiteList = new ArrayList<>();
-        }
-    }
-
-//TODO Move to OCS-Helper
     public List<RequisitionCategory> populateCategories(Computer myComputer, InstanceConfiguration config, String instance) {
         List<RequisitionCategory> categories = new ArrayList<>();
 
@@ -233,30 +165,5 @@ public class IpInterfaceHelper {
             }
         }
         return categories;
-    }
-
-    public String assetStringCleaner(String assetString, Integer maxSize) {
-        String result = "";
-        if (assetString != null) {
-            result = assetString;
-            //Trademarks
-            result = result.replace("®", "");
-            result = result.replace("(R)", "");
-            result = result.replace("(tm)", "");
-
-            //OperatingSystems
-            result = result.replace("Microsoft", "MS");
-            result = result.replace("Service Pack", "SP");
-            result = result.replace("CentOS release", "CentOS");
-            result = result.replace("Red Hat Enterprise Linux Server release", "Red Hat Linux");
-
-            //duplicate spaces
-            result = result.replaceAll("\\s+", " ");
-
-            if (result.length() > maxSize) {
-                result = result.substring(0, maxSize);
-            }
-        }
-        return result;
     }
 }

@@ -1,7 +1,7 @@
-import org.opennms.netmgt.provision.persist.requisition.Requisition
-import org.opennms.netmgt.provision.persist.requisition.RequisitionAsset
-import org.opennms.netmgt.provision.persist.requisition.RequisitionNode
-import org.opennms.netmgt.provision.persist.requisition.RequisitionCategory
+import org.opennms.pris.model.Requisition
+import org.opennms.pris.model.RequisitionAsset
+import org.opennms.pris.model.RequisitionNode
+import org.opennms.pris.model.RequisitionCategory
 
 final String ASSET_LATITUDE = "latitude"
 final String ASSET_LONGITUDE = "longitude"

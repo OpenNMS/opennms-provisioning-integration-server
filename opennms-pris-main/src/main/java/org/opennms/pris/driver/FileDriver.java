@@ -25,7 +25,7 @@
  */
 package org.opennms.pris.driver;
 
-import org.opennms.netmgt.provision.persist.requisition.Requisition;
+import org.opennms.pris.model.Requisition;
 import org.opennms.pris.RequisitionGenerator;
 import org.opennms.pris.Starter;
 import org.slf4j.Logger;

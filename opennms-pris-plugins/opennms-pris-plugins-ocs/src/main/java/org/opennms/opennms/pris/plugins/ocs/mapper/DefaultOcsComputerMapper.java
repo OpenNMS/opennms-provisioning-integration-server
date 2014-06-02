@@ -30,12 +30,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import org.kohsuke.MetaInfServices;
-import org.opennms.netmgt.model.PrimaryType;
-import org.opennms.netmgt.provision.persist.requisition.Requisition;
-import org.opennms.netmgt.provision.persist.requisition.RequisitionAsset;
-import org.opennms.netmgt.provision.persist.requisition.RequisitionInterface;
-import org.opennms.netmgt.provision.persist.requisition.RequisitionMonitoredService;
-import org.opennms.netmgt.provision.persist.requisition.RequisitionNode;
+import org.opennms.pris.model.PrimaryType;
+import org.opennms.pris.model.Requisition;
+import org.opennms.pris.model.RequisitionAsset;
+import org.opennms.pris.model.RequisitionInterface;
+import org.opennms.pris.model.RequisitionMonitoredService;
+import org.opennms.pris.model.RequisitionNode;
 import org.opennms.ocs.inventory.client.response.Bios;
 import org.opennms.ocs.inventory.client.response.Computer;
 import org.opennms.ocs.inventory.client.response.Computers;
@@ -45,11 +45,12 @@ import org.opennms.ocs.inventory.client.response.Network;
 import org.opennms.ocs.inventory.client.response.Sound;
 import org.opennms.ocs.inventory.client.response.Storage;
 import org.opennms.ocs.inventory.client.response.Video;
-import org.opennms.opennms.pris.plugins.ocs.IpInterfaceHelper;
+import org.opennms.opennms.pris.plugins.ocs.util.OcsInterfaceUtils;
 import org.opennms.pris.api.Mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.opennms.pris.api.InstanceConfiguration;
+import org.opennms.pris.util.AssetUtils;
 
 public class DefaultOcsComputerMapper implements Mapper {
     private static final Logger LOGGER = LoggerFactory.getLogger(DefaultOcsComputerMapper.class);
@@ -58,10 +59,11 @@ public class DefaultOcsComputerMapper implements Mapper {
     
     private final InstanceConfiguration config;
 
-    private final IpInterfaceHelper ipInterfaceHelper = new IpInterfaceHelper();
+    private final OcsInterfaceUtils interfaceUtils;
 
     public DefaultOcsComputerMapper(final InstanceConfiguration config) {
         this.config = config;
+        this.interfaceUtils = new OcsInterfaceUtils(config);
     }
 
     @Override
@@ -99,30 +101,30 @@ public class DefaultOcsComputerMapper implements Mapper {
 
         final RequisitionInterface requisitionInterface = new RequisitionInterface();
 
-        final Network managementNetwork = this.ipInterfaceHelper.selectManagementNetwork(computer);
+        final Network managementNetwork = this.interfaceUtils.selectManagementNetwork(computer);
         if (managementNetwork != null) {
             requisitionInterface.setIpAddr(managementNetwork.getIPAddress());
             requisitionInterface.setDescr(managementNetwork.getDescription());
             requisitionInterface.setSnmpPrimary(PrimaryType.PRIMARY);
             requisitionInterface.setStatus(1);
-            requisitionInterface.insertMonitoredService(new RequisitionMonitoredService("SNMP"));
-            requisitionInterface.insertMonitoredService(new RequisitionMonitoredService("ICMP"));
+            requisitionInterface.getMonitoredServices().add(new RequisitionMonitoredService().withServiceName("SNMP"));
+            requisitionInterface.getMonitoredServices().add(new RequisitionMonitoredService().withServiceName("ICMP"));
             requisitionNode.getInterfaces().add(requisitionInterface);
         } else {
             LOGGER.warn("computer '{}' named '{}' has no electable ip-address following the black- and whitelists.", computer.getHardware().getId(), computer.getHardware().getName());
         }
 
-        requisitionNode.getCategories().addAll(ipInterfaceHelper.populateCategories(computer, config, config.getInstanceIdentifier()));
+        requisitionNode.getCategories().addAll(interfaceUtils.populateCategories(computer, config, config.getInstanceIdentifier()));
 
-        requisitionNode.getAssets().add(new RequisitionAsset("operatingSystem", ipInterfaceHelper.assetStringCleaner(computer.getHardware().getOsname(), 64)));
-        requisitionNode.getAssets().add(new RequisitionAsset("cpu", ipInterfaceHelper.assetStringCleaner(computer.getHardware().getProcessort(), 64)));
-        requisitionNode.getAssets().add(new RequisitionAsset("ram", ipInterfaceHelper.assetStringCleaner(computer.getHardware().getMemory() + " MB", 10)));
+        requisitionNode.getAssets().add(new RequisitionAsset("operatingSystem", AssetUtils.assetStringCleaner(computer.getHardware().getOsname(), 64)));
+        requisitionNode.getAssets().add(new RequisitionAsset("cpu", AssetUtils.assetStringCleaner(computer.getHardware().getProcessort(), 64)));
+        requisitionNode.getAssets().add(new RequisitionAsset("ram", AssetUtils.assetStringCleaner(computer.getHardware().getMemory() + " MB", 10)));
 
         Bios biosData = computer.getBios();
         if (biosData != null) {
-            requisitionNode.getAssets().add(new RequisitionAsset("manufacturer", ipInterfaceHelper.assetStringCleaner(biosData.getSManufacturer(), 64)));
-            requisitionNode.getAssets().add(new RequisitionAsset("modelNumber", ipInterfaceHelper.assetStringCleaner(biosData.getSModel(), 64)));
-            requisitionNode.getAssets().add(new RequisitionAsset("serialNumber", ipInterfaceHelper.assetStringCleaner(biosData.getSSN(), 64)));
+            requisitionNode.getAssets().add(new RequisitionAsset("manufacturer", AssetUtils.assetStringCleaner(biosData.getSManufacturer(), 64)));
+            requisitionNode.getAssets().add(new RequisitionAsset("modelNumber", AssetUtils.assetStringCleaner(biosData.getSModel(), 64)));
+            requisitionNode.getAssets().add(new RequisitionAsset("serialNumber", AssetUtils.assetStringCleaner(biosData.getSSN(), 64)));
         }
 
         List<Drive> drives = computer.getDrives();
@@ -144,7 +146,7 @@ public class DefaultOcsComputerMapper implements Mapper {
 
                 if (i <= 6 && !hddAsset.isEmpty()) {
                     LOGGER.debug("Adding Asset hdd{} to Node '{}' as '{}'", i, requisitionNode.getNodeLabel(), hddAsset);
-                    requisitionNode.getAssets().add(new RequisitionAsset("hdd" + i, ipInterfaceHelper.assetStringCleaner(hddAsset, 64)));
+                    requisitionNode.getAssets().add(new RequisitionAsset("hdd" + i, AssetUtils.assetStringCleaner(hddAsset, 64)));
                 } else {
                     LOGGER.debug("node {} ignorring drive {} as hdd{} - string is empty or no hdd asset filed left", requisitionNode.getNodeLabel(), drive.toString(), i);
                 }

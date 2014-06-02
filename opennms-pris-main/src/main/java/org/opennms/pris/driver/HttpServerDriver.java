@@ -28,7 +28,7 @@ package org.opennms.pris.driver;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.AbstractHandler;
-import org.opennms.netmgt.provision.persist.requisition.Requisition;
+import org.opennms.pris.model.Requisition;
 import org.opennms.pris.RequisitionGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

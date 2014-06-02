@@ -20,14 +20,8 @@
         <groovyVersion>2.2.2</groovyVersion>
     </properties>
     
-    
     <dependencies>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>opennms-pris-api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-    
+        <!-- Languages -->
         <dependency>
             <groupId>org.beanshell</groupId>
             <artifactId>bsh</artifactId>
@@ -37,12 +31,6 @@
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-all</artifactId>
             <version>${groovyVersion}</version>
-        </dependency>
-        
-        <!-- SPI -->
-        <dependency>
-            <groupId>org.kohsuke.metainf-services</groupId>
-            <artifactId>metainf-services</artifactId>
         </dependency>
     </dependencies>
     

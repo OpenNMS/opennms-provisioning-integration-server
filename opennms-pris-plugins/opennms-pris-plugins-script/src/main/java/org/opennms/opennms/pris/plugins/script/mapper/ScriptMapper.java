@@ -28,7 +28,7 @@
 package org.opennms.opennms.pris.plugins.script.mapper;
 
 import org.apache.commons.io.FilenameUtils;
-import org.opennms.netmgt.provision.persist.requisition.Requisition;
+import org.opennms.pris.model.Requisition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
