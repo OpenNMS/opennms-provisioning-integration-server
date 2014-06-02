@@ -1,12 +1,12 @@
 ### XLS Source
-The `xls.source` reads a _XLS_ spreadsheet file and creates an _OpenNMS requisition_ based on the worksheet content.
+The `xls` reads a _XLS_ spreadsheet file and creates an _OpenNMS requisition_ based on the worksheet content.
 
-    source = xls.source
+    source = xls
 
-| parameter    | required  | description                                     |
-|--------------|:---------:|------------------------------------------------:|
-| xls.file     | *         | path of the xls file to read                    |
-| xls.encoding |           | encoding of the xls file. Default is ISO-8859-1 |
+| parameter | required  | description                                     |
+|-----------|:---------:|------------------------------------------------:|
+| file      | *         | path of the xls file to read                    |
+| encoding  |           | encoding of the xls file. Default is ISO-8859-1 |
 
 The structure of the spreadsheet has to follow this rules. The source is reading from a sheet named like the requisition you are requesting. The first row of the sheet is reserved to column-names. This column-names have to start with certain prefixes to be recognized.
 

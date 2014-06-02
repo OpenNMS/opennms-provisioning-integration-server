@@ -1,7 +1,7 @@
 ### file-source
 The file source allows to reade a requisition file from the filesystem.
 
-    source = file.source
+    source = file
 
 | parameter | required | description                                        |
 |-----------|:--------:|---------------------------------------------------:|

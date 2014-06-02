@@ -12,7 +12,7 @@ The documentation will be automatically build from Markdown to HTML and you can 
 * Example configuration and init script `opennms-pris/src/examples`
 * Recommended install path `/opt/opennms-pris`
 * http://www.opennms.org/wiki/OCS_Integration
-* http://www.opennms.eu/docs/opennms-pris/latest/opennms-pris-docs/overview.html
+* http://www.opennms.eu/docs/opennms-pris/latest/opennms-pris-docs/
 
 # Compiling from source
 This guide describes how you can checkout the source code from GitHub and how you can compile from source. The following parts are required:
