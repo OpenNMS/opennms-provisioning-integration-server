@@ -35,6 +35,14 @@ import java.nio.file.Path;
 public interface Configuration {
 
     /**
+     * Check if the configuration is empty.
+     *
+     * @return {@code true} if the configuration contains no property,
+     *         {@code false} otherwise
+     */
+    boolean isEmpty();
+
+    /**
      * Check if the configuration contains the specified key.
      *
      * @param key the key whose presence in this configuration is to be tested

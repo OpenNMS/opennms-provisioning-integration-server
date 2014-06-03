@@ -156,12 +156,17 @@ public class RequisitionGenerator {
 
         // Map the data to a requisition with the configured mapper
         requisition = this.mapper.map(data, requisition);
-
+        
+        // If the script mapper is available, an additional run of the script
+        // mapper is supported after the main mapper has finished
         // TODO: Obosolete with new config language
-//        if (this.config.containsKey("script")) {
-//            // Run the script mapper against the data and requisition
-//            requisition = new ScriptMapper(instance, config).map(data, requisition);
-//        }
+        if (MAPPERS.containsKey("script")) {
+            final InstanceConfiguration config = this.config.subset("script");
+            if (!config.isEmpty()) {
+                final Mapper mapper = MAPPERS.get("script").create(config);
+                requisition = mapper.map(data, requisition);
+            }
+        }
 
         return requisition;
     }
