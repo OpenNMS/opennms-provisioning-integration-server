@@ -19,12 +19,13 @@
  */
 package org.opennms.pris.config;
 
+import com.google.common.base.Joiner;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import org.opennms.pris.api.Configuration;
 
 public abstract class AbstractApacheConfiguration implements Configuration {
-    
+
     // The configuration
     private final org.apache.commons.configuration.Configuration config;
 
@@ -35,7 +36,7 @@ public abstract class AbstractApacheConfiguration implements Configuration {
     protected org.apache.commons.configuration.Configuration getConfig() {
         return config;
     }
-    
+
     @Override
     public boolean containsKey(final String key) {
         return this.config.containsKey(key);
@@ -43,14 +44,21 @@ public abstract class AbstractApacheConfiguration implements Configuration {
 
     @Override
     public String getString(final String key) {
-        return this.config.getString(key);
+        if (!this.config.containsKey(key)) {
+            return this.config.getString(key);
+        }
+
+        return Joiner.on(",").join(this.config.getStringArray(key));
     }
 
     @Override
     public String getString(final String key,
                             final String defaultValue) {
-        return this.config.getString(key,
-                                     defaultValue);
+        if (!this.config.containsKey(key)) {
+            return defaultValue;
+        }
+
+        return Joiner.on(",").join(this.config.getStringArray(key));
     }
 
     @Override
@@ -61,7 +69,7 @@ public abstract class AbstractApacheConfiguration implements Configuration {
     @Override
     public Path getPath(final String key) {
         return Paths.get(this.config.getString(key));
-        
+
     }
 
     @Override
@@ -70,7 +78,7 @@ public abstract class AbstractApacheConfiguration implements Configuration {
         if (!this.config.containsKey(key)) {
             return defaultValue;
         }
-        
+
         return Paths.get(this.config.getString(key));
     }
 
@@ -85,7 +93,7 @@ public abstract class AbstractApacheConfiguration implements Configuration {
         return this.config.getBoolean(key,
                                       defaultValue);
     }
-    
+
     @Override
     public int getInt(final String key) {
         return this.config.getInt(key);
