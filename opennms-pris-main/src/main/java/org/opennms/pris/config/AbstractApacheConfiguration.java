@@ -35,6 +35,11 @@ public abstract class AbstractApacheConfiguration implements Configuration {
     protected org.apache.commons.configuration.Configuration getConfig() {
         return config;
     }
+
+    @Override
+    public boolean isEmpty() {
+        return this.config.isEmpty();
+    }
     
     @Override
     public boolean containsKey(final String key) {

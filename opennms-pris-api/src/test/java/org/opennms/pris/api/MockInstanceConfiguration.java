@@ -40,6 +40,11 @@ public class MockInstanceConfiguration implements InstanceConfiguration {
     }
 
     @Override
+    public boolean isEmpty() {
+        return this.values.isEmpty();
+    }
+
+    @Override
     public boolean containsKey(final String key) {
         return this.values.containsKey(key);
     }

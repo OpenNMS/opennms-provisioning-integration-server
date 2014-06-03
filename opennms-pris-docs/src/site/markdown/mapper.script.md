@@ -26,3 +26,9 @@ If you don't set the language `lang` property _Groovy_ will be used instead.
 | mapper.lang |   |JSR-223 Script language by name                            |
 
 You can find a working example in _Groovy_ in the `examples/script.mapper` directory.
+
+
+In addition the any other mapper, a final script mapper can be used by specifying `script.file` in your requisition.properties` file.
+The specified script will run after the configured mapper and can be used to transform the mappers output any further.
+
+To specify the scripting language, the `script.lang` property can be used (see `mapper.lang`).
