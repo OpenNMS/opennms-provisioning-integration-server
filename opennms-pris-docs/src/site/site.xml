@@ -21,7 +21,8 @@
         </menu>
         <menu name="Mapper">
             <item name="Mapper" href="mappers.html" />
-            <item name="OCS Mapper" href="mapper.ocs.html"/>
+            <item name="OCS Inventory Mapper" href="mapper.ocs.html"/>
+            <item name="Script Mapper" href="mapper.script.html"/>
             <item name="Asset field mapping" href="mapping.assetfield.html" />
         </menu>
         <menu name="Scripts">
