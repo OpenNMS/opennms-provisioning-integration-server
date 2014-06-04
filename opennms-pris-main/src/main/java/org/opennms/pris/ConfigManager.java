@@ -124,7 +124,7 @@ public class ConfigManager {
      * @return the instance configuration
      */
     public InstanceConfiguration getInstanceConfig(final String instance) {
-        return new InstanceApacheConfiguration(this.base,
+        return new InstanceApacheConfiguration(this.base.resolve(instance),
                                                instance);
     }
 }

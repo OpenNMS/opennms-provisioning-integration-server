@@ -21,60 +21,57 @@ package org.opennms.pris.config;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collections;
-import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
 import org.opennms.pris.api.InstanceConfiguration;
 
 public class InstanceApacheConfiguration extends AbstractApacheConfiguration implements InstanceConfiguration {
 
-    private static org.apache.commons.configuration.Configuration createConfig(final Path base,
-                                                                               final String instance) {
-        final Path path = base.resolve(instance).resolve("requisition.properties");
+    private static org.apache.commons.configuration.Configuration createConfig(final Path basePath) {
+        final Path path = basePath.resolve("requisition.properties");
 
         // Raise wrapped file not found exception if the config file does not exist
         if (!Files.exists(path)) {
             throw new RuntimeException("Config file not found: " + path);
         }
-        
+
         // Load system and file properties
-        final org.apache.commons.configuration.PropertiesConfiguration propertiesConfig;
-        final org.apache.commons.configuration.MapConfiguration mapConfig;
         try {
-            propertiesConfig = new org.apache.commons.configuration.PropertiesConfiguration(path.toFile()) {{
-                setThrowExceptionOnMissing(true);
-                setReloadingStrategy(new FileChangedReloadingStrategy());
-            }};
-            
-            mapConfig = new org.apache.commons.configuration.MapConfiguration(Collections.singletonMap("requisition",
-                                                                              (Object) instance));
-            
+            return new org.apache.commons.configuration.PropertiesConfiguration(path.toFile()) {
+                {
+                    setThrowExceptionOnMissing(true);
+                    setReloadingStrategy(new FileChangedReloadingStrategy());
+                }
+            };
+
         } catch (final ConfigurationException ex) {
             throw new RuntimeException(ex);
         }
-
-        return new CompositeConfiguration() {{
-                addConfiguration(propertiesConfig);
-                addConfiguration(mapConfig);
-            }
-        };
     }
+
+    private final Path basePath;
 
     private final String instance;
 
-    public InstanceApacheConfiguration(final Path base,
+    public InstanceApacheConfiguration(final Path basePath,
                                        final String instance) {
-        this(createConfig(base,
-                           instance),
-             instance);
+        this(basePath,
+             instance,
+             createConfig(basePath));
     }
 
-    private InstanceApacheConfiguration(final org.apache.commons.configuration.Configuration config,
-                                        final String instance) {
+    private InstanceApacheConfiguration(final Path basePath,
+                                        final String instance,
+                                        final org.apache.commons.configuration.Configuration config) {
         super(config);
 
+        this.basePath = basePath;
         this.instance = instance;
+    }
+
+    @Override
+    public Path getBasePath() {
+        return this.basePath;
     }
 
     @Override
@@ -84,7 +81,8 @@ public class InstanceApacheConfiguration extends AbstractApacheConfiguration imp
 
     @Override
     public InstanceConfiguration subset(final String prefix) {
-        return new InstanceApacheConfiguration(this.getConfig().subset(prefix),
-                                               instance);
+        return new InstanceApacheConfiguration(this.basePath,
+                                               this.instance,
+                                               this.getConfig().subset(prefix));
     }
 }

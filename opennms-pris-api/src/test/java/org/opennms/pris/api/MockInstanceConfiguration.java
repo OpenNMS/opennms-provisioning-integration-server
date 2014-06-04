@@ -20,6 +20,7 @@
 package org.opennms.pris.api;
 
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import org.opennms.pris.api.InstanceConfiguration;
@@ -32,6 +33,11 @@ public class MockInstanceConfiguration implements InstanceConfiguration {
 
     public MockInstanceConfiguration(final String instance) {
         this.instance = instance;
+    }
+
+    @Override
+    public Path getBasePath() {
+        return Paths.get("");
     }
     
     @Override

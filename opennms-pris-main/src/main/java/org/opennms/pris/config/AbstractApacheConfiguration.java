@@ -25,8 +25,7 @@ import java.nio.file.Paths;
 import org.opennms.pris.api.Configuration;
 
 public abstract class AbstractApacheConfiguration implements Configuration {
-
-    // The configuration
+    
     private final org.apache.commons.configuration.Configuration config;
 
     protected AbstractApacheConfiguration(final org.apache.commons.configuration.Configuration config) {
@@ -73,8 +72,10 @@ public abstract class AbstractApacheConfiguration implements Configuration {
 
     @Override
     public Path getPath(final String key) {
-        return Paths.get(this.config.getString(key));
-
+        Path path = Paths
+                .get(this.config.getString(key));
+        
+        return this.getBasePath().resolve(path);
     }
 
     @Override
@@ -84,7 +85,7 @@ public abstract class AbstractApacheConfiguration implements Configuration {
             return defaultValue;
         }
 
-        return Paths.get(this.config.getString(key));
+        return this.getPath(key);
     }
 
     @Override

@@ -47,8 +47,17 @@ public class GlobalApacheConfiguration extends AbstractApacheConfiguration imple
             setThrowExceptionOnMissing(true);
         }};
     }
+
+    private final Path basePath;
     
-    public GlobalApacheConfiguration(final Path base) {
-        super(createConfig(base));
+    public GlobalApacheConfiguration(final Path basePath) {
+        super(createConfig(basePath));
+        
+        this.basePath = basePath;
+    }
+
+    @Override
+    public Path getBasePath() {
+        return this.basePath;
     }
 }
