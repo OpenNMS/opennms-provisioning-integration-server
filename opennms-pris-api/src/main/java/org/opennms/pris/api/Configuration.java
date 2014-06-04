@@ -33,6 +33,13 @@ import java.nio.file.Path;
  * @author Dustin Frisch <fooker@lab.sh>
  */
 public interface Configuration {
+    
+    /**
+     * Returns the path to the configuration.
+     * 
+     * @return the absolute path to the configuration folder.
+     */
+    Path getBasePath();
 
     /**
      * Check if the configuration is empty.

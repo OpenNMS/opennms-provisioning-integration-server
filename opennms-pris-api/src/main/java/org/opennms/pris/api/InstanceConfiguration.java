@@ -25,6 +25,8 @@
  */
 package org.opennms.pris.api;
 
+import java.nio.file.Path;
+
 /**
  * Container for an instance configuration.
  * 
