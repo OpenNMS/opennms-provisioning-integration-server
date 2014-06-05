@@ -13,6 +13,7 @@ import org.opennms.ocs.inventory.client.response.Computers;
 import org.opennms.ocs.inventory.client.response.Entry;
 import org.opennms.ocs.inventory.client.response.Hardware;
 import org.opennms.ocs.inventory.client.response.Network;
+import org.opennms.opennms.pris.plugins.ocs.util.OcsInterfaceUtils;
 import org.opennms.pris.model.RequisitionAsset;
 import org.opennms.pris.model.RequisitionCategory;
 import org.opennms.pris.model.RequisitionNode;
@@ -113,7 +114,7 @@ private void populateOSAssets(Computer myComputer, RequisitionNode myRequisition
 private void populateInterfaces(Computer myComputer, RequisitionNode myRequisitionNode) {
     RequisitionInterface requisitionInterface = new RequisitionInterface();
     
-    Network managementNetwork = ipInterfaceHelper.selectManagementNetworkWhiteAndBlackOnly(myComputer);
+    Network managementNetwork = new OcsInterfaceUtils(config).selectManagementNetworkWhiteAndBlackOnly(myComputer);
     if (managementNetwork != null) {
         requisitionInterface.setIpAddr(managementNetwork.getIPAddress());
         requisitionInterface.setDescr(managementNetwork?.getDescription());

@@ -39,9 +39,9 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import org.kohsuke.MetaInfServices;
-import org.opennms.pris.api.Configuration;
 import org.opennms.pris.api.InstanceConfiguration;
 import org.opennms.pris.api.Source;
+import org.opennms.pris.util.InterfaceUtils;
 
 /**
  * <p>ScriptSource class.</p>
@@ -80,8 +80,7 @@ public class ScriptSource implements Source {
         scriptBindings.put("logger", LoggerFactory.getLogger(script.toString()));
         scriptBindings.put("config", this.config);
         scriptBindings.put("instance", this.config.getInstanceIdentifier());
-        // TODO (fooker): Rewrite the Helper to be not OCS-dependent and re-add
-//        scriptBindings.put("ipInterfaceHelper", new IpInterfaceHelper());
+        scriptBindings.put("interfaceUtils", new InterfaceUtils(config));
 
         // Evaluate the script and return the requisition created in the script
         try (final Reader scriptReader = Files.newBufferedReader(script, StandardCharsets.UTF_8)) {

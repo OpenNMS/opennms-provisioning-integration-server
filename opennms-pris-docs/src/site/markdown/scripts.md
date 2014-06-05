@@ -14,7 +14,7 @@ Every script step is provided with the following parameter:
 * A Requisition object called requisition with the mappings result from the mapper.
 * A Logger object called logger from the slf4j project.
 * A Configuration object called config that contains all configured parameters, from the apache.commons.configuration framework.
-* An instance of the IpInterfaceHelper called ipInterfaceHelper, that provides the black- and whitelisting.
+* An instance of the InterfaceUtils called interfaceUtils, that provides the black- and whitelisting.
 
 Every script step has the provide a Requisition object as its result. For every request of a requisition each script step is reloaded. 
 As a reference the folder "src/examples/" contains examples. 

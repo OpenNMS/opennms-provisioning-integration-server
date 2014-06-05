@@ -42,6 +42,7 @@ import java.nio.file.Path;
 import org.kohsuke.MetaInfServices;
 import org.opennms.pris.api.InstanceConfiguration;
 import org.opennms.pris.api.Mapper;
+import org.opennms.pris.util.InterfaceUtils;
 
 /**
  * A mapper passing the data to a script.
@@ -83,8 +84,7 @@ public class ScriptMapper implements Mapper {
         scriptBindings.put("logger", LoggerFactory.getLogger(script.toString()));
         scriptBindings.put("config", this.config);
         scriptBindings.put("instance", this.config.getInstanceIdentifier());
-        // TODO (fooker): Rewrite the Helper to be not OCS-dependent and re-add
-//        scriptBindings.put("ipInterfaceHelper", new IpInterfaceHelper());
+        scriptBindings.put("interfaceUtils", new InterfaceUtils(config));
         scriptBindings.put("requisition", requisition);
 
         // Evaluate the script and return the requisition created in the script
