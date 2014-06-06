@@ -22,16 +22,12 @@ package org.opennms.opennms.pris.plugins.script.util;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.lang.reflect.Field;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Map;
-import java.util.ServiceLoader;
-import java.util.logging.Level;
 import javax.script.Bindings;
 import javax.script.ScriptEngine;
-import javax.script.ScriptEngineFactory;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import org.apache.commons.io.FilenameUtils;
@@ -58,6 +54,10 @@ public class ScriptManager {
                                           ? SCRIPT_ENGINE_MANAGER.getEngineByName(config.getString("lang"))
                                           : SCRIPT_ENGINE_MANAGER.getEngineByExtension(FilenameUtils.getExtension(script.toString()));
 
+        if (scriptEngine == null) {
+            throw new RuntimeException("Script engine implementation not found");
+        }
+        
         // Create some bindings for values available in the script
         final Bindings scriptBindings = scriptEngine.createBindings();
         scriptBindings.put("script", script);
