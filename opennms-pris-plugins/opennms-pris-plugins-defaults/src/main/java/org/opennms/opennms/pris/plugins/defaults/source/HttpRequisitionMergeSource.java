@@ -248,11 +248,11 @@ public class HttpRequisitionMergeSource implements Source {
     }
 
     public final String getAUserName() {
-        return this.config.getString("A.username");
+        return this.config.getString("A.username", null);
     }
 
     public final String getAPassword() {
-        return this.config.getString("A.password");
+        return this.config.getString("A.password", null);
     }
 
     public final String getAUrl() {
@@ -260,11 +260,11 @@ public class HttpRequisitionMergeSource implements Source {
     }
 
     public final String getBUserName() {
-        return this.config.getString("B.username");
+        return this.config.getString("B.username", null);
     }
 
     public final String getBPassword() {
-        return this.config.getString("B.password");
+        return this.config.getString("B.password", null);
     }
 
     public final String getBUrl() {

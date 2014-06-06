@@ -111,11 +111,11 @@ public class HttpRequisitionSource implements Source {
     }
 
     public final String getUserName() {
-        return this.config.getString("username");
+        return this.config.getString("username", null);
     }
 
     public final String getPassword() {
-        return this.config.getString("password");
+        return this.config.getString("password", null);
     }
 
     public final String getUrl() {
