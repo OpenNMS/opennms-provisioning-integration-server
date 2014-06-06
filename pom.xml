@@ -140,7 +140,7 @@
                 <groupId>org.kohsuke.metainf-services</groupId>
                 <artifactId>metainf-services</artifactId>
                 <version>${metainfServicesVersion}</version>
-                <scope>compile</scope>
+                <scope>provided</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
