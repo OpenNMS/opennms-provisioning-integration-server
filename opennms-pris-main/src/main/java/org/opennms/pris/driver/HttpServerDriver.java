@@ -115,10 +115,10 @@ public class HttpServerDriver implements Driver {
                     // Marshall the requisition and write it to the response stream
                     jaxbMarshaller.marshal(requisition, response.getOutputStream());
 
-                } catch (Exception ex) {
+                } catch (final Exception ex) {
                     response.sendError(500, ex.getMessage());
 
-                    LOGGER.warn(ex.getMessage(), ex);
+                    LOGGER.warn("Request failed", ex);
                 }
             }
         });
