@@ -25,13 +25,13 @@
  */
 package org.opennms.opennms.pris.plugins.dns.source;
 
+import com.google.common.base.CharMatcher;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.apache.commons.lang.StringUtils;
-import org.opennms.netmgt.model.PrimaryType;
+import org.opennms.pris.model.PrimaryType;
 import org.opennms.pris.model.Requisition;
 import org.opennms.pris.model.RequisitionInterface;
 import org.opennms.pris.model.RequisitionNode;
@@ -64,7 +64,7 @@ public class DNSSource implements Source {
     public Object dump() {
         final String instance = this.config.getInstanceIdentifier();
 
-        Requisition requisition = new Requisition(instance);
+        Requisition requisition = new Requisition().withForeignSource(instance);
 
         ZoneTransferIn xfer = null;
         List<Record> records = null;
@@ -92,7 +92,7 @@ public class DNSSource implements Source {
 
             for (Record rec : records) {
                 if (matchingRecord(rec)) {
-                    requisition.insertNode(createRequisitionNode(rec));
+                    requisition.getNodes().add(createRequisitionNode(rec));
                 }
             }
         }
@@ -146,7 +146,7 @@ public class DNSSource implements Source {
             switch (Type.string(rec.getType())) {
                 case "A":
                     ARecord arec = (ARecord) rec;
-                    addr = StringUtils.stripStart(arec.getAddress().toString(), "/");
+                    addr = CharMatcher.anyOf("/").trimLeadingFrom(arec.getAddress().toString());
                     break;
                 case "AAAA":
                     AAAARecord aaaarec = (AAAARecord) rec;
@@ -160,7 +160,7 @@ public class DNSSource implements Source {
         RequisitionNode node = new RequisitionNode();
 
         String host = rec.getName().toString();
-        String nodeLabel = StringUtils.stripEnd(StringUtils.stripStart(host, "."), ".");
+        String nodeLabel = CharMatcher.anyOf(".").trimFrom(host);
 
         switch (this.getForeignIdHashMode()) {
             case "nodeLabel":
@@ -189,7 +189,7 @@ public class DNSSource implements Source {
         i.setManaged(Boolean.TRUE);
         i.setStatus(1);
 
-        node.putInterface(i);
+        node.getInterfaces().add(i);
 
         return node;
     }
