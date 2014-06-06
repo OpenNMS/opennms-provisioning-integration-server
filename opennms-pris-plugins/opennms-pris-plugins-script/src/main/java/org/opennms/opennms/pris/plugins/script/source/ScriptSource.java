@@ -27,21 +27,14 @@
  *******************************************************************************/
 package org.opennms.opennms.pris.plugins.script.source;
 
-import org.apache.commons.io.FilenameUtils;
+import com.google.common.collect.ImmutableMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.script.Bindings;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import java.io.Reader;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import org.kohsuke.MetaInfServices;
+import org.opennms.opennms.pris.plugins.script.util.ScriptManager;
 import org.opennms.pris.api.InstanceConfiguration;
 import org.opennms.pris.api.Source;
-import org.opennms.pris.util.InterfaceUtils;
 
 /**
  * <p>ScriptSource class.</p>
@@ -53,8 +46,6 @@ import org.opennms.pris.util.InterfaceUtils;
 public class ScriptSource implements Source {
     private static final Logger LOGGER = LoggerFactory.getLogger(ScriptSource.class);
 
-    private static final ScriptEngineManager SCRIPT_ENGINE_MANAGER = new ScriptEngineManager();
-
     private final InstanceConfiguration config;
 
     public ScriptSource(final InstanceConfiguration config) {
@@ -63,38 +54,10 @@ public class ScriptSource implements Source {
 
     @Override
     public Object dump() throws Exception {
-        String scriptName = this.config.getString("file");
-
-        // Get the path to the script
-        final Path script = this.getFile();
-
-        // Get the script engine by language defined in config or by extension if it
-        // is not defined in the config
-        final ScriptEngine scriptEngine = this.config.containsKey("lang")
-                ? SCRIPT_ENGINE_MANAGER.getEngineByName(this.config.getString("lang"))
-                : SCRIPT_ENGINE_MANAGER.getEngineByExtension(FilenameUtils.getExtension(script.toString()));
-
-        // Create some bindings for values available in the script
-        final Bindings scriptBindings = scriptEngine.createBindings();
-        scriptBindings.put("script", script);
-        scriptBindings.put("logger", LoggerFactory.getLogger(script.toString()));
-        scriptBindings.put("config", this.config);
-        scriptBindings.put("instance", this.config.getInstanceIdentifier());
-        scriptBindings.put("interfaceUtils", new InterfaceUtils(config));
-
-        // Evaluate the script and return the requisition created in the script
-        try (final Reader scriptReader = Files.newBufferedReader(script, StandardCharsets.UTF_8)) {
-            LOGGER.debug("Start Script {}", scriptName);
-            final Object data = scriptEngine.eval(scriptReader, scriptBindings);
-            LOGGER.debug("Done  Script {}", scriptName);
-            return data;
-        }
+        return ScriptManager.execute(this.config,
+                                     ImmutableMap.<String, Object>builder().build());
     }
     
-    public Path getFile() {
-        return this.config.getPath("file");
-    }
-
     @MetaInfServices
     public static class Factory implements Source.Factory {
 
