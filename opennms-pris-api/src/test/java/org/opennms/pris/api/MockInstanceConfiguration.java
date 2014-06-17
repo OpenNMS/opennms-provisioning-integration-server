@@ -23,7 +23,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
-import org.opennms.pris.api.InstanceConfiguration;
 
 public class MockInstanceConfiguration implements InstanceConfiguration {
 
@@ -128,6 +127,6 @@ public class MockInstanceConfiguration implements InstanceConfiguration {
 
     @Override
     public InstanceConfiguration subset(String prefix) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }
