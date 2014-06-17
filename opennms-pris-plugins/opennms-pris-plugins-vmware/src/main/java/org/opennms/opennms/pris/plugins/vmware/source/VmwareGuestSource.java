@@ -34,11 +34,9 @@ import com.vmware.vim25.mo.ServiceInstance;
 import com.vmware.vim25.mo.VirtualMachine;
 import org.kohsuke.MetaInfServices;
 import org.opennms.core.utils.InetAddressUtils;
-import org.opennms.netmgt.model.PrimaryType;
-import org.opennms.netmgt.provision.persist.requisition.*;
-import org.opennms.pris.api.AssetField;
 import org.opennms.pris.api.InstanceConfiguration;
 import org.opennms.pris.api.Source;
+import org.opennms.pris.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -85,13 +83,13 @@ public class VmwareGuestSource extends AbstractVmwareSource {
      * OpenNMS node requisition which can be imported. Required asset fields are mapped. Additionally a few system
      * information are also mapped to the OpenNMS requisition node.
      *
-     * @return {@link org.opennms.netmgt.provision.persist.requisition.Requisition} OpenNMS Requisition which can be imported
+     * @return {@link org.opennms.pris.model.Requisition} OpenNMS Requisition which can be imported
      * @throws Exception
      */
     @Override
     public Object dump() throws Exception {
 
-        Requisition requisition = new Requisition(this.getInstance());
+        Requisition requisition = new Requisition().withForeignSource(this.getInstance());
 
         // Connection to vCenter
         ServiceInstance serviceInstance = new ServiceInstance(getUrl(), getUsername(), getPassword(), true);

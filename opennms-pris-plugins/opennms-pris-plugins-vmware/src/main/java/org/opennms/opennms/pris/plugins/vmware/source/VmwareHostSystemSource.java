@@ -31,9 +31,7 @@ import com.vmware.vim25.HostNetworkInfo;
 import com.vmware.vim25.HostVirtualNic;
 import com.vmware.vim25.mo.*;
 import org.kohsuke.MetaInfServices;
-import org.opennms.netmgt.model.PrimaryType;
-import org.opennms.netmgt.provision.persist.requisition.*;
-import org.opennms.pris.api.AssetField;
+import org.opennms.pris.model.*;
 import org.opennms.pris.api.InstanceConfiguration;
 import org.opennms.pris.api.Source;
 import org.slf4j.Logger;
@@ -61,7 +59,8 @@ public class VmwareHostSystemSource extends AbstractVmwareSource {
     @Override
     public Object dump() throws Exception {
 
-        Requisition requisition = new Requisition(this.getInstance());
+        Requisition requisition = new Requisition()
+                .withForeignSource(this.getInstance());
 
         // Connection to vCenter
         ServiceInstance serviceInstance = new ServiceInstance(getUrl(), getUsername(), getPassword(), true);
@@ -129,7 +128,7 @@ public class VmwareHostSystemSource extends AbstractVmwareSource {
 
                     // 3 = not monitored / 1 = monitored
                     requisitionInterface.setStatus(1);
-                    requisitionNode.putInterface(requisitionInterface);
+                    requisitionNode.getInterfaces().add(requisitionInterface);
                 }
                 LOGGER.debug("------ E N D :: building IP interfaces for node: '{}'", hostSystem.getName());
                 requisition.getNodes().add(requisitionNode);
