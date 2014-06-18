@@ -21,6 +21,11 @@
     </modules>
 
     <properties>
+        <!-- Build settings -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <github.global.server>github</github.global.server>
+
         <!-- Version settings -->
         <chQosLogbackVersion>1.0.13</chQosLogbackVersion>
         <commonsConfigurationVersion>1.9</commonsConfigurationVersion>
@@ -34,7 +39,6 @@
         <metainfServicesVersion>1.5</metainfServicesVersion>
         <opennmsVersion>1.12.5</opennmsVersion>
         <slf4jVersion>1.7.5</slf4jVersion>
-	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencies>
