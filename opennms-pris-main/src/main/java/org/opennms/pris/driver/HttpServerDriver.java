@@ -21,26 +21,25 @@
  *
  * For more information contact: OpenNMS(R) Licensing <license@opennms.org>
  * http://www.opennms.org/ http://www.opennms.com/
- ******************************************************************************
+ * *****************************************************************************
  */
 package org.opennms.pris.driver;
 
-import org.eclipse.jetty.server.Request;
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.handler.AbstractHandler;
-import org.opennms.pris.model.Requisition;
-import org.opennms.pris.RequisitionGenerator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import java.io.IOException;
+import java.net.InetSocketAddress;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
-import java.io.IOException;
-import java.net.InetSocketAddress;
+import org.eclipse.jetty.server.Request;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.opennms.pris.RequisitionGenerator;
 import org.opennms.pris.api.Configuration;
+import org.opennms.pris.model.Requisition;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A working mode providing a HTTP server publishing generated requisitions.
@@ -94,37 +93,55 @@ public class HttpServerDriver implements Driver {
                 // As this is the only handler, we mark every request as handled
                 baseRequest.setHandled(true);
 
-                // Get the instance for the request path
-                final String instance = request.getPathInfo().substring(1);
+                String[] pathParts = request.getPathInfo().substring(1).split("/");
 
-                LOGGER.debug("Handling request for instance: {}", instance);
+                //Check if a requisition or something else was requested
+                final String requestType = pathParts[0];
+                LOGGER.debug("requestType is '{}'", requestType);
 
-                // Check if the instance name was passed and valid
-                if (instance == null || instance.isEmpty() || instance.contains("favicon.ico")) {
-                    response.sendError(404, "No instance specified");
-                    return;
-                }
+                if (requestType != null) {
+                    if (requestType.equalsIgnoreCase("requisitions")) {
 
-                try {
-                    // Create the requisition provider for the instance
-                    final RequisitionGenerator requisitionProvider = new RequisitionGenerator(instance);
+                        // Get the instance for the request path
+                        String instance = null;
+                        if (pathParts.length > 1) {
+                            instance = pathParts[1];
+                        }
 
-                    // Generate the requisition
-                    final Requisition requisition = requisitionProvider.generate(instance);
+                        if (instance == null || instance.isEmpty() || instance.contains("favicon.ico")) {
+                            response.sendError(404, "No instance specified");
+                        } else {
+                            LOGGER.debug("Handling request for instance: {}", instance);
+                            try {
+                                // Create the requisition provider for the instance
+                                final RequisitionGenerator requisitionProvider = new RequisitionGenerator(instance);
 
-                    // Marshall the requisition and write it to the response stream
-                    jaxbMarshaller.marshal(requisition, response.getOutputStream());
+                                // Generate the requisition
+                                final Requisition requisition = requisitionProvider.generate(instance);
 
-                } catch (final Exception ex) {
-                    response.sendError(500, ex.getMessage());
-
-                    LOGGER.warn("Request failed", ex);
+                                // Marshall the requisition and write it to the response stream
+                                jaxbMarshaller.marshal(requisition, response.getOutputStream());
+                            } catch (final Exception ex) {
+                                response.sendError(500, ex.getMessage());
+                                LOGGER.warn("Request failed", ex);
+                            }
+                        }
+                    } else {
+                        if (requestType.equalsIgnoreCase("documentation")) {
+                            response.sendError(500, "documentations is not supported at the moment");
+                        } else {
+                            response.sendError(500, "requestType " + requestType + " causes a problem. try requisitions/myInstance");
+                            LOGGER.error("requestType '{}' of path '{}'", requestType, request.getPathInfo());
+                        }
+                    }
+                } else {
+                    response.sendError(404, "No requisitions/instance specified");
                 }
             }
         });
-
         // Start the server
         server.start();
+
         server.join();
     }
 }
