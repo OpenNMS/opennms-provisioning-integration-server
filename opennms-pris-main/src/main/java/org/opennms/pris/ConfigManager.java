@@ -20,6 +20,7 @@
  */
 package org.opennms.pris;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
@@ -124,7 +125,7 @@ public class ConfigManager {
      * @return the instance configuration
      */
     public InstanceConfiguration getInstanceConfig(final String instance) {
-        return new InstanceApacheConfiguration(this.base.resolve(instance),
+        return new InstanceApacheConfiguration(this.base.resolve("requisitions" + File.separator + instance),
                                                instance);
     }
 }
