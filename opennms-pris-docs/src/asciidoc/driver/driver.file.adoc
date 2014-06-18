@@ -10,6 +10,11 @@ To use the _file driver_ you have to set the parameters in the `global.propertie
 * `requisition` = `*` optional parameter as Java regexp filter for the requisition name
 
 .Example configuration for a file based requisition
+[source,ruby]
+----
+include::example.rb[]
+----
+
 [source,bash]
 ----
 ### File: global.properties
