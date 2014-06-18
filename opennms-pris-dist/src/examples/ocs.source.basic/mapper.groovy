@@ -29,7 +29,7 @@ for (Computer computer : myComputers.getComputers()) {
                 hddAsset = drive.getLetter() + " is " + drive.getFilesystem() + " as " + drive.getVolumn() + " " + drive.getFree() + "/" + drive.getTotal()
             }
             
-            //Linxu/Unix
+            //Linux/Unix
             if (drive.getType().startsWith("/")) {
                 hddAsset = drive.getType() + " is " + drive.getFilesystem() + " " + drive.getFree() + "/" + drive.getTotal()
             }
