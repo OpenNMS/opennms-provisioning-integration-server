@@ -9,14 +9,16 @@ The loglevel is also located in the `global.properties` file and can be configur
 
     loglevel = INFO
 
-| Level | Default|
-|-------|-------:|
-| ALL   |        |
-| TRACE |        |
-| DEBUG |        |
-| INFO  |   *    |
-| WARN  |        |
-| ERROR |        |
-| OFF   |        |
+[options="header", width="25%"]
+|==================
+| Level | Default
+| ALL   |
+| TRACE |
+| DEBUG |
+| INFO  | *
+| WARN  |
+| ERROR |
+| OFF   |
+|==================
 
 This section describes all available driver and the possible configuration parameter.
