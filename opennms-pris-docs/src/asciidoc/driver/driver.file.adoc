@@ -1,3 +1,4 @@
+
 [[driver-file]]
 === File driver
 
@@ -5,17 +6,17 @@ This driver offers the ability to generate an OpenNMS requisition directly into 
 To use the _file driver_ you have to set the parameters in the `global.properties`:
 
 * `driver` = `file` method to generate the output
-* `target` = path to for the output
+* `target` = path for the output folder
 * `requisition` = `*` optional parameter as Java regexp filter for the requisition name
 
 .Example configuration for a file based requisition
-[source]
+[source,bash]
 ----
 ### File: global.properties
 # Generate an requistion and create an requisition file to target
 # Create a file for all requisitions matching * (Java regular expression)
 
 driver = file
-target = /tmp/myRequisition.xml
+target = /my/output/folder
 requistions = *
 ----

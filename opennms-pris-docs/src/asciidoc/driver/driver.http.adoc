@@ -1,3 +1,4 @@
+
 [[driver-http]]
 === HTTP driver
 The HTTP driver starts _PRIS_ as a web server to provide the OpenNMS requisition over HTTP.
@@ -10,7 +11,7 @@ Access to the requisition can be tested with a browser to URL http://<your-ip>:<
 The path _name-requisition-cfg_ is the folder name which runs the requisition configuration located in your _PRIS_ server directory.
 
 .Example configuration for a web server provided requisition
-[source]
+[source,bash]
 ----
 ### File: global.properties
 # Start web server
