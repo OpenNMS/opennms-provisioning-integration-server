@@ -1,6 +1,7 @@
 = Documentation Overview
 // Authors, seperated by;. They might not be shown in the overview but will be generated
-Ronny Trommer <ronny@opennms.org>; Markus von Rueden <mvr@opennms.com>
+Version: {docVersion}
+Ronny Trommer <ronny@opennms.org>; Markus Neumann <markus@opennms.com>;
 :ascii-ids:
 :icons: font
 :toc: left
@@ -8,3 +9,5 @@ Ronny Trommer <ronny@opennms.org>; Markus von Rueden <mvr@opennms.com>
 :numbered:
 
 include::overview.adoc[]
+include::driver/driver.file.adoc[]
+include::documentation.adoc[]

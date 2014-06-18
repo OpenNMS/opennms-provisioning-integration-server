@@ -26,6 +26,11 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <github.global.server>github</github.global.server>
 
+    <!-- Ascii doc settings for documention -->    
+    <asciidoc.source.directory>${basedir}/src/asciidoc</asciidoc.source.directory>
+    <asciidoc.output.directory>${basedir}/target/generated-docs</asciidoc.output.directory>
+    <asciidoc.images.directory>images</asciidoc.images.directory>
+
     <!-- Version settings -->
     <chQosLogbackVersion>1.0.13</chQosLogbackVersion>
     <commonsConfigurationVersion>1.9</commonsConfigurationVersion>
