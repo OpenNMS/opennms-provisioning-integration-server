@@ -30,12 +30,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import org.kohsuke.MetaInfServices;
-import org.opennms.pris.model.PrimaryType;
-import org.opennms.pris.model.Requisition;
-import org.opennms.pris.model.RequisitionAsset;
-import org.opennms.pris.model.RequisitionInterface;
-import org.opennms.pris.model.RequisitionMonitoredService;
-import org.opennms.pris.model.RequisitionNode;
 import org.opennms.ocs.inventory.client.response.Bios;
 import org.opennms.ocs.inventory.client.response.Computer;
 import org.opennms.ocs.inventory.client.response.Computers;
@@ -47,16 +41,23 @@ import org.opennms.ocs.inventory.client.response.Storage;
 import org.opennms.ocs.inventory.client.response.Video;
 import org.opennms.opennms.pris.plugins.ocs.util.OcsInterfaceUtils;
 import org.opennms.pris.api.Mapper;
+import org.opennms.pris.model.PrimaryType;
+import org.opennms.pris.model.Requisition;
+import org.opennms.pris.model.RequisitionAsset;
+import org.opennms.pris.model.RequisitionInterface;
+import org.opennms.pris.model.RequisitionMonitoredService;
+import org.opennms.pris.model.RequisitionNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.opennms.pris.api.InstanceConfiguration;
 import org.opennms.pris.util.AssetUtils;
 
 public class DefaultOcsComputerMapper implements Mapper {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(DefaultOcsComputerMapper.class);
 
     private static final String OCS_ACCOUNTINFO = "accountinfo";
-    
+
     private final InstanceConfiguration config;
 
     private final OcsInterfaceUtils interfaceUtils;
@@ -101,8 +102,20 @@ public class DefaultOcsComputerMapper implements Mapper {
 
         final RequisitionInterface requisitionInterface = new RequisitionInterface();
 
-        final Network managementNetwork = this.interfaceUtils.selectManagementNetwork(computer);
-        if (managementNetwork != null) {
+        String managementIp = computer.getHardware().getIpsrc();
+
+        if (!interfaceUtils.isIpBlackListed(managementIp) || interfaceUtils.isIpWhiteListed(managementIp)) {
+
+            Network managementNetwork = new Network();
+            managementNetwork.setIPAddress(managementIp);
+
+            for (Network network : computer.getNetworks()) {
+                if (network.getIPAddress().equals(managementNetwork.getIPAddress())) {
+                    managementNetwork = network;
+                    break;
+                }
+            }
+
             requisitionInterface.setIpAddr(managementNetwork.getIPAddress());
             requisitionInterface.setDescr(managementNetwork.getDescription());
             requisitionInterface.setSnmpPrimary(PrimaryType.PRIMARY);
@@ -110,8 +123,9 @@ public class DefaultOcsComputerMapper implements Mapper {
             requisitionInterface.getMonitoredServices().add(new RequisitionMonitoredService().withServiceName("SNMP"));
             requisitionInterface.getMonitoredServices().add(new RequisitionMonitoredService().withServiceName("ICMP"));
             requisitionNode.getInterfaces().add(requisitionInterface);
+
         } else {
-            LOGGER.warn("computer '{}' named '{}' has no electable ip-address following the black- and whitelists.", computer.getHardware().getId(), computer.getHardware().getName());
+            LOGGER.warn("computer '{}' named '{}' has no electable ip-address following the black- and whitelists. OCS Source IP is '{}'", computer.getHardware().getId(), computer.getHardware().getName(), managementIp);
         }
 
         requisitionNode.getCategories().addAll(interfaceUtils.populateCategories(computer, config, config.getInstanceIdentifier()));
@@ -160,20 +174,20 @@ public class DefaultOcsComputerMapper implements Mapper {
                 LOGGER.debug("Node '{}' Storage '{}'", requisitionNode.getNodeLabel(), storage.toString());
             }
         }
-        
+
         List<Video> videos = computer.getVideos();
         if (videos != null) {
             for (Video video : videos) {
                 LOGGER.debug("Node '{}' Video '{}'", requisitionNode.getNodeLabel(), video.toString());
             }
         }
-        
+
         List<Sound> sounds = computer.getSounds();
         for (Sound sound : sounds) {
             sound.getDescription();
         }
-        
-	final String ocsComputerLink = "<a href=" + this.config.getString("ocs.url") + "/ocsreports/index.php?function=computer&head=1&systemid=" + computer.getHardware().getId() + ">OCS-Inventory</a>";
+
+        final String ocsComputerLink = "<a href=" + this.config.getString("ocs.url") + "/ocsreports/index.php?function=computer&head=1&systemid=" + computer.getHardware().getId() + ">OCS-Inventory</a>";
         requisitionNode.getAssets().add(new RequisitionAsset("comment", ocsComputerLink));
 
         return requisitionNode;
