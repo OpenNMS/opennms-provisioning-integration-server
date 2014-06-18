@@ -1,185 +1,185 @@
 <?xml version="1.0"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.opennms</groupId>
-    <artifactId>opennms-pris-parent</artifactId>
-    <version>1.0.8-SNAPSHOT</version>
+  <groupId>org.opennms</groupId>
+  <artifactId>opennms-pris-parent</artifactId>
+  <version>1.0.8-SNAPSHOT</version>
 
-    <packaging>pom</packaging>
+  <packaging>pom</packaging>
 
-    <name>OpenNMS :: Provisioning Integration Server :: Parent</name>
+  <name>OpenNMS :: Provisioning Integration Server :: Parent</name>
 
-    <modules>
-        <module>opennms-pris-model</module>
-        <module>opennms-pris-api</module>
-        <module>opennms-pris-main</module>
-        <module>opennms-pris-docs</module>
-        <module>opennms-pris-dist</module>
-        <module>opennms-pris-plugins</module>
-    </modules>
+  <modules>
+    <module>opennms-pris-model</module>
+    <module>opennms-pris-api</module>
+    <module>opennms-pris-main</module>
+    <module>opennms-pris-docs</module>
+    <module>opennms-pris-dist</module>
+    <module>opennms-pris-plugins</module>
+  </modules>
 
-    <properties>
-        <!-- Build settings -->
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <github.global.server>github</github.global.server>
+  <properties>
+    <!-- Build settings -->
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <github.global.server>github</github.global.server>
 
-        <!-- Version settings -->
-        <chQosLogbackVersion>1.0.13</chQosLogbackVersion>
-        <commonsConfigurationVersion>1.9</commonsConfigurationVersion>
-        <commonsIoVersion>2.4</commonsIoVersion>
-        <doxiaModuleMarkdownVersion>1.4</doxiaModuleMarkdownVersion>
-        <guavaVersion>15.0</guavaVersion>
-        <jettyServerVersion>7.6.13.v20130916</jettyServerVersion>
-        <junitVersion>4.11</junitVersion>
-        <mavenSitePluginVersion>3.3</mavenSitePluginVersion>
-        <mavenWagonSshVersion>2.6</mavenWagonSshVersion>
-        <metainfServicesVersion>1.5</metainfServicesVersion>
-        <opennmsVersion>1.12.5</opennmsVersion>
-        <slf4jVersion>1.7.5</slf4jVersion>
-    </properties>
+    <!-- Version settings -->
+    <chQosLogbackVersion>1.0.13</chQosLogbackVersion>
+    <commonsConfigurationVersion>1.9</commonsConfigurationVersion>
+    <commonsIoVersion>2.4</commonsIoVersion>
+    <doxiaModuleMarkdownVersion>1.4</doxiaModuleMarkdownVersion>
+    <guavaVersion>15.0</guavaVersion>
+    <jettyServerVersion>7.6.13.v20130916</jettyServerVersion>
+    <junitVersion>4.11</junitVersion>
+    <mavenSitePluginVersion>3.3</mavenSitePluginVersion>
+    <mavenWagonSshVersion>2.6</mavenWagonSshVersion>
+    <metainfServicesVersion>1.5</metainfServicesVersion>
+    <opennmsVersion>1.12.5</opennmsVersion>
+    <slf4jVersion>1.7.5</slf4jVersion>
+  </properties>
 
+  <dependencies>
+    <!-- Logging -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>${slf4jVersion}</version>
+    </dependency>
+
+    <!-- Helper APIs -->
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>${guavaVersion}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>${commonsIoVersion}</version>
+    </dependency>
+
+    <!-- Tests -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>${junitVersion}</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <dependencyManagement>
     <dependencies>
-        <!-- Logging -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4jVersion}</version>
-        </dependency>
+      <!-- Logging -->
+      <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-classic</artifactId>
+        <version>${chQosLogbackVersion}</version>
+      </dependency>
 
-        <!-- Helper APIs -->
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>${guavaVersion}</version>
-        </dependency>
+      <!-- Configuration -->
+      <dependency>
+        <groupId>commons-configuration</groupId>
+        <artifactId>commons-configuration</artifactId>
+        <version>${commonsConfigurationVersion}</version>
+      </dependency>
 
-        <dependency>
+      <!-- OpenNMS -->
+      <dependency>
+        <groupId>org.opennms</groupId>
+        <artifactId>opennms-import</artifactId>
+        <version>${opennmsVersion}</version>
+        <classifier>xsds</classifier>
+        <scope>compile</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.opennms</groupId>
+        <artifactId>opennms-util</artifactId>
+        <version>${opennmsVersion}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.opennms.dependencies</groupId>
+            <artifactId>spring-dependencies</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.opennms.core</groupId>
+            <artifactId>org.opennms.core.lib</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.opennms.dependencies</groupId>
+            <artifactId>jaxb-dependencies</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.opennms.dependencies</groupId>
+            <artifactId>dnsjava-dependencies</artifactId>
+          </exclusion>
+          <exclusion>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>${commonsIoVersion}</version>
-        </dependency>
+          </exclusion>
+          <exclusion>
+            <groupId>xalan</groupId>
+            <artifactId>serializer</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
 
-        <!-- Tests -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junitVersion}</version>
-            <scope>test</scope>
-        </dependency>
+      <!-- Web-Server -->
+      <dependency>
+        <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-server</artifactId>
+        <version>${jettyServerVersion}</version>
+      </dependency>
+
+      <!-- SPI -->
+      <dependency>
+        <groupId>org.kohsuke.metainf-services</groupId>
+        <artifactId>metainf-services</artifactId>
+        <version>${metainfServicesVersion}</version>
+        <scope>provided</scope>
+      </dependency>
     </dependencies>
+  </dependencyManagement>
 
-    <dependencyManagement>
-        <dependencies>
-            <!-- Logging -->
-            <dependency>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-classic</artifactId>
-                <version>${chQosLogbackVersion}</version>
-            </dependency>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.1</version>
+        <configuration>
+          <source>1.7</source>
+          <target>1.7</target>
+          <compilerArgument>-Xlint:all</compilerArgument>
+          <showWarnings>true</showWarnings>
+          <showDeprecation>true</showDeprecation>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 
-            <!-- Configuration -->
-            <dependency>
-                <groupId>commons-configuration</groupId>
-                <artifactId>commons-configuration</artifactId>
-                <version>${commonsConfigurationVersion}</version>
-            </dependency>
+  <repositories>
+    <repository>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <id>opennms-release</id>
+      <name>OpenNMS Release Maven Repository</name>
+      <url>http://maven.opennms.org/content/groups/opennms.org-release/</url>
+    </repository>
+  </repositories>
 
-            <!-- OpenNMS -->
-            <dependency>
-                <groupId>org.opennms</groupId>
-                <artifactId>opennms-import</artifactId>
-                <version>${opennmsVersion}</version>
-                <classifier>xsds</classifier>
-                <scope>compile</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.opennms</groupId>
-                <artifactId>opennms-util</artifactId>
-                <version>${opennmsVersion}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.opennms.dependencies</groupId>
-                        <artifactId>spring-dependencies</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.opennms.core</groupId>
-                        <artifactId>org.opennms.core.lib</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.opennms.dependencies</groupId>
-                        <artifactId>jaxb-dependencies</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.opennms.dependencies</groupId>
-                        <artifactId>dnsjava-dependencies</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>commons-io</groupId>
-                        <artifactId>commons-io</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>xalan</groupId>
-                        <artifactId>serializer</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-
-            <!-- Web-Server -->
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-server</artifactId>
-                <version>${jettyServerVersion}</version>
-            </dependency>
-
-            <!-- SPI -->
-            <dependency>
-                <groupId>org.kohsuke.metainf-services</groupId>
-                <artifactId>metainf-services</artifactId>
-                <version>${metainfServicesVersion}</version>
-                <scope>provided</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
-                <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
-                    <compilerArgument>-Xlint:all</compilerArgument>
-                    <showWarnings>true</showWarnings>
-                    <showDeprecation>true</showDeprecation>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
-
-    <repositories>
-        <repository>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <id>opennms-release</id>
-            <name>OpenNMS Release Maven Repository</name>
-            <url>http://maven.opennms.org/content/groups/opennms.org-release/</url>
-        </repository>
-    </repositories>
-
-    <distributionManagement>
-        <site>
-            <id>www.opennms.eu-docs</id>
-            <url>scp://www.opennms.eu/var/www/docs/opennms-pris/${project.version}/</url>
-        </site>
-    </distributionManagement>
+  <distributionManagement>
+    <site>
+      <id>www.opennms.eu-docs</id>
+      <url>scp://www.opennms.eu/var/www/docs/opennms-pris/${project.version}/</url>
+    </site>
+  </distributionManagement>
 </project>
