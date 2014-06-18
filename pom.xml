@@ -2,15 +2,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-  
+
     <groupId>org.opennms</groupId>
     <artifactId>opennms-pris-parent</artifactId>
     <version>1.0.8-SNAPSHOT</version>
-  
+
     <packaging>pom</packaging>
-  
+
     <name>OpenNMS :: Provisioning Integration Server :: Parent</name>
-  
+
     <modules>
         <module>opennms-pris-model</module>
         <module>opennms-pris-api</module>
@@ -19,13 +19,8 @@
         <module>opennms-pris-dist</module>
         <module>opennms-pris-plugins</module>
     </modules>
-  
+
     <properties>
-        <!-- Build settings -->
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <github.global.server>github</github.global.server>
-    
         <!-- Version settings -->
         <chQosLogbackVersion>1.0.13</chQosLogbackVersion>
         <commonsConfigurationVersion>1.9</commonsConfigurationVersion>
@@ -39,8 +34,9 @@
         <metainfServicesVersion>1.5</metainfServicesVersion>
         <opennmsVersion>1.12.5</opennmsVersion>
         <slf4jVersion>1.7.5</slf4jVersion>
+	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-    
+
     <dependencies>
         <!-- Logging -->
         <dependency>
@@ -48,20 +44,20 @@
             <artifactId>slf4j-api</artifactId>
             <version>${slf4jVersion}</version>
         </dependency>
-      
+
         <!-- Helper APIs -->
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>${guavaVersion}</version>
         </dependency>
-            
+
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>${commonsIoVersion}</version>
         </dependency>
-        
+
         <!-- Tests -->
         <dependency>
             <groupId>junit</groupId>
@@ -70,7 +66,7 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-  
+
     <dependencyManagement>
         <dependencies>
             <!-- Logging -->
@@ -79,14 +75,14 @@
                 <artifactId>logback-classic</artifactId>
                 <version>${chQosLogbackVersion}</version>
             </dependency>
-      
+
             <!-- Configuration -->
             <dependency>
                 <groupId>commons-configuration</groupId>
                 <artifactId>commons-configuration</artifactId>
                 <version>${commonsConfigurationVersion}</version>
             </dependency>
-      
+
             <!-- OpenNMS -->
             <dependency>
                 <groupId>org.opennms</groupId>
@@ -95,7 +91,7 @@
                 <classifier>xsds</classifier>
                 <scope>compile</scope>
             </dependency>
-            
+
             <dependency>
                 <groupId>org.opennms</groupId>
                 <artifactId>opennms-util</artifactId>
@@ -127,14 +123,14 @@
                     </exclusion>
                 </exclusions>
             </dependency>
-      
+
             <!-- Web-Server -->
             <dependency>
                 <groupId>org.eclipse.jetty</groupId>
                 <artifactId>jetty-server</artifactId>
                 <version>${jettyServerVersion}</version>
             </dependency>
-            
+
             <!-- SPI -->
             <dependency>
                 <groupId>org.kohsuke.metainf-services</groupId>
@@ -144,7 +140,7 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-  
+
     <build>
         <plugins>
             <plugin>
@@ -161,7 +157,7 @@
             </plugin>
         </plugins>
     </build>
-  
+
     <repositories>
         <repository>
             <snapshots>
@@ -175,7 +171,7 @@
             <url>http://maven.opennms.org/content/groups/opennms.org-release/</url>
         </repository>
     </repositories>
-  
+
     <distributionManagement>
         <site>
             <id>www.opennms.eu-docs</id>
