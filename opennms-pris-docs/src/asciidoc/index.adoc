@@ -1,4 +1,3 @@
-
 = Documentation
 // Authors, seperated by;. They might not be shown in the overview but will be generated
 Version: {docVersion}
