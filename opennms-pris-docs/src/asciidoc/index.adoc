@@ -1,13 +1,24 @@
-= Documentation Overview
+
+= Documentation
 // Authors, seperated by;. They might not be shown in the overview but will be generated
 Version: {docVersion}
-Ronny Trommer <ronny@opennms.org>; Markus Neumann <markus@opennms.com>;
 :ascii-ids:
 :icons: font
 :toc: left
 :toclevels: 4
 :numbered:
 
-include::overview.adoc[]
+
+// Introduction
+include::introduction.adoc[]
+
+// Drivers
+include::driver/driver.adoc[]
 include::driver/driver.file.adoc[]
+include::driver/driver.http.adoc[]
+
+// Sources
+include::source/source.file.adoc[]
+
+// How to contribute documentation
 include::documentation.adoc[]
