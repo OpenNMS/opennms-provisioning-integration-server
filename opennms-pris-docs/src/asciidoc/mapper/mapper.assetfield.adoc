@@ -1,3 +1,5 @@
+
+[[asset-field-mapping]]
 == Asset field mapping
 The asset field mapping can be used in `xls.source` and `jdbc.source`.
 
