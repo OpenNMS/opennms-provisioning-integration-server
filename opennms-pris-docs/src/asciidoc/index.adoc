@@ -29,5 +29,8 @@ include::source/source.ocs.adoc[]
 // Mapper
 include::mapper/mapper.adoc[]
 
+// Scripts
+include::scripts/scripts.adoc[]
+
 // How to contribute documentation
 include::documentation.adoc[]
