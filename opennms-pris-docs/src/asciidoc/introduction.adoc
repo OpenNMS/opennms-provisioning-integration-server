@@ -1,14 +1,9 @@
 [[introduction]]
 == Introduction
-The provisioning integration server (pris) is a software which provides the ability to get external information from your inventory into an OpenNMS requisition model.
-The output from pris is provided as XML over HTTP and can be used in OpenNMS Provisiond to import and discover nodes from.
-In OpenNMS a requisition is set of nodes where you want to import network devices into OpenNMS.
-You can assign service detectors and policies to model the network monitoring behavior.
-For this reason a requisition should contain nodes which have a similar network monitoring profile.
-To make it easier to integrate external data sources the OpenNMS pris is introduced.
-
-.OpenNMS PRIS overview
-image::images/pris-overview.png[pris-overview.png]
+If you have a large network and discovery doesn't help it helps to find a truth of source for starting to fill your management system.
+The provisioning integration server _PRIS_ is a software which helps you to integrate OpenNMS to single or multiple external inventory systems.
+It gives you several steps to integrate, transform, cleanup and merge your extracted data before you provide the data into OpenNMS.
+The result of _PRIS_ is the OpenNMS requisition model which can be read from OpenNMS Provisiond.
 
 The service is used to provide an integration point for _OpenNMS_ external inventories or home brew inventories.
 With pris the data is normalized to the _OpenNMS_ requisition model and can be consumed from _OpenNMS provisiond_.
@@ -16,9 +11,60 @@ It is highly specialized to enrich the requisition model with _SNMP_ information
 Beside that _Provisiond_ can also run service detectors against IP interfaces and allows to run policies to control the monitoring behavior.
 _Pris_ is an instance in front of _Provisiond_, it allows to aggregate information from different sources and manipulate them in a flexible way.
 
+The output from _PRIS_ is provided as _XML_ over _HTTP_ and can be used in _Provisiond_ to import and discover services and SNMP data from.
+In OpenNMS a requisition is a set of nodes where you want to import network devices into OpenNMS for monitoring and management.
+You can assign in OpenNMS services, detectors and policies to model the network monitoring behavior.
+For this reason a good practics is to organize nodes with a similar network monitoring profile in a requisition.
+The _PRIS_ components are shown in <<pris_overview>>.
+
+[[pris_overview]]
+.OpenNMS PRIS overview
+image::images/pris-overview.png[OpenNMS PRIS overview]
+
+The components from left to right are described as followed:
+
+- **OpenNMS Provisiond**: This is the internal daemon is responsible to get network devices into OpenNMS. Provisiond scans for SNMP information, network services and has to model the network monitoring behavior for OpenNMS.
+- **Driver**: The driver is the method how to present the data from _PRIS_ to _OpenNMS_. It is only possible to configure _one_ driver per _PRIS_ instance
+- **OpenNMS Requisition**: The data model which has to be build inside of _PRIS_. This is the shared model between _OpenNMS_ and _PRIS_.
+- **Requisition configuration**: The description of the integration of your external datasource. A requisition configuration defines which source should be used or which scripts should be applied to modify or transform the data before they are provided into _OpenNMS Provisiond_.
+- **Mapper Script**: The mapper script is the last script executed before it goes to _OpenNMS Provisiond_ through the driver. You can use a mapper script to enrich the requisition, remove nodes or replace OpenNMS requistion node attributes.
+- **Custom Scripts**: In some cases a external inventory has a own data model, e.g. OCS Inventory. The script source can be used to map the external inventory specific model into the OpenNMS requisition model.
+- **Source**: This is the specific implementation retrieving the data for from your external inventory.
+- **External Inventory**: The inventory you want to import data for OpenNMS. It could be a free application like phpIPAM, idoIT, ITIL ticket system like OTRS, a simple spreadsheet or just another OpenNMS instance.
+
+The latest release of _PRIS_ can be downloaded from the https://github.com/OpenNMS/opennms-provisioning-integration-server/releases[github release] page of the project.
+It is recommended to extract the tar.gz content to `/opt/opennms-pris`.
+The examples and the documentation are build based on this file structure.
+It is possible to install _PRIS_ in a different directory and you have to take care about adapting the paths in this documentation.
+
+After extracting the archive the file structure should look like this:
+
+[source,bash]
+----
+/opt/opennms-pris
+.
+├── documentation <1>
+├── examples <2>
+├── lib <3>
+├── requisitions <4>
+│   └── myRequisition <5>
+│       └── requisitions.properties <6>
+└── global.properties <7>
+----
+<1> This documentation in HTML format, if you run _PRIS_ in HTTP mode you can access the documentation with +
+http://<your-ip>:<port>/documentation
+<2> Configuration examples and scripts
+<3> Libraries for the different sources which can be used with _PRIS_
+<4> Folder which contains the requisition configuration for different inventories
+<5> Folder for a specific inventory, the folder name is used to access the configuration
+<6> Configuration for sources, mapper and scripts for a specific inventory
+<7> Global configuration for the _PRIS_ server
+
 _Pris_ needs at minimum two configuration files.
 First one is called `global.properties`, it controls the general behavior of the provisioning integration server.
-The second configuration file defines the requisition itself and is called `requisition.properties`.
+A requisition is just a directory in the application server directory `requisitions` and has to contain a file called `requisition.properties`.
+The directory name is used to access the requisition.
+
 You can create multiple requisitions using different sources, by creating a directory for each requisition with a `requisition.properties` inside.
 The `global.properties` and the directories with your requisitions has to be in the same directory where the `java -jar opennms-pris.jar` command is called.
 By default we suggest to install your `opennms-pris.jar` to `/opt/opennms-pris`.
