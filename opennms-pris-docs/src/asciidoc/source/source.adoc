@@ -14,6 +14,7 @@ The file system structure has to be defined as following:
 [source,bash]
 ----
 /opt/opennms-pris
-└── myRequsitionConfiguration
-    └── requisition.properties
+└── requisitions
+    └── myRequisitionConfiguration
+        └── requisition.properties
 ----

@@ -4,12 +4,11 @@
 
 The file source allows to read a requisition file from the filesystem.
 
-    source = file
-
 [options="header"]
 |========================
-| Parameter | Required | Description
-| file      | *        | The path to the requisition xml file to read from
+| Parameter   | Required | Description
+| source      | *        | Set `file` to use this source for the requisition configuration
+| source.file | *        | relative path from `requisitions.properties` to the OpenNMS requisition xml file
 |========================
 
 This source is reading an already defined requisitions from a XML file.
@@ -18,11 +17,5 @@ The file to read has to be a valid OpenNMS requisition already.
 .Example configuration for a file based requisition
 [source,bash]
 ----
-### File: requisition.properties
-# Generate an requistion and create an requisition file to target
-# Create a file for all requisitions matching * (Java regular expression)
-
-driver = file
-target = /my/output/folder
-requistions = *
+include::../examples/source/fileExample/requisitions/myFileRequisition/requisition.properties[]
 ----
