@@ -4,7 +4,7 @@
 The HTTP driver starts _PRIS_ as a web server to provide the OpenNMS requisition over HTTP.
 
 * `driver` = `http` run as web server and provide requisitions over HTTP
-* `host` = Network interface for listening, e.g. `*` = any, `127.0.0.1` = localhost ony
+* `host` = Network interface for listening, e.g. `0.0.0.0` = all, `127.0.0.1` = localhost ony
 * `port` = `8000` TCP port to listen for incoming requests
 
 Access to the requisition can be tested with a browser to URL http://<your-ip>:<port>8000/<name-requisition-cfg>.
@@ -13,12 +13,5 @@ The path _name-requisition-cfg_ is the folder name which runs the requisition co
 .Example configuration for a web server provided requisition
 [source,bash]
 ----
-### File: global.properties
-# Start web server
-# The web server listens on all interfaces and can be accessed on TCP port 8000
-# URL: http://${your-ip}:8000/${name-requisition-cfg}
-
-driver = http
-host = *
-port = 8000
+include::../examples/driver/http.global.properties[]
 ----

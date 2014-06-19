@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model-import xmlns="http://xmlns.opennms.org/xsd/config/model-import" foreign-source="myCustomRequisitionFile">
+  <node node-label="patches" foreign-id="7">
+    <interface ip-addr="192.168.42.23" descr="eth0" status="1" snmp-primary="P">
+      <monitored-service service-name="SNMP"/>
+      <monitored-service service-name="ICMP"/>
+    </interface>
+    <asset name="operatingSystem" value="Ubuntu 14.04 LTS"/>
+    <asset name="cpu" value="Intel Xeon(TM) CPU 3.0GHz"/>
+    <asset name="ram" value="8192 MB"/>
+    <asset name="manufacturer" value="HP"/>
+    <asset name="modelNumber" value="ProLiant DL380 G8"/>
+    <asset name="serialNumber" value="80AXILS22"/>
+    <asset name="hdd1" value="/ is ext4 20808/32304MB"/>
+    <asset name="hdd2" value="/dev is devtmpfs 1254/1254MB"/>
+    <asset name="hdd3" value="/var/lib/ureadahead/debugfs is debugfs 20808/32304MB"/>
+    <asset name="hdd4" value="/storage/vol1 is xfs 204395/1429807MB"/>
+    <asset name="hdd5" value="/storage/vol2 is xfs 51339/571918MB"/>
+    <asset name="hdd6" value="/storage/vol3 is xfs 71547/699725MB"/>
+  </node>
+</model-import>
