@@ -8,9 +8,7 @@ Depending on the type of the source you have different configuration parameter.
 An JDBC source for example has different configuration parameter than a XLS source.
 The existing sources with the configuration are described in this section.
 
-A source is configured in the `requisition.properties` in your configuration.
-The file system structure has to be defined as following:
-
+A source is configured in the `requisition.properties` for the requisition.
 [source,bash]
 ----
 /opt/opennms-pris
