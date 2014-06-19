@@ -58,13 +58,13 @@ It is possible to create for each requisition different script or mapping steps.
 .Configuration of the myRouter requisition
 [source,bash]
 ----
-include::examples/source/xlsExample/requisitions/myRouter/requisition.properties[]
+include::configs/examples/xlsExample/requisitions/myRouter/requisition.properties[]
 ----
 
 .Configuration of the myServer requisition
 [source,bash]
 ----
-include::examples/source/xlsExample/requisitions/myRouter/requisition.properties[]
+include::configs/examples/xlsExample/requisitions/myRouter/requisition.properties[]
 ----
 
 It is not necessary to restart the _pris_ server if you change property files or the _XLS_ file.

@@ -15,5 +15,5 @@ To use the _file driver_ you have to set the parameters in the `global.propertie
 .Example configuration for a file based requisition
 [source,bash]
 ----
-include::../examples/driver/file.global.properties[]
+include::../configs/driver/file.global.properties[]
 ----

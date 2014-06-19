@@ -31,6 +31,9 @@ include::source/source.ocs.adoc[]
 
 // Mapper
 include::mapper/mapper.adoc[]
+include::mapper/mapper.ocs.adoc[]
+include::mapper/mapper.script.adoc[]
+include::mapper/mapper.assetfield.adoc[]
 
 // Scripts
 include::scripts/scripts.adoc[]

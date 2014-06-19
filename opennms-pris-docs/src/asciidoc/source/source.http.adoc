@@ -19,5 +19,5 @@ The given example configuration reads the requisition from the public available 
 .Example configuration for a file based requisition
 [source,bash]
 ----
-include::../examples/source/httpExample/requisitions/opennmsdemo/requisition.properties[]
+include::../configs/examples/httpExample/requisitions/opennmsdemo/requisition.properties[]
 ----

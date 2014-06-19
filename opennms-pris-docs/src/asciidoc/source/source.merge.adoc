@@ -27,5 +27,5 @@ The A-Node (from requisition A) is enriched with the data from B-Node.
 .Example configuration for a merge requisition
 [source,bash]
 ----
-include::../examples/source/mergeExample/requisitions/merge/requisition.properties[]
+include::../configs/examples/mergeExample/requisitions/merge/requisition.properties[]
 ----

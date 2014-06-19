@@ -17,5 +17,5 @@ The path _name-requisition-cfg_ is the folder name which runs the requisition co
 .Example configuration for a web server provided requisition
 [source,bash]
 ----
-include::../examples/driver/http.global.properties[]
+include::../configs/driver/http.global.properties[]
 ----

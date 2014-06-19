@@ -42,11 +42,11 @@ NOTE: To use additional non standard SQL driver, just drop the JAR files into th
 .Example configuration to import nodes from phpIPAM MySQL database into OpenNMS
 [source,bash]
 ----
-include::../examples/source/jdbcExample/requisitions/phpipam/requisition.properties[]
+include::../configs/examples/jdbcExample/requisitions/phpipam/requisition.properties[]
 ----
 
 .Example configuration to import nodes from another OpenNMS database
 [source,bash]
 ----
-include::../examples/source/jdbcExample/requisitions/opennms/requisition.properties[]
+include::../configs/examples/jdbcExample/requisitions/opennms/requisition.properties[]
 ----

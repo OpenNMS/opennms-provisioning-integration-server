@@ -19,5 +19,5 @@ The file to read has to be a valid OpenNMS requisition already.
 .Example configuration for a file based requisition
 [source,bash]
 ----
-include::../examples/source/fileExample/requisitions/myFileRequisition/requisition.properties[]
+include::../configs/examples/fileExample/requisitions/myFileRequisition/requisition.properties[]
 ----
