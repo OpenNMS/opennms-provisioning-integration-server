@@ -20,5 +20,5 @@ A custom parameter name `count` is passed into the Groovy script.
 .Example configuration to generate a requisition from a Groovy script
 [source,bash]
 ----
-include::../configs/examples/scriptExample/requisitions/myGroovySource/requisition.properties[]
+include::{docdir}/configs/examples/scriptExample/requisitions/myGroovySource/requisition.properties[]
 ----

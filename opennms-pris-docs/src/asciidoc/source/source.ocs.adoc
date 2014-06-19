@@ -38,11 +38,11 @@ The file has also be referenced in the configuration.
 .Example configuration to import OCS computer into OpenNMS
 [source,bash]
 ----
-include::../configs/examples/ocsExample/requisitions/computers.basic/requisition.properties[]
+include::{docdir}/configs/examples/ocsExample/requisitions/computers.basic/requisition.properties[]
 ----
 
 .Example configuration to import OCS SNMP devices into OpenNMS
 [source,bash]
 ----
-include::../configs/examples/ocsExample/requisitions/snmpDevices.basic/requisition.properties[]
+include::{docdir}/configs/examples/ocsExample/requisitions/snmpDevices.basic/requisition.properties[]
 ----

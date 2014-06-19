@@ -39,5 +39,5 @@ The order in which the columns are arranged is irrelevant. Also additional colum
 .Example configuration for the requisition myRouter from an XLS spreadsheet
 [source,bash]
 ----
-include::../configs/examples/xlsExample/requisitions/myRouter/requisition.properties[]
+include::{docdir}/configs/examples/xlsExample/requisitions/myRouter/requisition.properties[]
 ----

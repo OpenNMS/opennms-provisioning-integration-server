@@ -1,11 +1,11 @@
 
-[[community-docs]]
-== Contributing documentation
+[[doc-guidelines]]
+== Documentation guidelines
 
 NOTE: Other than writing documentation, you can help out by providing comments about improvements or reporting bugs - head over to the http://issues.opennms.org/browse/PRIS/component/11369[issue tracker for documentation] to do that!
 
 For how to build the manual see:
-https://github.com/OpenNMS/opennms-provisioning-integration-server/blob/master/README.adoc[readme]
+https://github.com/OpenNMS/opennms-provisioning-integration-server/blob/master/README.md[readme]
 
 The documents use the AsciiDoc format, see:
 
@@ -42,6 +42,10 @@ For example, You want to explain how you used the JDBC source to integrate OpenN
 
 * The documentation you can find in the source code can be characterized as a non-emotional technical documentation which explains concepts in detail and should be complete.
 
+If you want to contribute a patch to the documentation, just fork the project on https://github.com/OpenNMS/opennms-provisioning-integration-server[github].
+Make your changes in the branch called `develop` and send us a pull request.
+After the review of the pull request we will merge it and your change is in the next release.
+
 [[docs-important-files-and-folders]]
 === Important files and folders
 
@@ -70,7 +74,7 @@ This is how a document should start:
 [source]
 ----
 [[unique-id-verbose-is-ok]]
-= The Document Title =
+= The Document Title
 ----
 
 To push the headings down to the right level in the output, the +leveloffset+
@@ -230,8 +234,8 @@ image::images/example.png[example.odp]
 === Attributes
 
 Common attributes you can use in documents:
-
-* \{opennms-version} - rendered as "{opennms-version}"
+{docVersion}
+* \{docVersion} - rendered as "{docVersion}"
 
 These can substitute part of URLs that point to for example APIdocs or source code.
 Note that opennms-git-tag also handles the case of snapshot/master.

@@ -39,4 +39,4 @@ include::mapper/mapper.assetfield.adoc[]
 include::scripts/scripts.adoc[]
 
 // How to contribute documentation
-include::documentation.adoc[]
+include::doc-guidelines.adoc[]
