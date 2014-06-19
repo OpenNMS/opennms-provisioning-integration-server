@@ -21,18 +21,21 @@ image::images/myServer.png[myServer.png]
 The _OpenNMS_ requisition should be provided via _HTTP_ and we use _OpenNMS Provisiond_ to synchronize it on a regular base.
 We build the following file structure:
 
+.File structure with two requisitions using a single spreadsheet
 [source,bash]
 ----
-[root@localhost opennms-pris]# clear && pwd && tree
+[root@localhost opennms-pris]# pwd && tree
 /opt/opennms-pris
 .
 ├── global.properties
-├── myInventory.xls
-├── myRouter
-│   └── requisition.properties
-├── myServer
-│   └── requisition.properties
-└── opennms-pris.jar
+├── requisitions/
+│   ├── myInventory.xls
+│   └── myRouter
+│       └── requisition.properties
+│   └── myServer
+│       └── requisition.properties
+├── lib/
+└── opennms-pris.jaropennms-pris.jar
 ----
 
 Providing the _OpenNMS requisition_ over _HTTP_ we create the following `global.properties`
