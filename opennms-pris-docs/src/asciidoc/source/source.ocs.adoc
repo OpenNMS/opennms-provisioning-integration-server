@@ -9,14 +9,14 @@ Some parameters are part of both sources and described first.
 ==== General OCS Parameters
 The following parameters are **required**:
 
-[options="header"]
+[options="header",cols="1,^1,10"]
 |========================
 | Parameter         | Required | Description
-| `source`          |    *     | Set `ocs.computers` to import OCS computer entities and `ocs.devices` for OCS SNMP devices
-| `source.url`      |    *     | The _URL_ of the _OCS web application_.
-| `source.username` |    *     | A _OCS user_ with rights to access the _OCS Soap interface_.
-| `source.password` |    *     | The password for the _OCS user_ with rights to access the _OCS Soap interface_.
-| `source.checksum` |    *     | The `ocs.checksum` parameter controls how detailed the data is that the integration is requesting from the _OCS_. It is important to request all the data you want to map into your requisition but not to much, cause a high checksum causes the request to be significantly slower. Read the http://wiki.ocsinventory-ng.org/index.php/Developers:Web_services[OCS Web-Services] documentation for more information. The default _checksum_ for the _default mapper_ is `4611`.
+| `source`          | *        | Set `ocs.computers` to import OCS computer entities and `ocs.devices` for OCS SNMP devices
+| `source.url`      | *        | The _URL_ of the _OCS web application_.
+| `source.username` | *        | A _OCS user_ with rights to access the _OCS Soap interface_.
+| `source.password` | *        | The password for the _OCS user_ with rights to access the _OCS Soap interface_.
+| `source.checksum` | *        | The `ocs.checksum` parameter controls how detailed the data is that the integration is requesting from the _OCS_. It is important to request all the data you want to map into your requisition but not to much, cause a high checksum causes the request to be significantly slower. Read the http://wiki.ocsinventory-ng.org/index.php/Developers:Web_services[OCS Web-Services] documentation for more information. The default _checksum_ for the _default mapper_ is `4611`.
 | `source.tags`     |          | OCS supports tags / custom fields. If a tag is added to the ocs.tags list, just computers and `snmpDevices` that are marked with all the tags will be read from the _OCS_. This feature can be used to tag computers as `testing` or `production`.
 | `source.target`   |          | This parameters allows to specify a file to write the result of the source to. The resulting xml file can be used for debug or test reasons.
 |========================

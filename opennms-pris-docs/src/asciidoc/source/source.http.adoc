@@ -3,7 +3,7 @@ This source is similar like the file source. Instead of reading from a local fil
 The location for the requisition is given by OpenNMS provisioning ReST URL.
 It is possible to provide a authentication to be able to consume the ReST service.
 
-[options="header"]
+[options="header",cols="1,^1,10"]
 |========================
 | Parameter         | Required | Description
 | `source`          | *        | Set `http` to use this source for the requisition configuration

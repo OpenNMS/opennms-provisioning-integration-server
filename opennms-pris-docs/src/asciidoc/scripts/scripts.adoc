@@ -11,7 +11,7 @@ The script will be executed by Apache-BSF.
 By default Groovy 2.2.2 and Beanshell 2.0b5 are supported.
 
 A script steps are configured in the `requisition.properties` for the requisition.
-[source,bash]
+
 ----
 /opt/opennms-pris
 └── requisitions

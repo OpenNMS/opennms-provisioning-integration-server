@@ -3,7 +3,7 @@
 === JDBC Source
 The JDBC source provides the ability to run an SQL-Query against an external system and map the result to an OpenNMS requisition.
 
-[options="header"]
+[options="header",cols="1,^1,10"]
 |========================
 | Parameter                | Required | Description
 | `source`                 | *        | Set `jdbc` to use this source for the requisition configuration
@@ -18,7 +18,7 @@ The JDBC source provides the ability to run an SQL-Query against an external sys
 
 The following column-headers will be mapped from the result set to the OpenNMS requisition:
 
-[options="header"]
+[options="header",cols="1,^1,10"]
 |========================
 | Column Header     | Required | Description
 | `Foreign_Id`      | *        | will be interpreted as `foreignId` on the node

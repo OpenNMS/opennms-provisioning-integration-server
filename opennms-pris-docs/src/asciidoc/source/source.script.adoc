@@ -5,11 +5,11 @@ This source is build to give you the flexibility building your own source withou
 The source uses https://www.jcp.org/en/jsr/detail?id=223[JSR-223 Scripting Engine].
 The used language can be changed by setting the property `source.lang` in your `requisition.properties` file.
 
-[options="header"]
+[options="header",cols="1,^1,10"]
 |========================
 | Parameter       | Required | Description
-| `source`        |    *     | set `script` to use JSR-223 Script Engine as source
-| `source.file`   |    *     | path to script source relative to `requisition.properties`
+| `source`        | *        | set `script` to use JSR-223 Script Engine as source
+| `source.file`   | *        | path to script source relative to `requisition.properties`
 | `source.lang`   |          | JSR-223 Script language by name, by default the file extension is used to detect the language.
 | `source.<name>` |          | you can have access to a parameter `name` in your Groovy script if you name it with the prefix `source.`
 |========================

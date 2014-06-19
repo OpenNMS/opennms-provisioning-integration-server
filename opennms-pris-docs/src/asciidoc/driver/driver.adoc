@@ -8,12 +8,11 @@ It is possible to configure exact one driver for the _PRIS_ server.
 For the _PRIS_ server you can configure a global log level.
 The loglevel is also located in the `global.properties` file and can be configured with the following values:
 
-[source,bash]
 ----
 loglevel = INFO
 ----
 
-[options="header", width="25%"]
+[options="header",width="25%", cols="1,^1"]
 |==================
 | Level | Default
 | ALL   |
@@ -26,7 +25,7 @@ loglevel = INFO
 |==================
 
 The driver is configured in the `global.properties` which is located in the root application directory.
-[source,bash]
+
 ----
 /opt/opennms-pris
 └── global.properties

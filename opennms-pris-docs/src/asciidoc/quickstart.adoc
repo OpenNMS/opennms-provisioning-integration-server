@@ -22,23 +22,24 @@ The _OpenNMS_ requisition should be provided via _HTTP_ and we use _OpenNMS Prov
 We build the following file structure:
 
 .File structure with two requisitions using a single spreadsheet
-[source,bash]
+
 ----
 [root@localhost opennms-pris]# pwd && tree
 /opt/opennms-pris
 .
 ├── documentation
 ├── examples
+├── lib
+├── requisitions/
+|   ├── myInventory.xls
+|   └── myRouter
+|   |   └── requisition.properties
+|   └── myServer
+|       └── requisition.properties
 ├── global.properties
-├── lib/
 ├── opennms-pris.jar
 ├── opennms-pris.sh
-└── requisitions/
-    ├── myInventory.xls
-    └── myRouter
-        └── requisition.properties
-    └── myServer
-        └── requisition.properties
+└── opennms-pris.service
 ----
 
 Providing the _OpenNMS requisition_ over _HTTP_ we create the following `global.properties`
@@ -75,7 +76,7 @@ With the given configuration you see the result of the OpenNMS requisitions with
 image::images/requisitions-http.png[requisitions-http.png]
 
 To get the requisition provided from _PRIS_ automatically into OpenNMS you can configure Provisiond with a schedule.
-Create following to entries in `provisiond-configuration.xml` and they will automatically synchronized every night at 0h:0m:0s and 1h:0m:0s. 
+Create following to entries in `provisiond-configuration.xml` and they will automatically synchronized every night at 0h:0m:0s and 1h:0m:0s.
 
 .Configuration from OpenNMS Provisiond with provisiond-configuration.xml
 [source,xml]

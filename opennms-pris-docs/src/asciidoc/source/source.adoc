@@ -9,7 +9,7 @@ An JDBC source for example has different configuration parameter than a XLS sour
 The existing sources with the configuration are described in this section.
 
 A source is configured in the `requisition.properties` for the requisition.
-[source,bash]
+
 ----
 /opt/opennms-pris
 └── requisitions

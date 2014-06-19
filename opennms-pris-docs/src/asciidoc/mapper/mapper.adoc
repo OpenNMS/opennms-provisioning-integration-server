@@ -10,7 +10,7 @@ Some sources provide OpenNMS Requisition directly, in thouse cases the `echo.map
 Complex sources like the `OCS-Sources` provide OCS specific models and require there own specific mappers.
 
 A mapper is configured in the `requisition.properties` for the requisition.
-[source,bash]
+
 ----
 /opt/opennms-pris
 └── requisitions

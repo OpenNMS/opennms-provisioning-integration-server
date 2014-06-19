@@ -5,7 +5,7 @@ The merge source allows to merge two requisitions URL provided requisitions.
 You can also use provided resources by _PRIS_ recursively.
 The example below shows how to configure the merge requisition for two requisitions A and B.
 
-[options="header"]
+[options="header",cols="1,^1,10"]
 |========================
 | Parameter    | Required | Description
 | `A.url`      | *        | URL to the requisition A

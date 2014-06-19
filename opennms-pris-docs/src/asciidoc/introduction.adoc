@@ -39,7 +39,6 @@ It is possible to install _PRIS_ in a different directory and you have to take c
 
 After extracting the archive the file structure should look like this:
 
-[source,bash]
 ----
 /opt/opennms-pris
 .

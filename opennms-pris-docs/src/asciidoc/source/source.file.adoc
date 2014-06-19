@@ -4,7 +4,7 @@
 
 The file source allows to read a requisition file from the filesystem.
 
-[options="header"]
+[options="header",cols="1,^1,10"]
 |========================
 | Parameter     | Required | Description
 | `source`      | *        | Set `file` to use this source for the requisition configuration
