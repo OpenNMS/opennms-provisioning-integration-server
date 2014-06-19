@@ -49,7 +49,10 @@ After extracting the archive the file structure should look like this:
 ├── requisitions <4>
 │   └── myRequisition <5>
 │       └── requisitions.properties <6>
-└── global.properties <7>
+├── global.properties <7>
+├── opennms-pris.jar <8>
+├── opennms-pris.sh <9>
+└── opennms-pris.service <10>
 ----
 <1> This documentation in HTML format, if you run _PRIS_ in HTTP mode you can access the documentation with +
 http://<your-ip>:<port>/documentation
@@ -59,6 +62,9 @@ http://<your-ip>:<port>/documentation
 <5> Folder for a specific inventory, the folder name is used to access the configuration
 <6> Configuration for sources, mapper and scripts for a specific inventory
 <7> Global configuration for the _PRIS_ server
+<8> Main application which is started with `java -jar`
+<9> Wrapper script to run in `file` mode, e.g. as cronjob
+<10> Init script for CentOS or Debian systems running in HTTP mode
 
 _Pris_ needs at minimum two configuration files.
 First one is called `global.properties`, it controls the general behavior of the provisioning integration server.
