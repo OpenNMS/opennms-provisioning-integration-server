@@ -1,4 +1,4 @@
-### HTTP Source
+=== HTTP Source
 This source is similar like the file source. Instead of reading from a local file, it can read a requisition via _HTTP_ from another _OpenNMS_.
 The location for the requisition is given by OpenNMS provisioning ReST URL.
 It is possible to provide a authentication to be able to consume the ReST service.
@@ -7,7 +7,7 @@ It is possible to provide a authentication to be able to consume the ReST servic
 |========================
 | Parameter         | Required | Description
 | `source`          | *        | Set `http` to use this source for the requisition configuration
-| `source.url`      | *        | OpenNMS requisition ReST URL, e.g. http://dem.opennms.org/opennms/rest/requisitions
+| `source.url`      | *        | OpenNMS requisition ReST URL, e.g. http://demo.opennms.org/opennms/rest/requisitions
 | `source.username` |          | OpenNMS user name for access the requisition ReST URL
 | `source.password` |          | OpenNMS user password for access the requisition ReST URL
 | `mapper`          | *        | Mapper script changing the requisition. For no operation use `echo`, apply a Groovy script set to `script`
