@@ -19,6 +19,7 @@ include::driver/driver.http.adoc[]
 // Sources
 include::source/source.adoc[]
 include::source/source.file.adoc[]
+include::source/source.http.adoc[]
 
 // How to contribute documentation
 include::documentation.adoc[]

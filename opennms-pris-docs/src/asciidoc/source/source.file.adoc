@@ -6,9 +6,11 @@ The file source allows to read a requisition file from the filesystem.
 
 [options="header"]
 |========================
-| Parameter   | Required | Description
-| source      | *        | Set `file` to use this source for the requisition configuration
-| source.file | *        | relative path from `requisitions.properties` to the OpenNMS requisition xml file
+| Parameter     | Required | Description
+| `source`      | *        | Set `file` to use this source for the requisition configuration
+| `source.file` | *        | relative path from `requisitions.properties` to the OpenNMS requisition xml file
+| `mapper`      | *        | Mapper script changing the requisition. For no operation use `echo`, apply a Groovy script set to `script`
+| `mapper.file` |          | If set `mapper` is set to `script`, relative path to your groovy script for modifying the requisition
 |========================
 
 This source is reading an already defined requisitions from a XML file.
