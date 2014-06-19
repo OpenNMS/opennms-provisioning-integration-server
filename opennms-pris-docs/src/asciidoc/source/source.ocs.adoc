@@ -1,0 +1,48 @@
+
+[[ocs-source]]
+=== OCS Source
+_OCS-Inventory NG_ is a inventory and software management software.
+It is handling computers and SNMP devices separately in its APIs.
+For that reason there are two different sources available to import nodes from _OCS_.
+Some parameters are part of both sources and described first.
+
+==== General OCS Parameters
+The following parameters are **required**:
+
+[options="header"]
+|========================
+| Parameter         | Required | Description
+| `source`          |    *     | Set `ocs.computers` to import OCS computer entities and `ocs.devices` for OCS SNMP devices
+| `source.url`      |    *     | The _URL_ of the _OCS web application_.
+| `source.username` |    *     | A _OCS user_ with rights to access the _OCS Soap interface_.
+| `source.password` |    *     | The password for the _OCS user_ with rights to access the _OCS Soap interface_.
+| `source.checksum` |    *     | The `ocs.checksum` parameter controls how detailed the data is that the integration is requesting from the _OCS_. It is important to request all the data you want to map into your requisition but not to much, cause a high checksum causes the request to be significantly slower. Read the http://wiki.ocsinventory-ng.org/index.php/Developers:Web_services[OCS Web-Services] documentation for more information. The default _checksum_ for the _default mapper_ is `4611`.
+| `source.tags`     |          | OCS supports tags / custom fields. If a tag is added to the ocs.tags list, just computers and `snmpDevices` that are marked with all the tags will be read from the _OCS_. This feature can be used to tag computers as `testing` or `production`.
+| `source.target`   |          | This parameters allows to specify a file to write the result of the source to. The resulting xml file can be used for debug or test reasons.
+|========================
+
+==== Using a source for OCS computers
+This source is reading computers from a _OCS instance_.
+It supports all parameters listed as general and the following additions:
+
+* `accountinfo` = `accountinfo` data is based on custom fields managed in OCS. There are managed by the _Administrative-Data_ section of the _OCS web application_. The name of the custom field is presented in all caps. The value of the field as provided by the user. The `ocs.accountinfo` parameters supports a list of `accountinfo` that has to be present on the computer. If one of the `accountinfo` is not present the computers is skipped. To add multiple `accountinfo` they can be separated with spaces.
+
+==== Using a source for OCS SNMP devices
+This source is reading `snmpDevices` from a _OCS instance_. It supports all parameters listed as general and no additional at the moment.
+
+==== Using a mock source for development
+For development and testing there are `ocs.computers.replay` and `ocs.devices.replay` sources available.
+This sources require a file that contains the computers or `snmpDevices` as _XML_ file.
+The file has also be referenced in the configuration.
+
+.Example configuration to import OCS computer into OpenNMS
+[source,bash]
+----
+include::../examples/source/ocsExample/requisitions/computers.basic/requisition.properties[]
+----
+
+.Example configuration to import OCS SNMP devices into OpenNMS
+[source,bash]
+----
+include::../examples/source/ocsExample/requisitions/snmpDevices.basic/requisition.properties[]
+----

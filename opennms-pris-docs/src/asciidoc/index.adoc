@@ -24,6 +24,10 @@ include::source/source.jdbc.adoc[]
 include::source/source.merge.adoc[]
 include::source/source.script.adoc[]
 include::source/source.xls.adoc[]
+include::source/source.ocs.adoc[]
+
+// Mapper
+include::mapper/mapper.adoc[]
 
 // How to contribute documentation
 include::documentation.adoc[]
