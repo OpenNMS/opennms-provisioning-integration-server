@@ -1,6 +1,6 @@
 
 [[driver-http]]
-=== HTTP driver
+=== HTTP Driver
 The HTTP driver starts _PRIS_ as a web server to provide the OpenNMS requisition over HTTP.
 
 * `driver = http` run as web server and provide requisitions over HTTP

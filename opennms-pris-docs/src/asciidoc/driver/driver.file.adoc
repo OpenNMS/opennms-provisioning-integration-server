@@ -1,6 +1,6 @@
 
 [[driver-file]]
-=== File driver
+=== File Driver
 This driver offers the ability to generate an OpenNMS requisition directly into the filesystem.
 To use the _file driver_ you have to set the parameters in the `global.properties`:
 

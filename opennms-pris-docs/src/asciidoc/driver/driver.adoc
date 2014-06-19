@@ -22,4 +22,12 @@ The loglevel is also located in the `global.properties` file and can be configur
 | OFF   |
 |==================
 
+The driver is configured in the `global.properties` which is located in the root application directory.
+
+[source,bash]
+----
+/opt/opennms-pris
+└── global.properties
+----
+
 This section describes all available driver and the possible configuration parameter.
