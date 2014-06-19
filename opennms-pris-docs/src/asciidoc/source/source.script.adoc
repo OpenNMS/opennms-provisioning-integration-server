@@ -8,10 +8,10 @@ The used language can be changed by setting the property `source.lang` in your `
 [options="header"]
 |========================
 | Parameter       | Required | Description
-| `source`        |    *     | `script` to use JSR-223 Script Engine as source
-| `source.file`   |    *     | Path to script source relative to `requisition.properties`
+| `source`        |    *     | set `script` to use JSR-223 Script Engine as source
+| `source.file`   |    *     | path to script source relative to `requisition.properties`
 | `source.lang`   |          | JSR-223 Script language by name, by default the file extension is used to detect the language.
-| `source.<name>` |          | You can have access to a parameter `name` in your Groovy script if you name it with the prefix `source.`
+| `source.<name>` |          | you can have access to a parameter `name` in your Groovy script if you name it with the prefix `source.`
 |========================
 
 You can find a working Groovy source in the `examples/source/scriptExample` directory.

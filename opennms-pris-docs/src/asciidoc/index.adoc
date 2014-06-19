@@ -23,6 +23,7 @@ include::source/source.http.adoc[]
 include::source/source.jdbc.adoc[]
 include::source/source.merge.adoc[]
 include::source/source.script.adoc[]
+include::source/source.xls.adoc[]
 
 // How to contribute documentation
 include::documentation.adoc[]
