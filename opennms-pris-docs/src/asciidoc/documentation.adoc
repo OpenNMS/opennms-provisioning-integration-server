@@ -43,7 +43,7 @@ For example, You want to explain how you used the JDBC source to integrate OpenN
 * The documentation you can find in the source code can be characterized as a non-emotional technical documentation which explains concepts in detail and should be complete.
 
 [[docs-important-files-and-folders]]
-=== Important files and folders in 'opennms-pris-docs'
+=== Important files and folders
 
 [options="header", cols="e,d"]
 |========================
@@ -52,7 +52,9 @@ For example, You want to explain how you used the JDBC source to integrate OpenN
 | pom.xml                 | Maven project settings for the documentation module
 | src/asciidoc            | Folder with adoc source files
 | src/asciidoc/index.adoc | root file which includes all the document parts
-| src/asciidoc/images     | directory for including images and screenshots
+| src/asciidoc/images     | directory for including images and screenshots in `.png` or `.jpg` format
+| src/asciidoc/images_src | directory for including original format, e.g. `.graphml`
+| src/asciidoc/configs    | configuration and script examples referenced in the documentation
 |========================
 
 [[headings-doc-structure]]
