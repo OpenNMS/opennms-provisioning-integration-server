@@ -46,7 +46,7 @@ Providing the _OpenNMS requisition_ over _HTTP_ we create the following `global.
 .Use the HTTP web server
 [source,bash]
 ----
-include::examples/source/xlsExample/global.properties[]
+include::configs/examples/xlsExample/global.properties[]
 ----
 
 The HTTP server is listening on localhost port 8000/TCP.
