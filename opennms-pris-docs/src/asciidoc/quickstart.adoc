@@ -27,15 +27,18 @@ We build the following file structure:
 [root@localhost opennms-pris]# pwd && tree
 /opt/opennms-pris
 .
+├── documentation
+├── examples
 ├── global.properties
-├── requisitions/
-│   ├── myInventory.xls
-│   └── myRouter
-│       └── requisition.properties
-│   └── myServer
-│       └── requisition.properties
 ├── lib/
-└── opennms-pris.jaropennms-pris.jar
+├── opennms-pris.jar
+├── opennms-pris.sh
+└── requisitions/
+    ├── myInventory.xls
+    └── myRouter
+        └── requisition.properties
+    └── myServer
+        └── requisition.properties
 ----
 
 Providing the _OpenNMS requisition_ over _HTTP_ we create the following `global.properties`
