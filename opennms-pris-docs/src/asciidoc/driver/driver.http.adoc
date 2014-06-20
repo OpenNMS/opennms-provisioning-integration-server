@@ -11,7 +11,7 @@ The HTTP driver starts _PRIS_ as a web server to provide the OpenNMS requisition
 | `port`    | *        | TCP port to listen for incoming requests. Default is `8000`
 |========================
 
-Access to the requisition can be tested with a browser to URL http://<your-ip>:<port>8000/<name-requisition-cfg>.
+Access to the requisition can be tested with a browser to URL http://<your-ip>:<port>8000/requisitions/<name-requisition-cfg>.
 The path _name-requisition-cfg_ is the folder name which runs the requisition configuration located in your _PRIS_ server directory.
 
 .Example configuration for a web server provided requisition

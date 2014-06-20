@@ -70,7 +70,7 @@ include::configs/examples/xlsExample/requisitions/myRouter/requisition.propertie
 
 It is not necessary to restart the _pris_ server if you change property files or the _XLS_ file.
 All changes will be executed with the next request against the server.
-With the given configuration you see the result of the OpenNMS requisitions with the URL http://localhost:8000/myRouter and http://localhost:8000/myServer and can be used in _OpenNMS Provisiond_.
+With the given configuration you see the result of the OpenNMS requisitions with the URL http://localhost:8000/requisitions/myRouter and http://localhost:8000/requisitions/myServer and can be used in _OpenNMS Provisiond_.
 
 .Output of _PRIS_ server for the both configured requisitions
 image::images/requisitions-http.png[requisitions-http.png]
@@ -81,11 +81,11 @@ Create following to entries in `provisiond-configuration.xml` and they will auto
 .Configuration from OpenNMS Provisiond with provisiond-configuration.xml
 [source,xml]
 ----
-<requisition-def import-name="myRouter" import-url-resource="http://localhost:8000/myRouter">
+<requisition-def import-name="myRouter" import-url-resource="http://localhost:8000/requisitions/myRouter">
   <cron-schedule>0 0 0 * * ? *</cron-schedule>
 </requisition-def>
 
-<requisition-def import-name="myServer" import-url-resource="http://localhost:8000/myServer">
+<requisition-def import-name="myServer" import-url-resource="http://localhost:8000/requisitions/myServer">
   <cron-schedule>0 0 1 * * ? *</cron-schedule>
 </requisition-def>
 ----

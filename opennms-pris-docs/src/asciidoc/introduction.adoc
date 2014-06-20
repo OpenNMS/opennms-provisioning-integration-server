@@ -58,7 +58,7 @@ http://<your-ip>:<port>/documentation
 <2> Configuration examples and scripts
 <3> Libraries for the different sources which can be used with _PRIS_
 <4> Folder which contains the requisition configuration for different inventories
-<5> Folder for a specific inventory, the folder name is used to access the configuration
+<5> Folder for a specific inventory, the folder name is used to access the configuration.
 <6> Configuration for sources, mapper and scripts for a specific inventory
 <7> Global configuration for the _PRIS_ server
 <8> Main application which is started with `java -jar`
