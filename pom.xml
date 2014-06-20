@@ -26,7 +26,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <github.global.server>github</github.global.server>
 
-    <!-- Ascii doc settings for documention -->    
+    <!-- Ascii doc settings for documention -->
     <asciidoc.source.directory>${basedir}/src/asciidoc</asciidoc.source.directory>
     <asciidoc.output.directory>${basedir}/target/generated-docs</asciidoc.output.directory>
     <asciidoc.images.directory>images</asciidoc.images.directory>
@@ -44,6 +44,8 @@
     <metainfServicesVersion>1.5</metainfServicesVersion>
     <opennmsVersion>1.12.5</opennmsVersion>
     <slf4jVersion>1.7.5</slf4jVersion>
+    <wagonSshVersion>1.0-beta-6</wagonSshVersion>
+    <wagonPluginVersion>1.0-beta-5</wagonPluginVersion>
   </properties>
 
   <dependencies>
@@ -182,9 +184,9 @@
   </repositories>
 
   <distributionManagement>
-    <site>
-      <id>www.opennms.eu-docs</id>
-      <url>scp://www.opennms.eu/var/www/docs/opennms-pris/${project.version}/</url>
-    </site>
+    <repository>
+      <id>opennms-pris-docs</id>
+      <url>scp://www.opennms.eu/home/indigo/${project.version}/</url>
+    </repository>
   </distributionManagement>
 </project>
