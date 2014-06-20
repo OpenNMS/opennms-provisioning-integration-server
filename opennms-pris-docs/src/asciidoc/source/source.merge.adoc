@@ -7,17 +7,16 @@ The example below shows how to configure the merge requisition for two requisiti
 
 [options="header",cols="1,^1,10"]
 |========================
-| Parameter    | Required | Description
-| `A.url`      | *        | URL to the requisition A
-| `A.username` |          | username for access
-| `A.password` |          | password for access
-|              |          |
-| `B.url`      | *        | URL to the requisition B
-| `B.username` |          | username for access
-| `B.password` |          | password for access
-|              |          |
-| `A.keepAll`  |          | if this parameters is present in the config all nodes from requisition A will be present in the resulting requisition.
-| `B.keepAll`  |          | if this parameters is present in the config all nodes from requisition B will be present in the resulting requisition.
+| Parameter           | Required | Description
+| `source`            | *        | set to `merge` to configure this requisition as a merge requisition
+| `source.A.url`      | *        | URL to the requisition A
+| `source.A.username` |          | username for access
+| `source.A.password` |          | password for access
+| `source.B.url`      | *        | URL to the requisition B
+| `source.B.username` |          | username for access
+| `source.B.password` |          | password for access
+| `source.A.keepAll`  |          | if this parameters is present in the config all nodes from requisition A will be present in the resulting requisition.
+| `source.B.keepAll`  |          | if this parameters is present in the config all nodes from requisition B will be present in the resulting requisition.
 |========================
 
 This source is reading two already defined requisitions via _HTTP_ and merges them into one new requisition.
