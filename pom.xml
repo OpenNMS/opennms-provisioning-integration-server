@@ -186,7 +186,7 @@
   <distributionManagement>
     <repository>
       <id>opennms-pris-docs</id>
-      <url>scp://www.opennms.eu/home/indigo/${project.version}/</url>
+      <url>scp://www.opennms.eu/var/www/docs/opennms-pris/</url>
     </repository>
   </distributionManagement>
 </project>

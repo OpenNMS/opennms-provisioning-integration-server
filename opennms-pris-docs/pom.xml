@@ -23,7 +23,6 @@
         <version>${wagonSshVersion}</version>
       </extension>
     </extensions>
-
     <plugins>
       <!-- we need this to copy the images to the generated-docs output directory,
       otherwise images would not be part of the generated-docs -->
@@ -85,7 +84,7 @@
           <includes>**</includes>
           <excludes>pom.xml</excludes>
           <url>scp://www.opennms.eu</url>
-          <toDir>home/indigo/test</toDir>
+          <toDir>${project.version}</toDir>
         </configuration>
         <executions>
           <execution>
