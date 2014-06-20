@@ -1,0 +1,31 @@
+
+[[merge-source]]
+=== Merge Source
+The merge source allows to merge two requisitions URL provided requisitions.
+You can also use provided resources by _PRIS_ recursively.
+The example below shows how to configure the merge requisition for two requisitions A and B.
+
+[options="header",cols="1,^1,10"]
+|========================
+| Parameter    | Required | Description
+| `A.url`      | *        | URL to the requisition A
+| `A.username` |          | username for access
+| `A.password` |          | password for access
+|              |          |
+| `B.url`      | *        | URL to the requisition B
+| `B.username` |          | username for access
+| `B.password` |          | password for access
+|              |          |
+| `A.keepAll`  |          | if this parameters is present in the config all nodes from requisition A will be present in the resulting requisition.
+| `B.keepAll`  |          | if this parameters is present in the config all nodes from requisition B will be present in the resulting requisition.
+|========================
+
+This source is reading two already defined requisitions via _HTTP_ and merges them into one new requisition.
+By default the resulting requisition will contain all nodes that are present in both requisitions, identified by the `foreignId`.
+The A-Node (from requisition A) is enriched with the data from B-Node.
+
+.Example configuration for a merge requisition
+[source,bash]
+----
+include::{docdir}/configs/examples/mergeExample/requisitions/merge/requisition.properties[]
+----
