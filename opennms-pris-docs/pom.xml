@@ -83,7 +83,7 @@
           <fromDir>${project.build.directory}/generated-docs</fromDir>
           <includes>**</includes>
           <excludes>pom.xml</excludes>
-          <url>scp://www.opennms.eu</url>
+          <url>scp://www.opennms.eu/var/www/docs/opennms-pris</url>
           <toDir>${project.version}</toDir>
         </configuration>
         <executions>
