@@ -21,26 +21,18 @@
  *
  * For more information contact: OpenNMS(R) Licensing <license@opennms.org>
  * http://www.opennms.org/ http://www.opennms.com/
- ******************************************************************************
+ * *****************************************************************************
  */
 package org.opennms.pris.driver;
 
-import org.eclipse.jetty.server.Request;
+import java.net.InetSocketAddress;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.handler.AbstractHandler;
-import org.opennms.pris.model.Requisition;
-import org.opennms.pris.RequisitionGenerator;
+import org.eclipse.jetty.server.handler.ContextHandler;
+import org.eclipse.jetty.server.handler.ContextHandlerCollection;
+import org.eclipse.jetty.server.handler.ResourceHandler;
+import org.opennms.pris.api.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import org.opennms.pris.api.Configuration;
 
 /**
  * A working mode providing a HTTP server publishing generated requisitions.
@@ -76,54 +68,24 @@ public class HttpServerDriver implements Driver {
         final Server server = new Server(new InetSocketAddress(this.config.getString("host", "127.0.0.1"),
                 this.config.getInt("port", 8686)));
 
-        // Create the marshaller for the requisition
-        final JAXBContext jaxbContext = JAXBContext.newInstance(Requisition.class);
+        
+        ContextHandlerCollection contextHandlerCollection = new ContextHandlerCollection();
+        
+        RequisitionProviderHandler requisitionProviderHandler = new RequisitionProviderHandler();
+        ContextHandler contextHandlerRequisitions = new ContextHandler("/requisitions");
+        contextHandlerRequisitions.setHandler(requisitionProviderHandler);
+        contextHandlerCollection.addHandler(contextHandlerRequisitions);
+        
+        ResourceHandler docuResourceHandler = new ResourceHandler();
+        docuResourceHandler.setDirectoriesListed(true);
+        docuResourceHandler.setWelcomeFiles(new String[]{"index.html"});
+        docuResourceHandler.setResourceBase("./documentation/");
+        ContextHandler contextHandlerDocu = new ContextHandler("/documentation");
+        contextHandlerDocu.setHandler(docuResourceHandler);
+        contextHandlerCollection.addHandler(contextHandlerDocu);
 
-        final Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-        jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+        server.setHandler(contextHandlerCollection);
 
-        // Create a handler for the HTTP requests returning a requisition
-        server.setHandler(new AbstractHandler() {
-
-            @Override
-            public void handle(final String target,
-                    final Request baseRequest,
-                    final HttpServletRequest request,
-                    final HttpServletResponse response) throws IOException,
-                    ServletException {
-                // As this is the only handler, we mark every request as handled
-                baseRequest.setHandled(true);
-
-                // Get the instance for the request path
-                final String instance = request.getPathInfo().substring(1);
-
-                LOGGER.debug("Handling request for instance: {}", instance);
-
-                // Check if the instance name was passed and valid
-                if (instance == null || instance.isEmpty() || instance.contains("favicon.ico")) {
-                    response.sendError(404, "No instance specified");
-                    return;
-                }
-
-                try {
-                    // Create the requisition provider for the instance
-                    final RequisitionGenerator requisitionProvider = new RequisitionGenerator(instance);
-
-                    // Generate the requisition
-                    final Requisition requisition = requisitionProvider.generate(instance);
-
-                    // Marshall the requisition and write it to the response stream
-                    jaxbMarshaller.marshal(requisition, response.getOutputStream());
-
-                } catch (Exception ex) {
-                    response.sendError(500, ex.getMessage());
-
-                    LOGGER.warn(ex.getMessage(), ex);
-                }
-            }
-        });
-
-        // Start the server
         server.start();
         server.join();
     }

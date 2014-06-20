@@ -20,6 +20,7 @@
         <fileSet>
             <includes>
                 <include>opennms-pris.sh</include>
+                <include>opennms-pris.service</include>
             </includes>
             <directory>${project.basedir}/src/main/resources</directory>
             <outputDirectory>./</outputDirectory>
@@ -30,15 +31,32 @@
             <includes>
                 <include>**</include>
             </includes>
-            <directory>${project.basedir}/src/examples/</directory>
+            <directory>${project.basedir}/../opennms-pris-docs/src/asciidoc/configs/examples/</directory>
             <outputDirectory>examples</outputDirectory>
+        </fileSet>
+
+        <fileSet>
+            <includes>
+                <include>**</include>
+            </includes>
+            <directory>${project.basedir}/../opennms-pris-docs/src/asciidoc/configs/examples/xlsExample/requisitions/</directory>
+            <outputDirectory>requisitions</outputDirectory>
+        </fileSet>
+
+        <fileSet>
+            <includes>
+                <include>global.properties</include>
+            </includes>
+            <directory>${project.basedir}/../opennms-pris-docs/src/asciidoc/configs/examples/xlsExample</directory>
+            <outputDirectory>./</outputDirectory>
+            <fileMode>0644</fileMode>
         </fileSet>
         
         <fileSet>
             <includes>
                 <include>**</include>
             </includes>
-            <directory>${project.basedir}/../opennms-pris-docs/target/site/</directory>
+            <directory>${project.basedir}/../opennms-pris-docs/target/generated-docs/</directory>
             <outputDirectory>documentation</outputDirectory>
         </fileSet>
     </fileSets>
@@ -47,7 +65,7 @@
         <dependencySet>
             <outputDirectory>lib</outputDirectory>
             <includes>
-                <include>${project.groupId}:opennms-pris-plugins-*:jar:jar-with-dependencies</include>
+                <include>${project.groupId}:opennms-pris-plugins-*:jar:shaded</include>
             </includes>
         </dependencySet>
     </dependencySets>

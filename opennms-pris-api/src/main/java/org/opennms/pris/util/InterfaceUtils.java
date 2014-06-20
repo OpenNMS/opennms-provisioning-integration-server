@@ -48,7 +48,7 @@ public class InterfaceUtils {
         this.config = config;
     }
 
-    protected Boolean isIpBlackListed(String ipAddress) {
+    public Boolean isIpBlackListed(String ipAddress) {
         for (String blackedIp : ipBlackList) {
             if (IPLike.matches(ipAddress, blackedIp)) {
                 LOGGER.debug("IpAddress Black: {} \t vs \t {} \t OK", ipAddress, blackedIp);
@@ -60,7 +60,7 @@ public class InterfaceUtils {
         return false;
     }
 
-    protected Boolean isIpWhiteListed(String ipAddress) {
+    public Boolean isIpWhiteListed(String ipAddress) {
         for (String whiteIp : ipWhiteList) {
             if (IPLike.matches(ipAddress, whiteIp)) {
                 LOGGER.debug("IpAddress White: {} \t vs \t {} \t OK", ipAddress, whiteIp);
