@@ -32,18 +32,23 @@
     <asciidoc.images.directory>images</asciidoc.images.directory>
 
     <!-- Version settings -->
-    <chQosLogbackVersion>1.0.13</chQosLogbackVersion>
-    <commonsConfigurationVersion>1.9</commonsConfigurationVersion>
+    <chQosLogbackVersion>1.1.2</chQosLogbackVersion>
+    <commonsConfigurationVersion>1.10</commonsConfigurationVersion>
     <commonsIoVersion>2.4</commonsIoVersion>
     <doxiaModuleMarkdownVersion>1.4</doxiaModuleMarkdownVersion>
-    <guavaVersion>15.0</guavaVersion>
-    <jettyServerVersion>7.6.13.v20130916</jettyServerVersion>
+    <guavaVersion>17.0</guavaVersion>
     <junitVersion>4.11</junitVersion>
     <mavenSitePluginVersion>3.3</mavenSitePluginVersion>
-    <mavenWagonSshVersion>2.6</mavenWagonSshVersion>
     <metainfServicesVersion>1.5</metainfServicesVersion>
-    <opennmsVersion>1.12.5</opennmsVersion>
-    <slf4jVersion>1.7.5</slf4jVersion>
+    <opennmsVersion>1.12.8</opennmsVersion>
+    <slf4jVersion>1.7.7</slf4jVersion>
+    <groovyVersion>2.3.3</groovyVersion>
+    <beanshellVersion>2.0b5</beanshellVersion>
+    <jettyServerVersion>7.6.13.v20130916</jettyServerVersion>
+    <apacheDerbyVersion>10.10.2.0</apacheDerbyVersion>
+    <postgresqlDriverVersion>9.1-901-1.jdbc4</postgresqlDriverVersion>
+    <mysqlConnectorVersion>5.1.31</mysqlConnectorVersion>
+    <httpComponentsVersion>4.3.4</httpComponentsVersion>
   </properties>
 
   <dependencies>
@@ -147,9 +152,22 @@
         <version>${metainfServicesVersion}</version>
         <scope>provided</scope>
       </dependency>
+      
+      <dependency>
+        <groupId>org.codehaus.groovy</groupId>
+        <artifactId>groovy-all</artifactId>
+        <version>${groovyVersion}</version>
+      </dependency>
+      
+      <dependency>
+        <groupId>org.beanshell</groupId>
+        <artifactId>bsh</artifactId>
+        <version>${beanshellVersion}</version>
+      </dependency>
+      
     </dependencies>
   </dependencyManagement>
-
+  
   <build>
     <plugins>
       <plugin>

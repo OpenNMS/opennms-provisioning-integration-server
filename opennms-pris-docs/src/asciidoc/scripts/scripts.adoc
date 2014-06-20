@@ -8,7 +8,7 @@ To use a script step add a `script` property to the ´requisition.properties` fi
 Multiple scripts can be executed by adding multiple comma separated references to script files to the script property.
 The script will be executed after the mapper has been applied.
 The script will be executed by Apache-BSF.
-By default Groovy 2.2.2 and Beanshell 2.0b5 are supported.
+By default Groovy 2.3.3 and Beanshell 2.0b5 are supported.
 
 A script steps are configured in the `requisition.properties` for the requisition.
 

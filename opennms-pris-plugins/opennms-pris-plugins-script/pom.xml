@@ -14,23 +14,16 @@
     <packaging>jar</packaging>
     
     <name>OpenNMS :: Provisioning Integration Server :: Plugins :: Script</name>
-    
-    <properties>
-        <beanshellVersion>2.0b5</beanshellVersion>
-        <groovyVersion>2.2.2</groovyVersion>
-    </properties>
-    
+        
     <dependencies>
         <!-- Languages -->
         <dependency>
             <groupId>org.beanshell</groupId>
             <artifactId>bsh</artifactId>
-            <version>${beanshellVersion}</version>
         </dependency>
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-all</artifactId>
-            <version>${groovyVersion}</version>
         </dependency>
     </dependencies>
     

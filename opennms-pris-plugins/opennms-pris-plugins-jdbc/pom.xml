@@ -15,12 +15,6 @@
     
     <name>OpenNMS :: Provisioning Integration Server :: Plugins :: JDBC</name>
     
-    <properties>
-        <apacheDerbyVersion>10.10.1.1</apacheDerbyVersion>
-        <postgresqlDriverVersion>9.1-901-1.jdbc4</postgresqlDriverVersion>
-        <mysqlConnectorVersion>5.1.28</mysqlConnectorVersion>
-    </properties>
-    
     <dependencies>
         <!-- Database Drivers -->
         <dependency>
