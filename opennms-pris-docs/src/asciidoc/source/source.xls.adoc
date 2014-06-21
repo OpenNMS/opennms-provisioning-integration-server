@@ -1,5 +1,5 @@
 
-[[script-source]]
+[[xls-source]]
 === XLS Source
 The `xls` reads a _XLS_ spreadsheet file and creates an _OpenNMS requisition_ based on the worksheet content.
 
