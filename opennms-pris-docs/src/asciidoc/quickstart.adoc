@@ -68,7 +68,7 @@ include::configs/examples/xlsExample/requisitions/myRouter/requisition.propertie
 include::configs/examples/xlsExample/requisitions/myRouter/requisition.properties[]
 ----
 
-It is not necessary to restart the _pris_ server if you change property files or the _XLS_ file.
+It is not necessary to restart the _PRIS_ server if you change property files or the _XLS_ file.
 All changes will be executed with the next request against the server.
 With the given configuration you see the result of the OpenNMS requisitions with the URL http://localhost:8000/requisitions/myRouter and http://localhost:8000/requisitions/myServer and can be used in _OpenNMS Provisiond_.
 

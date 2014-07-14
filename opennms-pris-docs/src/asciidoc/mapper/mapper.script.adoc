@@ -14,11 +14,11 @@ The following example runs your script in the the http://en.wikipedia.org/wiki/R
 source = ...
 
 ## Run a no operation mapper
-mapper = echo.mapper
+mapper = echo
 
 # run mapper script in JavaScript
 mapper.lang=javascript
-mapper.file = myGroovySource.js
+mapper.file = myJavaScriptSource.js
 ----
 
 If you don't set the language `lang` property the script engine tries to detect the language by evaluating the file extension.

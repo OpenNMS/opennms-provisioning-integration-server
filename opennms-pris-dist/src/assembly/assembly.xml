@@ -51,7 +51,16 @@
             <outputDirectory>./</outputDirectory>
             <fileMode>0644</fileMode>
         </fileSet>
-        
+
+        <fileSet>
+            <includes>
+                <include>**</include>
+            </includes>
+            <directory>${project.basedir}/../opennms-pris-docs/src/asciidoc/configs/scriptsteps/</directory>
+            <outputDirectory>scriptsteps/default</outputDirectory>
+        </fileSet>
+
+       
         <fileSet>
             <includes>
                 <include>**</include>

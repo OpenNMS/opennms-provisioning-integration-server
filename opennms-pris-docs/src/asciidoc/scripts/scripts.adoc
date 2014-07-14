@@ -1,33 +1,72 @@
-
 [[scripts]]
 == Script Steps
-To provide easy customization options, scripts can be applied to the result of the mapper before the final requisition is delivered.
-Every script step can manipulate the requisition and has access to the raw result of the source.
-Additionally access to the configuration, logging and some helpers is available.
-To use a script step add a `script` property to the ´requisition.properties` file and reference the script file you want to run.
-Multiple scripts can be executed by adding multiple comma separated references to script files to the script property.
-The script will be executed after the mapper has been applied.
-The script will be executed by Apache-BSF.
-By default Groovy 2.3.3 and Beanshell 2.0b5 are supported.
+After the mapper has delivered its requitition multiple script steps can be used to customize the result.
+This script steps can change the requisition initially provided by the mapper.
+Script steps provide a requisition as there result, what allows the chaining of script steps.
+Every script step has access to the latest version of the requisition.
+The first script steps reads the requisition from the mapper. 
+The second script step reads the requisition privided by the first script step and so on.
+Additionally every script step can access the configuration of PRIS and the raw result of the source.
+The script will be executed by Apache-BSF. There for all Apache-BSF supported languages can be used to write script steps.
+By default runtimes for Groovy 2.3.3 and Beanshell 2.0b5 are provided out of the box.
 
-A script steps are configured in the `requisition.properties` for the requisition.
+Script steps are configured in the `requisition.properties` for the requisition.
 
 ----
 /opt/opennms-pris
 └── requisitions
-    └── myRequisitionConfiguration
-        └── requisition.properties
+|   └── myRequisitionConfiguration
+|       └── requisition.properties
+└── scriptsteps
+    └── default
+    |   └── reverseDNS.groovy
+    |   └── requisitionRename.groovy
+    |   └── IgnoreNodeByCategory.groovy
+    └── custom
+        └── myScript.groovy
 ----
 
-Every script step is provided with the following parameter:
+.How to add script steps
+[source,bash]
+----
+### File: requisition.properties
 
-* A Path object called `script` that points the the script file
-* A Object called data, that contains a Computers or SnmpDevices object, depending on the source that is used.
-* A Requisition object called requisition with the mappings result from the mapper.
-* A Logger object called `logger` from the slf4j project.
-* A Configuration object called `config` that contains all configured parameters, from the `apache.commons.configuration` framework.
-* An instance of the InterfaceUtils called `interfaceUtils`, that provides the black- and whitelisting.
+## source configuration part
+source = ...
 
-Every script step has the provide a Requisition object as its result.
+## Run a no operation mapper
+mapper = echo
+
+# run script step
+script.file = ../../scriptsteps/default/requisitionRename.groovy, ../../scriptsteps/default/IgnoreNodeByCategory.groovy
+----
+
+.Example script step 1
+[source,java]
+----
+include::../configs/scriptsteps/requisitionRename.groovy[]
+----
+
+.Example script step 2
+[source,java]
+----
+include::../configs/scriptsteps/IgnoreNodeByCategory.groovy[]
+----
+
+.Example script step 3
+[source,java]
+----
+include::../configs/scriptsteps/reverseDNS.groovy[]
+----
+
+
+Every script step can reference variable from the runtime of PRIS. The following script shows the provided objects:
+
+.Example script step 4
+[source,java]
+----
+include::../configs/scriptsteps/sample.groovy[]
+----
+
+Every script step has to provide a Requisition object as its result.
 For every request of a requisition each script step is reloaded.
-As a reference the folder `examples` contains examples for different sources.
