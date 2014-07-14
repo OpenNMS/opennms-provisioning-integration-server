@@ -1,44 +1,102 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
   <parent>
     <groupId>org.opennms</groupId>
-    <artifactId>pris-parent</artifactId>
-    <version>1.0.7</version>
+    <artifactId>opennms-pris-parent</artifactId>
+    <version>1.1.0</version>
   </parent>
-  <modelVersion>4.0.0</modelVersion>
+
   <artifactId>opennms-pris-docs</artifactId>
+
   <name>OpenNMS :: Provisioning Integration Server :: Docs</name>
+
   <packaging>pom</packaging>
+
   <build>
+    <extensions>
+      <extension>
+        <groupId>org.apache.maven.wagon</groupId>
+        <artifactId>wagon-ssh</artifactId>
+        <version>${wagonSshVersion}</version>
+      </extension>
+    </extensions>
     <plugins>
+      <!-- we need this to copy the images to the generated-docs output directory,
+      otherwise images would not be part of the generated-docs -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-site-plugin</artifactId>
-        <version>${mavenSitePluginVersion}</version>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>2.6</version>
         <executions>
           <execution>
+            <id>copy-resources</id>
+            <phase>generate-resources</phase>
             <goals>
-              <goal>site</goal>
+              <goal>copy-resources</goal>
             </goals>
-            <phase>package</phase>
+            <configuration>
+              <outputDirectory>${asciidoc.output.directory}/${asciidoc.images.directory}</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>${asciidoc.source.directory}/${asciidoc.images.directory}</directory>
+                  <filtering>false</filtering>
+                </resource>
+              </resources>
+            </configuration>
           </execution>
         </executions>
-        <dependencies>
-          <dependency>
-            <groupId>org.apache.maven.doxia</groupId>
-            <artifactId>doxia-module-markdown</artifactId>
-            <version>${doxiaModuleMarkdownVersion}</version>
-          </dependency>
-          <dependency><!-- add support for ssh/scp -->
-            <groupId>org.apache.maven.wagon</groupId>
-            <artifactId>wagon-ssh</artifactId>
-            <version>${mavenWagonSshVersion}</version>
-          </dependency>
-        </dependencies>
+      </plugin>
+      <plugin>
+        <groupId>org.asciidoctor</groupId>
+        <artifactId>asciidoctor-maven-plugin</artifactId>
+        <version>0.1.4</version>
+        <executions>
+          <execution>
+            <id>output-html</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>process-asciidoc</goal>
+            </goals>
+            <configuration>
+              <sourceHighlighter>prettify</sourceHighlighter>
+              <backend>html5</backend>
+            </configuration>
+          </execution>
+        </executions>
         <configuration>
-          <generateReports>false</generateReports>
+          <headerFooter>true</headerFooter>
+          <sourceDirectory>${asciidoc.source.directory}</sourceDirectory>
+          <outputDirectory>${asciidoc.output.directory}</outputDirectory>
+          <imagesDir>./</imagesDir>
+          <attributes>
+            <docVersion>${project.version}</docVersion>
+          </attributes>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>wagon-maven-plugin</artifactId>
+        <version>${wagonPluginVersion}</version>
+        <configuration>
+          <serverId>opennms-pris-docs</serverId>
+          <fromDir>${project.build.directory}/generated-docs</fromDir>
+          <includes>**</includes>
+          <excludes>pom.xml</excludes>
+          <url>scp://www.opennms.eu/var/www/docs/opennms-pris</url>
+          <toDir>${project.version}</toDir>
+        </configuration>
+        <executions>
+          <execution>
+            <id>upload-docs</id>
+            <phase>deploy</phase>
+            <goals>
+              <goal>upload</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

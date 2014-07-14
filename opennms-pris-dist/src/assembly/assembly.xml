@@ -2,31 +2,80 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
     <id>release-archive</id>
+    
     <formats>
         <format>zip</format>
         <format>tar.gz</format>
     </formats>
+    
     <fileSets>
         <fileSet>
             <includes>
-                <include>PRIS.jar</include>
+                <include>opennms-pris.jar</include>
             </includes>
             <directory>${project.basedir}/target</directory>
             <outputDirectory>./</outputDirectory>
         </fileSet>
+        
+        <fileSet>
+            <includes>
+                <include>opennms-pris.sh</include>
+                <include>opennms-pris.service</include>
+            </includes>
+            <directory>${project.basedir}/src/main/resources</directory>
+            <outputDirectory>./</outputDirectory>
+            <fileMode>0755</fileMode>
+        </fileSet>
+        
         <fileSet>
             <includes>
                 <include>**</include>
             </includes>
-            <directory>${project.basedir}/../opennms-pris/src/examples/</directory>
+            <directory>${project.basedir}/../opennms-pris-docs/src/asciidoc/configs/examples/</directory>
             <outputDirectory>examples</outputDirectory>
         </fileSet>
+
         <fileSet>
             <includes>
                 <include>**</include>
             </includes>
-            <directory>${project.basedir}/../opennms-pris-docs/target/site/</directory>
+            <directory>${project.basedir}/../opennms-pris-docs/src/asciidoc/configs/examples/xlsExample/requisitions/</directory>
+            <outputDirectory>requisitions</outputDirectory>
+        </fileSet>
+
+        <fileSet>
+            <includes>
+                <include>global.properties</include>
+            </includes>
+            <directory>${project.basedir}/../opennms-pris-docs/src/asciidoc/configs/examples/xlsExample</directory>
+            <outputDirectory>./</outputDirectory>
+            <fileMode>0644</fileMode>
+        </fileSet>
+
+        <fileSet>
+            <includes>
+                <include>**</include>
+            </includes>
+            <directory>${project.basedir}/../opennms-pris-docs/src/asciidoc/configs/scriptsteps/</directory>
+            <outputDirectory>scriptsteps</outputDirectory>
+        </fileSet>
+
+       
+        <fileSet>
+            <includes>
+                <include>**</include>
+            </includes>
+            <directory>${project.basedir}/../opennms-pris-docs/target/generated-docs/</directory>
             <outputDirectory>documentation</outputDirectory>
         </fileSet>
     </fileSets>
+    
+    <dependencySets>
+        <dependencySet>
+            <outputDirectory>lib</outputDirectory>
+            <includes>
+                <include>${project.groupId}:opennms-pris-plugins-*:jar:shaded</include>
+            </includes>
+        </dependencySet>
+    </dependencySets>
 </assembly>

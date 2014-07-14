@@ -1,0 +1,88 @@
+[[introduction]]
+== Introduction
+If you have a large network and discovery doesn't help it helps to find a truth of source for starting to fill your management system.
+The provisioning integration server _PRIS_ is a software which helps you to integrate OpenNMS to single or multiple external inventory systems.
+It gives you several steps to integrate, transform, cleanup and merge your extracted data before you provide the data into OpenNMS.
+The result of _PRIS_ is the OpenNMS requisition model which can be read from OpenNMS Provisiond.
+
+The service is used to provide an integration point for _OpenNMS_ external inventories or home brew inventories.
+With pris the data is normalized to the _OpenNMS_ requisition model and can be consumed from _OpenNMS provisiond_.
+It is highly specialized to enrich the requisition model with _SNMP_ information i.e. _SNMP_ interfaces, generic _SNMP_ attributes like system location, contact and the system description.
+Beside that _Provisiond_ can also run service detectors against IP interfaces and allows to run policies to control the monitoring behavior.
+_Pris_ is an instance in front of _Provisiond_, it allows to aggregate information from different sources and manipulate them in a flexible way.
+
+The output from _PRIS_ is provided as _XML_ over _HTTP_ and can be used in _Provisiond_ to import and discover services and SNMP data from.
+In OpenNMS a requisition is a set of nodes where you want to import network devices into OpenNMS for monitoring and management.
+You can assign in OpenNMS services, detectors and policies to model the network monitoring behavior.
+For this reason a good practics is to organize nodes with a similar network monitoring profile in a requisition.
+The _PRIS_ components are shown in <<pris_overview>>.
+
+[[pris_overview]]
+=== Overview
+
+.OpenNMS PRIS overview
+image::images/pris-overview.png[OpenNMS PRIS overview]
+
+The components from left to right are described as followed:
+
+- **OpenNMS Provisiond**: This is the internal daemon is responsible to get network devices into OpenNMS. Provisiond scans for SNMP information, network services and has to model the network monitoring behavior for OpenNMS.
+- **Driver**: The driver is the method how to present the data from _PRIS_ to _OpenNMS_. It is only possible to configure _one_ driver per _PRIS_ instance
+- **OpenNMS Requisition**: The data model which has to be build inside of _PRIS_. This is the shared model between _OpenNMS_ and _PRIS_.
+- **Requisition configuration**: The description of the integration of your external datasource. A requisition configuration defines which source should be used or which scripts should be applied to modify or transform the data before they are provided into _OpenNMS Provisiond_.
+- **Mapper Script**: The mapper script is the last script executed before it goes to _OpenNMS Provisiond_ through the driver. You can use a mapper script to enrich the requisition, remove nodes or replace OpenNMS requistion node attributes.
+- **Custom Scripts**: In some cases a external inventory has a own data model, e.g. OCS Inventory. The script source can be used to map the external inventory specific model into the OpenNMS requisition model.
+- **Source**: This is the specific implementation retrieving the data for from your external inventory.
+- **External Inventory**: The inventory you want to import data for OpenNMS. It could be a free application like phpIPAM, idoIT, ITIL ticket system like OTRS, a simple spreadsheet or just another OpenNMS instance.
+
+[[pris-intro-file-and-folder-structure]]
+=== Files and Folder structure
+
+The latest release of _PRIS_ can be downloaded from the https://github.com/OpenNMS/opennms-provisioning-integration-server/releases[github release] page of the project.
+It is recommended to extract the tar.gz content to `/opt/opennms-pris`.
+The examples and the documentation are build based on this file structure.
+It is possible to install _PRIS_ in a different directory and you have to take care about adapting the paths in this documentation.
+
+After extracting the archive the file structure should look like this:
+
+----
+.
+├── documentation <1>
+├── examples <2>
+|   ├── fileExample
+|   ├── httpExample
+|   ├── jdbcExample
+|   ├── mergeExample
+|   ├── ocsExample
+|   ├── scriptExample
+|   └── xlsExample
+├── global.properties <3>
+├── lib <4>
+├── opennms-pris.jar <5>
+├── opennms-pris.service <6>
+├── opennms-pris.sh <7>
+├── requisitions <8>
+└── scriptsteps <9>
+    ├── custom <10>
+    └── default <11>
+----
+<1> This documentation in HTML format, if you run _PRIS_ in HTTP mode you can access the documentation with http://<your-ip>:<port>/documentation
+<2> Configuration examples for requisitions for every available source
+<3> Default configuration for _PRIS_ to run in HTTP mode on port `8000`
+<4> Libraries for the different sources which can be used with _PRIS_
+<5> Main application which is started with `java -jar`
+<6> Init script for CentOS or Debian systems running in HTTP mode
+<7> Wrapper script to run in `file` mode, e.g. as cronjob
+<8> Configuration directory for all requisitions to integrate inventories
+<9> Default folder for scripts which are used in requisition configurations to manipulate the inventory import
+<10> Drop-in for your custom created scripts
+<11> Drop-in for default ready to use scripts
+
+_Pris_ needs at minimum two configuration files.
+First one is called `global.properties`, it controls the general behavior of the provisioning integration server.
+A requisition is just a directory in the application server directory `requisitions` and has to contain a file called `requisition.properties`.
+The directory name is used to access the requisition.
+
+You can create multiple requisitions using different sources, by creating a directory for each requisition with a `requisition.properties` inside.
+The `global.properties` and the directories with your requisitions has to be in the same directory where the `java -jar opennms-pris.jar` command is called.
+By default we suggest to install your `opennms-pris.jar` to `/opt/opennms-pris`.
+If you want to provide the _OpenNMS_ requisitions via _HTTP_ from the build in _Jetty_ web server as background daemon, you can use the init script in `opennms-pris/src/examples/opennms-pris`.
