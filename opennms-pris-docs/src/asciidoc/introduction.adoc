@@ -65,14 +65,12 @@ After extracting the archive the file structure should look like this:
     ├── custom <10>
     └── default <11>
 ----
-
 <1> This documentation in HTML format, if you run _PRIS_ in HTTP mode you can access the documentation with http://<your-ip>:<port>/documentation
 <2> Configuration examples for requisitions for every available source
 <3> Default configuration for _PRIS_ to run in HTTP mode on port `8000`
 <4> Libraries for the different sources which can be used with _PRIS_
 <5> Main application which is started with `java -jar`
 <6> Init script for CentOS or Debian systems running in HTTP mode
-<5> Folder for a specific inventory, the folder name is used to access the configuration.
 <7> Wrapper script to run in `file` mode, e.g. as cronjob
 <8> Configuration directory for all requisitions to integrate inventories
 <9> Default folder for scripts which are used in requisition configurations to manipulate the inventory import
