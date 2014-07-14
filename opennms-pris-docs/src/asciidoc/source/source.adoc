@@ -1,5 +1,5 @@
 
-[[Source]]
+[[source]]
 == Source
 
 A Source is used to get the data to build an _OpenNMS requisition_.

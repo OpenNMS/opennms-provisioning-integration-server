@@ -18,6 +18,8 @@ For this reason a good practics is to organize nodes with a similar network moni
 The _PRIS_ components are shown in <<pris_overview>>.
 
 [[pris_overview]]
+=== Overview
+
 .OpenNMS PRIS overview
 image::images/pris-overview.png[OpenNMS PRIS overview]
 
@@ -32,6 +34,9 @@ The components from left to right are described as followed:
 - **Source**: This is the specific implementation retrieving the data for from your external inventory.
 - **External Inventory**: The inventory you want to import data for OpenNMS. It could be a free application like phpIPAM, idoIT, ITIL ticket system like OTRS, a simple spreadsheet or just another OpenNMS instance.
 
+[[pris-intro-file-and-folder-structure]]
+=== Files and Folder structure
+
 The latest release of _PRIS_ can be downloaded from the https://github.com/OpenNMS/opennms-provisioning-integration-server/releases[github release] page of the project.
 It is recommended to extract the tar.gz content to `/opt/opennms-pris`.
 The examples and the documentation are build based on this file structure.
@@ -40,30 +45,39 @@ It is possible to install _PRIS_ in a different directory and you have to take c
 After extracting the archive the file structure should look like this:
 
 ----
-/opt/opennms-pris
 .
 ├── documentation <1>
 ├── examples <2>
-├── lib <3>
-├── requisitions <4>
-│   └── myRequisition <5>
-│       └── requisitions.properties <6>
-├── global.properties <7>
-├── opennms-pris.jar <8>
-├── opennms-pris.sh <9>
-└── opennms-pris.service <10>
+|   ├── fileExample
+|   ├── httpExample
+|   ├── jdbcExample
+|   ├── mergeExample
+|   ├── ocsExample
+|   ├── scriptExample
+|   └── xlsExample
+├── global.properties <3>
+├── lib <4>
+├── opennms-pris.jar <5>
+├── opennms-pris.service <6>
+├── opennms-pris.sh <7>
+├── requisitions <8>
+└── scriptsteps <9>
+    ├── custom <10>
+    └── default <11>
 ----
-<1> This documentation in HTML format, if you run _PRIS_ in HTTP mode you can access the documentation with +
-http://<your-ip>:<port>/documentation
-<2> Configuration examples and scripts
-<3> Libraries for the different sources which can be used with _PRIS_
-<4> Folder which contains the requisition configuration for different inventories
+
+<1> This documentation in HTML format, if you run _PRIS_ in HTTP mode you can access the documentation with http://<your-ip>:<port>/documentation
+<2> Configuration examples for requisitions for every available source
+<3> Default configuration for _PRIS_ to run in HTTP mode on port `8000`
+<4> Libraries for the different sources which can be used with _PRIS_
+<5> Main application which is started with `java -jar`
+<6> Init script for CentOS or Debian systems running in HTTP mode
 <5> Folder for a specific inventory, the folder name is used to access the configuration.
-<6> Configuration for sources, mapper and scripts for a specific inventory
-<7> Global configuration for the _PRIS_ server
-<8> Main application which is started with `java -jar`
-<9> Wrapper script to run in `file` mode, e.g. as cronjob
-<10> Init script for CentOS or Debian systems running in HTTP mode
+<7> Wrapper script to run in `file` mode, e.g. as cronjob
+<8> Configuration directory for all requisitions to integrate inventories
+<9> Default folder for scripts which are used in requisition configurations to manipulate the inventory import
+<10> Drop-in for your custom created scripts
+<11> Drop-in for default ready to use scripts
 
 _Pris_ needs at minimum two configuration files.
 First one is called `global.properties`, it controls the general behavior of the provisioning integration server.
