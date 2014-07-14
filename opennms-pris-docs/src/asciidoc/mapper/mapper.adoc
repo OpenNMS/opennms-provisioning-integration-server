@@ -20,11 +20,11 @@ A mapper is configured in the `requisition.properties` for the requisition.
 
 [[echo-mapper]]
 === No-operation echo mapper
-The `echo.mapper` is a mapper that forwards the result of the source directly.
-That requires the source to provide a requisition it self.
+The `echo` mapper is a mapper that forwards the result of the source directly.
+That requires the source to provide a requisition already and not a custom model.
 This mapper dose not change the result of the source.
 
 [[null-mapper]]
 === Empty requisition mapper
-The `null.mapper` is a special mapper that just provides an empty requisition.
+The `null` mapper is a special mapper that just provides an empty requisition.
 This can be usefull to handle the entire mapping between the result of the source and the OpenNMS requisition in a script step.

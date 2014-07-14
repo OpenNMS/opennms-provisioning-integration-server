@@ -44,19 +44,19 @@ script.file = ../../scriptsteps/default/requisitionRename.groovy, ../../scriptst
 .Example script step 1
 [source,java]
 ----
-include::../configs/scriptsteps/requisitionRename.groovy[]
+include::../configs/scriptsteps/default/requisitionRename.groovy[]
 ----
 
 .Example script step 2
 [source,java]
 ----
-include::../configs/scriptsteps/IgnoreNodeByCategory.groovy[]
+include::../configs/scriptsteps/default/IgnoreNodeByCategory.groovy[]
 ----
 
 .Example script step 3
 [source,java]
 ----
-include::../configs/scriptsteps/reverseDNS.groovy[]
+include::../configs/scriptsteps/default/reverseDNS.groovy[]
 ----
 
 
@@ -65,7 +65,7 @@ Every script step can reference variable from the runtime of PRIS. The following
 .Example script step 4
 [source,java]
 ----
-include::../configs/scriptsteps/sample.groovy[]
+include::../configs/scriptsteps/default/sample.groovy[]
 ----
 
 Every script step has to provide a Requisition object as its result.

@@ -57,7 +57,7 @@
                 <include>**</include>
             </includes>
             <directory>${project.basedir}/../opennms-pris-docs/src/asciidoc/configs/scriptsteps/</directory>
-            <outputDirectory>scriptsteps/default</outputDirectory>
+            <outputDirectory>scriptsteps</outputDirectory>
         </fileSet>
 
        
