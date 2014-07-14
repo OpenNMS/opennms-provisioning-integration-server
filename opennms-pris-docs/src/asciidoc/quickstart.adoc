@@ -29,17 +29,20 @@ We build the following file structure:
 .
 ├── documentation
 ├── examples
+├── global.properties
 ├── lib
+├── opennms-pris.jar
+├── opennms-pris.service
+├── opennms-pris.sh
 ├── requisitions/
 |   ├── myInventory.xls
-|   └── myRouter
+|   ├── myRouter
 |   |   └── requisition.properties
 |   └── myServer
 |       └── requisition.properties
-├── global.properties
-├── opennms-pris.jar
-├── opennms-pris.sh
-└── opennms-pris.service
+└── scriptsteps
+    ├── custom
+    └── default
 ----
 
 Providing the _OpenNMS requisition_ over _HTTP_ we create the following `global.properties`
