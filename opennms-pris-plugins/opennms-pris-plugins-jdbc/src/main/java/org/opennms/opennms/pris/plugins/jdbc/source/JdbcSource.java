@@ -19,25 +19,15 @@
  */
 package org.opennms.opennms.pris.plugins.jdbc.source;
 
-import org.opennms.pris.model.PrimaryType;
-import org.opennms.pris.model.Requisition;
-import org.opennms.pris.model.RequisitionAsset;
-import org.opennms.pris.model.RequisitionCategory;
-import org.opennms.pris.model.RequisitionInterface;
-import org.opennms.pris.model.RequisitionMonitoredService;
-import org.opennms.pris.model.RequisitionNode;
+import org.kohsuke.MetaInfServices;
+import org.opennms.pris.api.InstanceConfiguration;
 import org.opennms.pris.api.Source;
+import org.opennms.pris.model.*;
+import org.opennms.pris.util.RequisitionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.opennms.pris.api.InstanceConfiguration;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import org.kohsuke.MetaInfServices;
-import org.opennms.pris.model.AssetField;
-import org.opennms.pris.util.RequisitionUtils;
+
+import java.sql.*;
 
 /**
  * A JDBC data source allows to connect to an SQL database and extract data in a given format. The result set is mapped to an OpenNMS requisition.
@@ -80,7 +70,7 @@ public class JdbcSource implements Source {
 
         } catch (ClassNotFoundException e) {
 
-            LOGGER.error("JDBC Driver not found. Include it in class path.", e);
+            LOGGER.error("JDBC Driver not found in class path.", e);
             return null;
         }
 

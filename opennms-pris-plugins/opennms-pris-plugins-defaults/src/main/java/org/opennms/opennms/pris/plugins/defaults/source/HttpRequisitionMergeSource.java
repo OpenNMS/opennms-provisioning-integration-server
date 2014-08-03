@@ -25,7 +25,6 @@
  */
 package org.opennms.opennms.pris.plugins.defaults.source;
 
-import org.opennms.pris.util.RequisitionUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -34,8 +33,11 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.opennms.pris.model.PrimaryType;
+import org.kohsuke.MetaInfServices;
+import org.opennms.pris.api.InstanceConfiguration;
+import org.opennms.pris.api.Source;
 import org.opennms.pris.model.*;
+import org.opennms.pris.util.RequisitionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,9 +49,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
-import org.kohsuke.MetaInfServices;
-import org.opennms.pris.api.Source;
-import org.opennms.pris.api.InstanceConfiguration;
 
 /**
  * Source to merge two requisitions (A and B) provided via HTTP. The merge
@@ -105,11 +104,11 @@ public class HttpRequisitionMergeSource implements Source {
                     requisition = (Requisition) jaxbUnmarshaller.unmarshal(bufferedReader);
 
                 } catch (JAXBException e) {
-                    LOGGER.error("The responce did not contain a valid requisition as xml.", e);
+                    LOGGER.error("The response did not contain a valid requisition as xml.", e);
                 }
                 LOGGER.debug("Got Requisition {}", requisition);
             } catch (IOException ex) {
-                LOGGER.error("Requestiong requisition from {} faild", url, ex);
+                LOGGER.error("Requesting requisition from {} failed", url, ex);
                 return null;
             }
         } else {
