@@ -129,7 +129,9 @@ public class DefaultOcsComputerMapper implements Mapper {
         }
 
         requisitionNode.getCategories().addAll(interfaceUtils.populateCategories(computer, config, config.getInstanceIdentifier()));
-
+        
+        requisitionNode.getAssets().addAll(interfaceUtils.populateAssets(computer, config, config.getInstanceIdentifier()));
+        
         requisitionNode.getAssets().add(new RequisitionAsset("operatingSystem", AssetUtils.assetStringCleaner(computer.getHardware().getOsname(), 64)));
         requisitionNode.getAssets().add(new RequisitionAsset("cpu", AssetUtils.assetStringCleaner(computer.getHardware().getProcessort(), 64)));
         requisitionNode.getAssets().add(new RequisitionAsset("ram", AssetUtils.assetStringCleaner(computer.getHardware().getMemory() + " MB", 10)));

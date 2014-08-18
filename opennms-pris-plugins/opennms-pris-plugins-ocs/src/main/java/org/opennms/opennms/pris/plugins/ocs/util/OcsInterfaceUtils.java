@@ -25,29 +25,33 @@
  */
 package org.opennms.opennms.pris.plugins.ocs.util;
 
-import org.opennms.pris.util.InterfaceUtils;
-import org.opennms.pris.model.RequisitionCategory;
-import org.opennms.ocs.inventory.client.response.Computer;
-import org.opennms.ocs.inventory.client.response.Entry;
-import org.opennms.ocs.inventory.client.response.Network;
-import org.opennms.ocs.inventory.client.response.snmp.SnmpDevice;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import org.opennms.ocs.inventory.client.response.Computer;
+import org.opennms.ocs.inventory.client.response.Entry;
+import org.opennms.ocs.inventory.client.response.Network;
+import org.opennms.ocs.inventory.client.response.snmp.SnmpDevice;
 import org.opennms.pris.api.InstanceConfiguration;
+import org.opennms.pris.model.RequisitionAsset;
+import org.opennms.pris.model.RequisitionCategory;
+import org.opennms.pris.util.InterfaceUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class OcsInterfaceUtils extends InterfaceUtils {
-    private static final Logger LOGGER = LoggerFactory.getLogger(OcsInterfaceUtils.class);
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(OcsInterfaceUtils.class);
+    private final String CONFIG_PARAMETER_ASSET_MAP = "assetMap";
+    private final String CONFIG_PARAMETER_CATEGORY_MAP = "categoryMap";
+    
     public OcsInterfaceUtils(final InstanceConfiguration config) {
         super(config);
     }
-    
+
     /**
      * Returns null if no Network was found that is whitelisted and not
      * blacklisted.
@@ -139,13 +143,15 @@ public class OcsInterfaceUtils extends InterfaceUtils {
     }
 
     public List<RequisitionCategory> populateCategories(Computer myComputer, InstanceConfiguration config, String instance) {
+        LOGGER.info("Mapping OCS-Accountinfo to Categories");
+        
         List<RequisitionCategory> categories = new ArrayList<>();
 
-        if (config.getString("categoryMap") != null && !config.getString("categoryMap").isEmpty()) {
+        if (config.getString(CONFIG_PARAMETER_CATEGORY_MAP) != null && !config.getString(CONFIG_PARAMETER_CATEGORY_MAP).isEmpty()) {
             Properties catMap = new Properties();
             try {
-                File categoryMap = new File(config.getString("categoryMap"));
-                catMap.load(new FileInputStream(instance + File.separator + categoryMap));
+                File categoryMap =  config.getPath(CONFIG_PARAMETER_CATEGORY_MAP).toFile();
+                catMap.load(new FileInputStream(categoryMap));
                 LOGGER.info("Loaded properties from {}", categoryMap.getAbsolutePath());
             } catch (IOException e) {
                 LOGGER.error("Could not read category mappings from", e);
@@ -165,5 +171,37 @@ public class OcsInterfaceUtils extends InterfaceUtils {
             }
         }
         return categories;
+    }
+
+    public List<RequisitionAsset> populateAssets(Computer myComputer, InstanceConfiguration config, String instance) {
+        LOGGER.info("Mapping OCS-Accountinfo to Assets");
+        
+        List<RequisitionAsset> assets = new ArrayList<>();
+        
+        if (config.getString(CONFIG_PARAMETER_ASSET_MAP) != null && !config.getString(CONFIG_PARAMETER_ASSET_MAP).isEmpty()) {
+            Properties categoryMap = new Properties();
+            try {
+                File assetMappingFile = config.getPath(CONFIG_PARAMETER_ASSET_MAP).toFile();
+                categoryMap.load(new FileInputStream(assetMappingFile));
+                LOGGER.info("Loaded properties from {}", assetMappingFile.getAbsolutePath());
+            } catch (IOException e) {
+                LOGGER.error("Could not read asset mappings from", e);
+                throw new RuntimeException(e);
+            }
+
+            for (Entry ocsAccountInfoEntry : myComputer.getAccountInfo().getEntries()) {
+                if (ocsAccountInfoEntry.getValue().isEmpty()) {
+                    continue;
+                }
+                LOGGER.info("On computer {} got an accountinfo entry called {} with value {}", myComputer.getHardware().getName(), ocsAccountInfoEntry.getName(), ocsAccountInfoEntry.getValue());
+                if (categoryMap.containsKey(ocsAccountInfoEntry.getName())) {
+                    RequisitionAsset asset = new RequisitionAsset(categoryMap.getProperty(ocsAccountInfoEntry.getName()), ocsAccountInfoEntry.getValue());
+                    assets.add(asset);
+                } else {
+                    LOGGER.info("NOT Adding accountinfo data {}.{} as asset to node {}", ocsAccountInfoEntry.getName(), ocsAccountInfoEntry.getValue(), myComputer.getHardware().getName());
+                }
+            }
+        }
+        return assets;
     }
 }
