@@ -33,6 +33,9 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.kohsuke.MetaInfServices;
+import org.opennms.pris.api.InstanceConfiguration;
+import org.opennms.pris.api.Source;
 import org.opennms.pris.model.Requisition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,9 +45,6 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import org.kohsuke.MetaInfServices;
-import org.opennms.pris.api.Source;
-import org.opennms.pris.api.InstanceConfiguration;
 
 /**
  * A external OpenNMS requisition provided through HTTP
@@ -103,7 +103,7 @@ public class HttpRequisitionSource implements Source {
             LOGGER.error("Parameter requisition.url is missing in requisition.properties");
         }
         if (requisition == null) {
-            LOGGER.error("Requisition is null for unkown reasons");
+            LOGGER.error("Requisition is null for unknown reasons");
             return null;
         }
         LOGGER.info("HttpRequisitionSource delivered for requisition '{}'", requisition.getNodes().size());

@@ -78,7 +78,7 @@ public class DefaultOcsSnmpDevicesMapper implements Mapper {
             requisitionInterface.getMonitoredServices().add(new RequisitionMonitoredService().withServiceName("ICMP"));
             requisitionNode.getInterfaces().add(requisitionInterface);
         } else {
-            LOGGER.warn("snmpDevice '{}' named '{}' whith ipAddress '{}', is not valid follworing black- and whitelists.", snmpDevice.getSNMP().getId(), snmpDevice.getSNMP().getName(), snmpDevice
+            LOGGER.warn("snmpDevice '{}' named '{}' whith ipAddress '{}', is not valid following black- and whitelists.", snmpDevice.getSNMP().getId(), snmpDevice.getSNMP().getName(), snmpDevice
                         .getSNMP().getIPAddr());
         }
         final String ocsSnmpDeviceLink = "<a href=" + this.config.getString("url") + "/ocsreports/index.php?function=snmp_detail&head=1&id=" + snmpDevice.getSNMP().getId() + ">OCS-Inventory</a>";
