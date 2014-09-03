@@ -20,7 +20,7 @@ public class XlsSourceTest {
 
     private XlsSource xlsSource;
 
-    private XMLGregorianCalendarImpl xMLGregorianCalendarImpl = new XMLGregorianCalendarImpl((GregorianCalendar) GregorianCalendar.getInstance());
+    private final XMLGregorianCalendarImpl xMLGregorianCalendarImpl = new XMLGregorianCalendarImpl((GregorianCalendar) GregorianCalendar.getInstance());
 
     @Before
     public void setUp() {
