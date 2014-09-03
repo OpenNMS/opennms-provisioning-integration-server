@@ -151,7 +151,9 @@ public class OcsInterfaceUtils extends InterfaceUtils {
             Properties catMap = new Properties();
             try {
                 File categoryMap =  config.getPath(CONFIG_PARAMETER_CATEGORY_MAP).toFile();
-                catMap.load(new FileInputStream(categoryMap));
+                try (FileInputStream fileInputStream = new FileInputStream(categoryMap)) {
+                    catMap.load(fileInputStream);
+                }
                 LOGGER.info("Loaded properties from {}", categoryMap.getAbsolutePath());
             } catch (IOException e) {
                 LOGGER.error("Could not read category mappings from", e);
@@ -182,7 +184,9 @@ public class OcsInterfaceUtils extends InterfaceUtils {
             Properties categoryMap = new Properties();
             try {
                 File assetMappingFile = config.getPath(CONFIG_PARAMETER_ASSET_MAP).toFile();
-                categoryMap.load(new FileInputStream(assetMappingFile));
+                try (FileInputStream fileInputStream = new FileInputStream(assetMappingFile)) {
+                    categoryMap.load(fileInputStream);
+                }
                 LOGGER.info("Loaded properties from {}", assetMappingFile.getAbsolutePath());
             } catch (IOException e) {
                 LOGGER.error("Could not read asset mappings from", e);
