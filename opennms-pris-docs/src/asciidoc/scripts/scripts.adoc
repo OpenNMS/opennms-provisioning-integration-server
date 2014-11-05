@@ -1,13 +1,13 @@
 [[scripts]]
 == Script Steps
-After the mapper has delivered its requitition multiple script steps can be used to customize the result.
+After the mapper has delivered its requitition, multiple script steps can be used to customize the result.
 This script steps can change the requisition initially provided by the mapper.
 Script steps provide a requisition as there result, what allows the chaining of script steps.
 Every script step has access to the latest version of the requisition.
 The first script steps reads the requisition from the mapper.
 The second script step reads the requisition privided by the first script step and so on.
 Additionally every script step can access the configuration of PRIS and the raw result of the source.
-The script will be executed by Apache-BSF. There for all Apache-BSF supported languages can be used to write script steps.
+The script steps are executed by the JVM following the JSR-223 specification. There for all JSR-223 supported languages can be used to write script steps.
 By default runtimes for Groovy 2.3.3 and Beanshell 2.0b5 are provided out of the box.
 
 Script steps are configured in the `requisition.properties` for the requisition.
