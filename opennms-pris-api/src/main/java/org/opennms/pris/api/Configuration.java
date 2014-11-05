@@ -26,6 +26,7 @@
 package org.opennms.pris.api;
 
 import java.nio.file.Path;
+import java.util.List;
 
 /**
  * Container for a configuration.
@@ -105,10 +106,10 @@ public interface Configuration {
     int getInt(final String key,
                final int defaultValue);
 
-    /**
+   /**
      * Get a path associated with the given configuration key.
      *
-     * The returned path is resolved to the base directory if the instance
+     * The returned path is resolved to the base directory of the instance
      * configuration.
      *
      * @param key The configuration key
@@ -117,6 +118,19 @@ public interface Configuration {
      */
     Path getPath(final String key);
 
+   /**
+     * Get all pathes associated with the given configuration key.
+     * 
+     * The returned pathes are resolved to the base directory of the instance
+     * configuration.
+     *
+     * @param key The configuration key
+     *
+     * @return A List of the associated pathes
+     */
+    List<Path> getPathes(final String key);
+
+        
     /**
      * Get a path associated with the given configuration key.
      *

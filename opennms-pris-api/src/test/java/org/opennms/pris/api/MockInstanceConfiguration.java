@@ -21,7 +21,9 @@ package org.opennms.pris.api;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MockInstanceConfiguration implements InstanceConfiguration {
@@ -102,6 +104,11 @@ public class MockInstanceConfiguration implements InstanceConfiguration {
     }
 
     @Override
+    public List<Path> getPathes(String key) {
+        return this.get(key);
+    }
+    
+    @Override
     public Path getPath(final String key,
                         final Path defaultValue) {
         return this.get(key,
@@ -129,4 +136,5 @@ public class MockInstanceConfiguration implements InstanceConfiguration {
     public InstanceConfiguration subset(String prefix) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+
 }
