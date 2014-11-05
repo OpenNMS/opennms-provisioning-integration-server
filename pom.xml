@@ -40,7 +40,7 @@
     <junitVersion>4.11</junitVersion>
     <mavenSitePluginVersion>3.3</mavenSitePluginVersion>
     <metainfServicesVersion>1.5</metainfServicesVersion>
-    <opennmsVersion>1.12.8</opennmsVersion>
+    <opennmsVersion>14.0.0</opennmsVersion>
     <slf4jVersion>1.7.7</slf4jVersion>
     <groovyVersion>2.3.3</groovyVersion>
     <beanshellVersion>2.0b5</beanshellVersion>
@@ -100,9 +100,10 @@
       </dependency>
 
       <!-- OpenNMS -->
-      <dependency>
+
+    <dependency>
         <groupId>org.opennms</groupId>
-        <artifactId>opennms-import</artifactId>
+        <artifactId>opennms-provision-persistence</artifactId>
         <version>${opennmsVersion}</version>
         <classifier>xsds</classifier>
         <scope>compile</scope>
