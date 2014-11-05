@@ -42,8 +42,6 @@ public class ScriptManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ScriptManager.class);
 
-//    private static final ScriptEngineManager SCRIPT_ENGINE_MANAGER = new ScriptEngineManager(ScriptManager.class.getClassLoader());
-
     public static Object execute(final InstanceConfiguration config,
                                  final Map<String, Object> bindings) throws IOException, ScriptException {
         
@@ -56,9 +54,8 @@ public class ScriptManager {
         final ScriptEngineManager SCRIPT_ENGINE_MANAGER = new ScriptEngineManager(ScriptManager.class.getClassLoader());
 
         for (Path script : scripts) {
-            LOGGER.info("Processing Script '{}'", script.toString());
             
-            ScriptEngine scriptEngine = config.containsKey("lang")
+            final ScriptEngine scriptEngine = config.containsKey("lang")
                                           ? SCRIPT_ENGINE_MANAGER.getEngineByName(config.getString("lang"))
                                           : SCRIPT_ENGINE_MANAGER.getEngineByExtension(FilenameUtils.getExtension(script.toString()));
 
@@ -67,7 +64,7 @@ public class ScriptManager {
         }
         
         // Create some bindings for values available in the script
-        Bindings scriptBindings = scriptEngine.createBindings();
+        final Bindings scriptBindings = scriptEngine.createBindings();
         scriptBindings.put("script", script);
         scriptBindings.put("logger", LoggerFactory.getLogger(script.toString()));
         scriptBindings.put("config", config);
@@ -75,20 +72,16 @@ public class ScriptManager {
         scriptBindings.put("interfaceUtils", new InterfaceUtils(config));
         scriptBindings.putAll(bindings);
         
-        //overwrite requisition for the next scriptrun
+        // Overwrite initial requisition with the requisition from the previous script, if there was any.
         if (requisition != null) {
-            scriptBindings.put("requisiion", requisition);
+            scriptBindings.put("requisition", requisition);
         }
 
         // Evaluate the script and return the requisition created in the script
         try (final Reader scriptReader = Files.newBufferedReader(script, StandardCharsets.UTF_8)) {
             LOGGER.debug("Start Script {}", script);
-            final Object data = scriptEngine.eval(scriptReader, scriptBindings);
+            requisition = (Requisition) scriptEngine.eval(scriptReader, scriptBindings);
             LOGGER.debug("Done  Script {}", script);
-
-            //overwrite requisition for the next scriptrun
-            requisition = (Requisition) data;
-            LOGGER.info("Done with Script '{}'", script.toString());
         }
     }
         return requisition;

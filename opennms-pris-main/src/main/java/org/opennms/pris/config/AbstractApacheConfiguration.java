@@ -20,6 +20,7 @@
 package org.opennms.pris.config;
 
 import com.google.common.base.Joiner;
+import com.google.common.collect.ImmutableList;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -86,7 +87,7 @@ public abstract class AbstractApacheConfiguration implements Configuration {
         String[] pathStrings = this.config.getStringArray(key);
         
         for (String pathString : pathStrings) {
-            pathes.add(this.getBasePath().resolve(Paths.get(pathString)));
+            pathes.add(this.getBasePath().resolve(pathString));
         }
         
         return pathes;
