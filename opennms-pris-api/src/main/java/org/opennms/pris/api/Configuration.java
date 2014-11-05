@@ -119,16 +119,16 @@ public interface Configuration {
     Path getPath(final String key);
 
    /**
-     * Get all pathes associated with the given configuration key.
+     * Get all paths associated with the given configuration key.
      * 
-     * The returned pathes are resolved to the base directory of the instance
+     * The returned paths are resolved to the base directory of the instance
      * configuration.
      *
      * @param key The configuration key
      *
-     * @return A List of the associated pathes
+     * @return A List of the associated paths
      */
-    List<Path> getPathes(final String key);
+    List<Path> getPaths(final String key);
 
         
     /**

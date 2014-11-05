@@ -104,7 +104,7 @@ public class MockInstanceConfiguration implements InstanceConfiguration {
     }
 
     @Override
-    public List<Path> getPathes(String key) {
+    public List<Path> getPaths(String key) {
         return this.get(key);
     }
     

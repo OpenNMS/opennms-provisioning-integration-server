@@ -82,15 +82,15 @@ public abstract class AbstractApacheConfiguration implements Configuration {
     }
 
     @Override
-    public List<Path> getPathes(final String key) {
-        List<Path> pathes = new ArrayList<>();
+    public List<Path> getPaths(final String key) {
+        List<Path> paths = new ArrayList<>();
         String[] pathStrings = this.config.getStringArray(key);
         
         for (String pathString : pathStrings) {
-            pathes.add(this.getBasePath().resolve(pathString));
+            paths.add(this.getBasePath().resolve(pathString));
         }
         
-        return pathes;
+        return paths;
     }    
     
     @Override

@@ -47,7 +47,7 @@ public class ScriptManager {
         
         Requisition requisition = null;
         // Get the path to the script
-        final List<Path> scripts = config.getPathes("file");
+        final List<Path> scripts = config.getPaths("file");
         
         // Get the script engine by language defined in config or by extension if it
         // is not defined in the config
