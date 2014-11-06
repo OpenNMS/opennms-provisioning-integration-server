@@ -25,6 +25,7 @@ import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Map;
 import javax.script.Bindings;
 import javax.script.ScriptEngine;
@@ -32,6 +33,7 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import org.apache.commons.io.FilenameUtils;
 import org.opennms.pris.api.InstanceConfiguration;
+import org.opennms.pris.model.Requisition;
 import org.opennms.pris.util.InterfaceUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,17 +42,20 @@ public class ScriptManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ScriptManager.class);
 
-//    private static final ScriptEngineManager SCRIPT_ENGINE_MANAGER = new ScriptEngineManager(ScriptManager.class.getClassLoader());
-
     public static Object execute(final InstanceConfiguration config,
                                  final Map<String, Object> bindings) throws IOException, ScriptException {
+        
+        Requisition requisition = null;
         // Get the path to the script
-        final Path script = config.getPath("file");
-
+        final List<Path> scripts = config.getPaths("file");
+        
         // Get the script engine by language defined in config or by extension if it
         // is not defined in the config
         final ScriptEngineManager SCRIPT_ENGINE_MANAGER = new ScriptEngineManager(ScriptManager.class.getClassLoader());
-        final ScriptEngine scriptEngine = config.containsKey("lang")
+
+        for (Path script : scripts) {
+            
+            final ScriptEngine scriptEngine = config.containsKey("lang")
                                           ? SCRIPT_ENGINE_MANAGER.getEngineByName(config.getString("lang"))
                                           : SCRIPT_ENGINE_MANAGER.getEngineByExtension(FilenameUtils.getExtension(script.toString()));
 
@@ -66,15 +71,20 @@ public class ScriptManager {
         scriptBindings.put("instance", config.getInstanceIdentifier());
         scriptBindings.put("interfaceUtils", new InterfaceUtils(config));
         scriptBindings.putAll(bindings);
+        
+        // Overwrite initial requisition with the requisition from the previous script, if there was any.
+        if (requisition != null) {
+            scriptBindings.put("requisition", requisition);
+        }
 
         // Evaluate the script and return the requisition created in the script
         try (final Reader scriptReader = Files.newBufferedReader(script, StandardCharsets.UTF_8)) {
             LOGGER.debug("Start Script {}", script);
-            final Object data = scriptEngine.eval(scriptReader, scriptBindings);
+            requisition = (Requisition) scriptEngine.eval(scriptReader, scriptBindings);
             LOGGER.debug("Done  Script {}", script);
-
-            return data;
         }
+    }
+        return requisition;
     }
 
 }
