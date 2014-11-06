@@ -10,6 +10,9 @@ Additionally every script step can access the configuration of PRIS and the raw 
 The script steps are executed by the JVM following the JSR-223 specification. There for all JSR-223 supported languages can be used to write script steps.
 By default runtimes for Groovy 2.3.3 and Beanshell 2.0b5 are provided out of the box.
 
+Every script step has to provide a Requisition object as its result.
+For every request of a requisition each script step is reloaded.
+
 Script steps are configured in the `requisition.properties` for the requisition.
 
 ----
@@ -65,13 +68,16 @@ include::{docdir}/configs/scriptsteps/default/reverseDNS.groovy[]
 include::{docdir}/configs/scriptsteps/default/failOnEmpty.groovy[]
 ----
 
+.Example script step 5
+[source,java]
+----
+include::{docdir}/configs/scriptsteps/default/OpenNMS_Assets_1_12.groovy[]
+----
+
 Every script step can reference variable from the runtime of PRIS. The following script shows the provided objects:
 
-.Example script step 5
+.Example script step 6
 [source,java]
 ----
 include::{docdir}/configs/scriptsteps/default/sample.groovy[]
 ----
-
-Every script step has to provide a Requisition object as its result.
-For every request of a requisition each script step is reloaded.
