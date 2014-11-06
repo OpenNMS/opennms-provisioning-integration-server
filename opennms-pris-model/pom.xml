@@ -39,7 +39,7 @@
                             <artifactItems>
                                 <artifactItem>
                                     <groupId>org.opennms</groupId>
-                                    <artifactId>opennms-import</artifactId>
+                                    <artifactId>opennms-provision-persistence</artifactId>
                                     <classifier>xsds</classifier>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>target</outputDirectory>
