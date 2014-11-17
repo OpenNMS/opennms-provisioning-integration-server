@@ -26,31 +26,19 @@
 package org.opennms.opennms.pris.plugins.ocs.mapper;
 
 import com.google.common.collect.Sets;
+import org.kohsuke.MetaInfServices;
+import org.opennms.ocs.inventory.client.response.*;
+import org.opennms.opennms.pris.plugins.ocs.util.OcsInterfaceUtils;
+import org.opennms.pris.api.InstanceConfiguration;
+import org.opennms.pris.api.Mapper;
+import org.opennms.pris.model.*;
+import org.opennms.pris.util.AssetUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import org.kohsuke.MetaInfServices;
-import org.opennms.ocs.inventory.client.response.Bios;
-import org.opennms.ocs.inventory.client.response.Computer;
-import org.opennms.ocs.inventory.client.response.Computers;
-import org.opennms.ocs.inventory.client.response.Drive;
-import org.opennms.ocs.inventory.client.response.Entry;
-import org.opennms.ocs.inventory.client.response.Network;
-import org.opennms.ocs.inventory.client.response.Sound;
-import org.opennms.ocs.inventory.client.response.Storage;
-import org.opennms.ocs.inventory.client.response.Video;
-import org.opennms.opennms.pris.plugins.ocs.util.OcsInterfaceUtils;
-import org.opennms.pris.api.Mapper;
-import org.opennms.pris.model.PrimaryType;
-import org.opennms.pris.model.Requisition;
-import org.opennms.pris.model.RequisitionAsset;
-import org.opennms.pris.model.RequisitionInterface;
-import org.opennms.pris.model.RequisitionMonitoredService;
-import org.opennms.pris.model.RequisitionNode;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.opennms.pris.api.InstanceConfiguration;
-import org.opennms.pris.util.AssetUtils;
 
 public class DefaultOcsComputerMapper implements Mapper {
 
@@ -129,7 +117,9 @@ public class DefaultOcsComputerMapper implements Mapper {
         }
 
         requisitionNode.getCategories().addAll(interfaceUtils.populateCategories(computer, config, config.getInstanceIdentifier()));
-
+        
+        requisitionNode.getAssets().addAll(interfaceUtils.populateAssets(computer, config, config.getInstanceIdentifier()));
+        
         requisitionNode.getAssets().add(new RequisitionAsset("operatingSystem", AssetUtils.assetStringCleaner(computer.getHardware().getOsname(), 64)));
         requisitionNode.getAssets().add(new RequisitionAsset("cpu", AssetUtils.assetStringCleaner(computer.getHardware().getProcessort(), 64)));
         requisitionNode.getAssets().add(new RequisitionAsset("ram", AssetUtils.assetStringCleaner(computer.getHardware().getMemory() + " MB", 10)));
@@ -162,7 +152,7 @@ public class DefaultOcsComputerMapper implements Mapper {
                     LOGGER.debug("Adding Asset hdd{} to Node '{}' as '{}'", i, requisitionNode.getNodeLabel(), hddAsset);
                     requisitionNode.getAssets().add(new RequisitionAsset("hdd" + i, AssetUtils.assetStringCleaner(hddAsset, 64)));
                 } else {
-                    LOGGER.debug("node {} ignorring drive {} as hdd{} - string is empty or no hdd asset filed left", requisitionNode.getNodeLabel(), drive.toString(), i);
+                    LOGGER.debug("node {} ignore drive {} as hdd{} - string is empty or no hdd asset filed left", requisitionNode.getNodeLabel(), drive.toString(), i);
                 }
                 i++;
             }

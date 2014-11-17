@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.opennms</groupId>
         <artifactId>opennms-pris-parent</artifactId>
-        <version>1.1.0</version>
+        <version>1.1.1</version>
     </parent>
   
     <artifactId>opennms-pris-model</artifactId>
@@ -39,7 +39,7 @@
                             <artifactItems>
                                 <artifactItem>
                                     <groupId>org.opennms</groupId>
-                                    <artifactId>opennms-import</artifactId>
+                                    <artifactId>opennms-provision-persistence</artifactId>
                                     <classifier>xsds</classifier>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>target</outputDirectory>

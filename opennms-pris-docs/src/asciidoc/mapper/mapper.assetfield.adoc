@@ -41,6 +41,8 @@ The asset field mapping can be used in `xls.source` and `jdbc.source`.
 | `Asset_maintContractExpiration`
 | `Asset_maintContractNumber`
 | `Asset_manufacturer`
+| `Asset_managedObjectType`
+| `Asset_managedObjectInstance`
 | `Asset_modelNumber`
 | `Asset_notifyCategory`
 | `Asset_numpowersupplies`
