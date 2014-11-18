@@ -1,7 +1,7 @@
 
 [[jdbc-source]]
 === JDBC Source
-The JDBC source provides the ability to run an SQL-Query against an external system and map the result to an OpenNMS requisition.
+The JDBC source provides the ability to run an SQL Query against an external system and map the result to an OpenNMS requisition.
 
 [options="header",cols="1,^1,10"]
 |========================
@@ -12,8 +12,8 @@ The JDBC source provides the ability to run an SQL-Query against an external sys
 | `source.selectStatement` |          | SQL statement
 | `source.user`            |          | user name for database connection
 | `source.password`        |          | password for database connection
-| `mapper`                 | *        | Mapper script changing the requisition. For no operation use `echo`, apply a Groovy script set to `script`
-| `mapper.file`            |          | If set `mapper` is set to `script`, relative path to your groovy script for modifying the requisition
+| `mapper`                 | *        | Mapper script for changing the requisition. For no operation use `echo`; for a JSR-223 script set to `script`
+| `mapper.file`            |          | If set `mapper` is set to `script`, relative path to your JSR-223 script for modifying the requisition
 |========================
 
 The following column-headers will be mapped from the result set to the OpenNMS requisition:
@@ -26,18 +26,18 @@ The following column-headers will be mapped from the result set to the OpenNMS r
 | `MgmtType`        |          | is interpreted as `snmp-primary` flag and controls how the interface can be used to communicate with the SNMP agent. Valid are `P` (Primary), `S` (Secondary) and `N` (None).
 | `InterfaceStatus` |          | will be interpreted as Interface Status. Value has to be an integer. Use `1` for monitored and `3` for not monitored.
 | `Node_Label`      |          | will be interpreted as node label for the node identified by the `Foreign_Id`
-| `Cat`             |          | will be interpreted as a surveillance-category for the node identified by the `Foreign_Id`
+| `Cat`             |          | will be interpreted as a surveillance category for the node identified by the `Foreign_Id`
 | `Svc`             |          | will be interpreted as a service on the interface of the node identified by the `Foreign_Id` and `IP_Address` field
 |========================
 
-This source also supports all asset-fields by using `Asset_` as a prefix followed by the `asset-field-name`.
+This source also supports all asset fields by using `Asset_` as a prefix followed by the `asset-field-name`.
 The city field of the assets can be addressed like this: `yourvalue AS Asset_City` and is not case-sensitive.
 
 Every row of the result set will be checked for the listed column headers.
 The provided data will be added to the corresponding node.
-Multiple result rows with matching `Foreign_Id` will be added to the corresponding node.
+Multiple result rows with matching `Foreign_Id` will be added to the same node.
 
-NOTE: To use additional non standard SQL driver, just drop the JAR files into the `opennms-pris/lib` directory and set the `source.driver` and `source.url` accordingly.
+NOTE: To use additional JDBC drivers, just drop the JAR files into the `opennms-pris/lib` directory and set the `source.driver` and `source.url` accordingly.
 
 .Example configuration to import nodes from phpIPAM MySQL database into OpenNMS
 [source,bash]
