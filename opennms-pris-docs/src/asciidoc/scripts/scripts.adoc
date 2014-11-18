@@ -1,13 +1,13 @@
 [[scripts]]
 == Script Steps
 After the mapper has delivered its requitition, multiple script steps can be used to customize the result.
-This script steps can change the requisition initially provided by the mapper.
-Script steps provide a requisition as there result, what allows the chaining of script steps.
+These script steps can change the requisition initially provided by the mapper.
+Script steps provide a requisition as their results, which allows the chaining of script steps.
 Every script step has access to the latest version of the requisition.
-The first script steps reads the requisition from the mapper.
-The second script step reads the requisition privided by the first script step and so on.
+The first script step reads the requisition from the mapper.
+The second script step reads the requisition provided by the first script step and so on.
 Additionally every script step can access the configuration of PRIS and the raw result of the source.
-The script steps are executed by the JVM following the JSR-223 specification. There for all JSR-223 supported languages can be used to write script steps.
+The script steps are executed by the JVM following the JSR-223 specification. Therefore all JSR-223 supported languages can be used to write script steps.
 By default runtimes for Groovy 2.3.3 and Beanshell 2.0b5 are provided out of the box.
 
 Every script step has to provide a Requisition object as its result.
@@ -74,7 +74,7 @@ include::{docdir}/configs/scriptsteps/default/failOnEmpty.groovy[]
 include::{docdir}/configs/scriptsteps/default/OpenNMS_Assets_1_12.groovy[]
 ----
 
-Every script step can reference variable from the runtime of PRIS. The following script shows the provided objects:
+Every script step can reference variables from the runtime of PRIS. The following script shows the provided objects:
 
 .Example script step 6
 [source,java]
