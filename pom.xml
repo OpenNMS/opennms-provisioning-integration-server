@@ -32,6 +32,7 @@
     <asciidoc.images.directory>images</asciidoc.images.directory>
 
     <!-- Version settings -->
+    <asciidoctorVersion>1.5.0</asciidoctorVersion>
     <chQosLogbackVersion>1.1.2</chQosLogbackVersion>
     <commonsConfigurationVersion>1.10</commonsConfigurationVersion>
     <commonsIoVersion>2.4</commonsIoVersion>
