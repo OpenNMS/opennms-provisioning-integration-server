@@ -26,34 +26,32 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <github.global.server>github</github.global.server>
 
+    <!-- Version settings -->
+    <apacheDerbyVersion>10.10.2.0</apacheDerbyVersion>
+    <asciidoctorVersion>1.5.0</asciidoctorVersion>
+    <beanshellVersion>2.0b5</beanshellVersion>
+    <chQosLogbackVersion>1.1.2</chQosLogbackVersion>
+    <commonsConfigurationVersion>1.10</commonsConfigurationVersion>
+    <commonsIoVersion>2.4</commonsIoVersion>
+    <groovyVersion>2.3.3</groovyVersion>
+    <guavaVersion>17.0</guavaVersion>
+    <httpComponentsVersion>4.3.4</httpComponentsVersion>
+    <jettyServerVersion>9.2.1.v20140609</jettyServerVersion>
+    <junitVersion>4.11</junitVersion>
+    <mavenResourcesPluginVersion>2.6</mavenResourcesPluginVersion>
+    <mavenCompilerPluginVersion>3.1</mavenCompilerPluginVersion>
+    <metainfServicesVersion>1.5</metainfServicesVersion>
+    <mysqlConnectorVersion>5.1.31</mysqlConnectorVersion>
+    <opennmsVersion>14.0.0</opennmsVersion>
+    <postgresqlDriverVersion>9.1-901-1.jdbc4</postgresqlDriverVersion>
+    <slf4jVersion>1.7.7</slf4jVersion>
+    <wagonPluginVersion>1.0-beta-5</wagonPluginVersion>
+    <wagonSshVersion>1.0-beta-6</wagonSshVersion>
+
     <!-- Ascii doc settings for documention -->
     <asciidoc.source.directory>${basedir}/src/asciidoc</asciidoc.source.directory>
     <asciidoc.output.directory>${basedir}/target/generated-docs</asciidoc.output.directory>
     <asciidoc.images.directory>images</asciidoc.images.directory>
-
-    <!-- Version settings -->
-    <asciidoctorVersion>1.5.0</asciidoctorVersion>
-    <chQosLogbackVersion>1.1.2</chQosLogbackVersion>
-    <commonsConfigurationVersion>1.10</commonsConfigurationVersion>
-    <commonsIoVersion>2.4</commonsIoVersion>
-    <doxiaModuleMarkdownVersion>1.4</doxiaModuleMarkdownVersion>
-    <guavaVersion>17.0</guavaVersion>
-    <junitVersion>4.11</junitVersion>
-    <mavenSitePluginVersion>3.3</mavenSitePluginVersion>
-    <mavenResourcesPluginVersion>2.6</mavenResourcesPluginVersion>
-    <mavenCompilerPluginVersion>3.1</mavenCompilerPluginVersion>
-    <metainfServicesVersion>1.5</metainfServicesVersion>
-    <opennmsVersion>14.0.0</opennmsVersion>
-    <slf4jVersion>1.7.7</slf4jVersion>
-    <groovyVersion>2.3.3</groovyVersion>
-    <beanshellVersion>2.0b5</beanshellVersion>
-    <jettyServerVersion>9.2.1.v20140609</jettyServerVersion>
-    <apacheDerbyVersion>10.10.2.0</apacheDerbyVersion>
-    <postgresqlDriverVersion>9.1-901-1.jdbc4</postgresqlDriverVersion>
-    <mysqlConnectorVersion>5.1.31</mysqlConnectorVersion>
-    <httpComponentsVersion>4.3.4</httpComponentsVersion>
-    <wagonSshVersion>1.0-beta-6</wagonSshVersion>
-    <wagonPluginVersion>1.0-beta-5</wagonPluginVersion>
   </properties>
 
   <dependencies>
