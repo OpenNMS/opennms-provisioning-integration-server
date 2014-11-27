@@ -40,6 +40,8 @@
     <guavaVersion>17.0</guavaVersion>
     <junitVersion>4.11</junitVersion>
     <mavenSitePluginVersion>3.3</mavenSitePluginVersion>
+    <mavenResourcesPluginVersion>2.6</mavenResourcesPluginVersion>
+    <mavenCompilerPluginVersion>3.1</mavenCompilerPluginVersion>
     <metainfServicesVersion>1.5</metainfServicesVersion>
     <opennmsVersion>14.0.0</opennmsVersion>
     <slf4jVersion>1.7.7</slf4jVersion>
@@ -177,7 +179,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.1</version>
+        <version>${mavenCompilerPluginVersion}</version>
         <configuration>
           <source>1.7</source>
           <target>1.7</target>
