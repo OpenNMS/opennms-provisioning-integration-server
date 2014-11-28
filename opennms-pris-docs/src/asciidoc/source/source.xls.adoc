@@ -19,10 +19,11 @@ These `column names` have to start with certain prefixes to be recognized.
 [options="header",cols="1,^1,10"]
 |========================
 | Prefixes          | Required | Description
-| `Node_`           | *        | will be interpreted as node label and `foreignId`.
+| `Node_`           | *        | will be interpreted as node label. It is also used as `foreignId` if no `ID_` header is present.
 | `IP_`             | *        | will be interpreted as an IP address as a new interface on the node.
 | `MgmtType_`       | *        | is interpreted as `snmp-primary` flag and controls how the interface can be used to communicate with the SNMP agent. Valid are `P` (Primary), `S` (Secondary) and `N` (None).
-| `InterfaceStatus` |          | will be interpreted as interface status. This is NOT a prefix. The column name has to match exactly. Use `1` for monitored and `3` for not monitored.
+| `ID_`             |          | will be interpreted as `foreignId` for the node. If no `foreignId` is definded the `Node_` value is used as `foreignId`.
+| `InterfaceStatus` |          | will be interpreted as interface status. Use `1` for monitored and `3` for not monitored.
 | `cat_`            |          | will be interpreted as a surveillance category. Multiple comma-separated categories can be provided. It can be used multiple times per sheet.
 | `svc_`            |          | will be interpreted as a service on the interface of the node. Multiple comma-separated services can be provided. It can be used multiple times per sheet.
 |========================
@@ -35,6 +36,8 @@ To add a node with multiple interfaces, add a subsequent row with the same node 
 This row will be added as a new interface based on the data from the  IP_, MgmtType_, svc_ columns.
 
 The order in which the columns are arranged is irrelevant. Also additional columns can be present.
+
+CAUTION: Check the formats of the cells to avoid problems with fields like IP address.
 
 .Example configuration for the requisition myRouter from an XLS spreadsheet
 [source,bash]
