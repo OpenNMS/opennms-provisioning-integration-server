@@ -1,7 +1,7 @@
 
 [[merge-source]]
 === Merge Source
-The merge source allows to merge two requisitions URL provided requisitions.
+The merge source allows to merge two provided requisitions accessed by URLs.
 You can also use provided resources by _PRIS_ recursively.
 The example below shows how to configure the merge requisition for two requisitions A and B.
 
@@ -15,8 +15,8 @@ The example below shows how to configure the merge requisition for two requisiti
 | `source.B.url`      | *        | URL to the requisition B
 | `source.B.username` |          | username for access
 | `source.B.password` |          | password for access
-| `source.A.keepAll`  |          | if this parameters is present in the config all nodes from requisition A will be present in the resulting requisition.
-| `source.B.keepAll`  |          | if this parameters is present in the config all nodes from requisition B will be present in the resulting requisition.
+| `source.A.keepAll`  |          | if this parameter is present in the config all nodes from requisition A will be present in the resulting requisition.
+| `source.B.keepAll`  |          | if this parameter is present in the config all nodes from requisition B will be present in the resulting requisition.
 |========================
 
 This source is reading two already defined requisitions via _HTTP_ and merges them into one new requisition.

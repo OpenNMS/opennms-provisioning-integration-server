@@ -13,10 +13,10 @@ The file source allows to read a requisition file from the filesystem.
 | `mapper.file` |          | If set `mapper` is set to `script`, relative path to your groovy script for modifying the requisition
 |========================
 
-This source is reading an already defined requisitions from a XML file.
+This source reads an already-defined requisition from an XML file.
 The file to read has to be a valid OpenNMS requisition already.
 
-.Example configuration for a file based requisition
+.Example configuration for a file-based requisition
 [source,bash]
 ----
 include::{docdir}/configs/examples/fileExample/requisitions/myFileRequisition/requisition.properties[]

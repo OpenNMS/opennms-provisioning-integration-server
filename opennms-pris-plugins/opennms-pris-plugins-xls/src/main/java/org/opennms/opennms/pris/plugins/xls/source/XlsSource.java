@@ -78,8 +78,7 @@ public class XlsSource implements Source {
     }
 
     @Override
-    public Object dump() throws MissingRequiredColumnHeaderException,
-                                Exception {
+    public Object dump() throws MissingRequiredColumnHeaderException, Exception {
         final String instance = this.config.getInstanceIdentifier();
 
         Requisition requisition = new Requisition().withForeignSource(instance);
@@ -118,6 +117,13 @@ public class XlsSource implements Source {
                                 node = new RequisitionNode();
                                 node.setNodeLabel(nodeLabel);
                                 node.setForeignId(nodeLabel);
+                                
+                                if (getRelevantColumnID(OPTIONAL_UNIQUE_HEADERS.PREFIX_FOREIGN_ID) != null) {
+                                    String foreignId = sheet.getCell(getRelevantColumnID(OPTIONAL_UNIQUE_HEADERS.PREFIX_FOREIGN_ID), row).getContents().trim();
+                                    if (!foreignId.trim().isEmpty()) {
+                                        node.setForeignId(foreignId);
+                                    }                                
+                                }
                                 requisition.getNodes().add(node);
                             }
                             //adding categories
@@ -183,7 +189,7 @@ public class XlsSource implements Source {
         for (OPTIONAL_UNIQUE_HEADERS header : OPTIONAL_UNIQUE_HEADERS.values()) {
             Cell[] row = sheet.getRow(0);
             for (Cell cell : row) {
-                if (cell.getContents().trim().equalsIgnoreCase(header.HEADER)) {
+                if (cell.getContents().trim().toLowerCase().startsWith(header.HEADER.toLowerCase())) {
                     result.put(header.HEADER, cell.getColumn());
                 }
             }
@@ -359,8 +365,9 @@ public class XlsSource implements Source {
      * They can just be used for one column.
      */
     private enum OPTIONAL_UNIQUE_HEADERS {
-        PREFIX_INTERFACE_STATUS("InterfaceStatus");
-
+        PREFIX_INTERFACE_STATUS("InterfaceStatus"),
+        PREFIX_FOREIGN_ID("ID_");
+        
         private final String HEADER;
 
         private OPTIONAL_UNIQUE_HEADERS(String header) {

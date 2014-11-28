@@ -1,10 +1,10 @@
 
 [[driver]]
 == Driver
-The driver is responsible how to provide the generated OpenNMS requisition.
-It is a required global configuration for the _PRIS_ server.
+The driver determines how to provide the generated OpenNMS requisition.
+It is a required global configuration item for the _PRIS_ server.
 The configuration for the drivers has to be specified in the +global.properties+ file.
-It is possible to configure exact one driver for the _PRIS_ server.
+It is possible to configure exactly one driver for the _PRIS_ server.
 For the _PRIS_ server you can configure a global log level.
 The loglevel is also located in the +global.properties+ file and can be configured with the following values:
 
@@ -26,7 +26,7 @@ loglevel = INFO
 
 NOTE: Changing the log level requires a restart if you run PRIS as a daemon in HTTP mode.
 
-The driver is configured in the +global.properties+ which is located in the root application directory.
+The driver is configured in +global.properties+ which is located in the root application directory.
 
 ----
 /opt/opennms-pris
