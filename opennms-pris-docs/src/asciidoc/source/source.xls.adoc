@@ -37,7 +37,7 @@ This row will be added as a new interface based on the data from the  IP_, MgmtT
 
 The order in which the columns are arranged is irrelevant. Also additional columns can be present.
 
-CAUTION: Check the formats of the cells to avoid problems with fields like IP address.
+CAUTION: Check the format of cells to avoid problems with data like IP address.
 
 .Example configuration for the requisition myRouter from an XLS spreadsheet
 [source,bash]
