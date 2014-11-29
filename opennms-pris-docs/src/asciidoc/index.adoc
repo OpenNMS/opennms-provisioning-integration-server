@@ -3,7 +3,7 @@
 Version: {docVersion}
 :ascii-ids:
 :icons: font
-:toc: right
+:toc: left
 :toclevels: 4
 :numbered:
 

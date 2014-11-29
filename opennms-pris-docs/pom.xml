@@ -29,7 +29,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
-        <version>2.6</version>
+        <version>${mavenResourcesPluginVersion}</version>
         <executions>
           <execution>
             <id>copy-resources</id>
@@ -52,7 +52,7 @@
       <plugin>
         <groupId>org.asciidoctor</groupId>
         <artifactId>asciidoctor-maven-plugin</artifactId>
-        <version>0.1.4</version>
+        <version>${asciidoctorVersion}</version>
         <executions>
           <execution>
             <id>output-html</id>
@@ -63,6 +63,7 @@
             <configuration>
               <sourceHighlighter>prettify</sourceHighlighter>
               <backend>html5</backend>
+              <doctype>book</doctype>
             </configuration>
           </execution>
         </executions>
