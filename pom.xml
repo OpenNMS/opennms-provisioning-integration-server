@@ -5,7 +5,7 @@
 
   <groupId>org.opennms</groupId>
   <artifactId>opennms-pris-parent</artifactId>
-  <version>1.1.2-SNAPSHOT</version>
+  <version>1.1.3-SNAPSHOT-SNAPSHOT</version>
 
   <packaging>pom</packaging>
 
@@ -30,7 +30,7 @@
     <apacheDerbyVersion>10.10.2.0</apacheDerbyVersion>
     <asciidoctorVersion>1.5.0</asciidoctorVersion>
     <beanshellVersion>2.0b5</beanshellVersion>
-    <chQosLogbackVersion>1.1.2</chQosLogbackVersion>
+    <chQosLogbackVersion>1.1.3-SNAPSHOT</chQosLogbackVersion>
     <commonsConfigurationVersion>1.10</commonsConfigurationVersion>
     <commonsIoVersion>2.4</commonsIoVersion>
     <groovyVersion>2.3.3</groovyVersion>
