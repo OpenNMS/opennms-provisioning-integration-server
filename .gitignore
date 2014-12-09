@@ -7,5 +7,6 @@ target/
 *.ear
 *.iml
 **/*nbactions.xml
+**/*nb-configuration.xml
 *.iws
 *.ipr

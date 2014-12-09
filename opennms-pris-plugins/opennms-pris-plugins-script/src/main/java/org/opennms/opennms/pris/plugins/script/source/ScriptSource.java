@@ -54,7 +54,7 @@ public class ScriptSource implements Source {
 
     @Override
     public Object dump() throws Exception {
-        return ScriptManager.execute(this.config,
+        return ScriptManager.executeToObject(this.config,
                                      ImmutableMap.<String, Object>builder().build());
     }
     

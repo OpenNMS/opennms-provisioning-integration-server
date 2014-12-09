@@ -50,7 +50,7 @@ public class ScriptMapper implements Mapper {
     @Override
     public Requisition map(final Object data,
                            final Requisition requisition) throws Exception {
-        return (Requisition) ScriptManager.execute(this.config,
+        return (Requisition) ScriptManager.executeToRequisition(this.config,
                                                    ImmutableMap.<String, Object>builder()
                                                            .put("data", data)
                                                            .put("requisition", requisition)
