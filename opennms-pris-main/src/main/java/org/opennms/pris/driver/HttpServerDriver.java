@@ -26,6 +26,8 @@
 package org.opennms.pris.driver;
 
 import java.net.InetSocketAddress;
+import org.eclipse.jetty.rewrite.handler.RedirectPatternRule;
+import org.eclipse.jetty.rewrite.handler.RewriteHandler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
@@ -83,7 +85,23 @@ public class HttpServerDriver implements Driver {
         ContextHandler contextHandlerDocu = new ContextHandler("/documentation");
         contextHandlerDocu.setHandler(docuResourceHandler);
         contextHandlerCollection.addHandler(contextHandlerDocu);
+        
+        ContextHandler defaultHandlerDocu = new ContextHandler("/");
+        contextHandlerDocu.setHandler(docuResourceHandler);
+        contextHandlerCollection.addHandler(defaultHandlerDocu);
 
+//        RewriteHandler rewrite = new RewriteHandler();
+//        rewrite.setRewriteRequestURI(true);
+//        rewrite.setRewritePathInfo(false);
+//        
+//        RedirectPatternRule redirect = new RedirectPatternRule();
+//        redirect.setPattern("^$");
+//        redirect.setLocation("/documentation");
+//        rewrite.addRule(redirect);
+//        rewrite.setHandler(docuResourceHandler);
+//        contextHandlerCollection.addHandler(rewrite);
+        
+        
         server.setHandler(contextHandlerCollection);
 
         server.start();

@@ -34,6 +34,12 @@
             <artifactId>jetty-server</artifactId>
         </dependency>
         
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-rewrite</artifactId>
+        </dependency>
+        
+        
         <!-- Configuration -->
         <dependency>
             <groupId>commons-configuration</groupId>
