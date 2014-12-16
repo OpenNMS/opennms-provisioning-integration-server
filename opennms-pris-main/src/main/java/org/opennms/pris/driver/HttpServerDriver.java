@@ -26,6 +26,8 @@
 package org.opennms.pris.driver;
 
 import java.net.InetSocketAddress;
+import org.eclipse.jetty.rewrite.handler.RedirectPatternRule;
+import org.eclipse.jetty.rewrite.handler.RewriteHandler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
@@ -47,6 +49,8 @@ public class HttpServerDriver implements Driver {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(HttpServerDriver.class);
 
+    private final String DOCU_PATH = "/documentation";
+    
     public static final class Factory implements Driver.Factory {
 
         @Override
@@ -66,24 +70,40 @@ public class HttpServerDriver implements Driver {
     public void run() throws Exception {
         // Create an embedded jetty instance
         final Server server = new Server(new InetSocketAddress(this.config.getString("host", "127.0.0.1"),
-                this.config.getInt("port", 8686)));
-
+                this.config.getInt("port", 8000)));
+        
         
         ContextHandlerCollection contextHandlerCollection = new ContextHandlerCollection();
         
+        // custom handling for requisitions
         RequisitionProviderHandler requisitionProviderHandler = new RequisitionProviderHandler();
         ContextHandler contextHandlerRequisitions = new ContextHandler("/requisitions");
         contextHandlerRequisitions.setHandler(requisitionProviderHandler);
         contextHandlerCollection.addHandler(contextHandlerRequisitions);
         
+        // provide the documentation
         ResourceHandler docuResourceHandler = new ResourceHandler();
         docuResourceHandler.setDirectoriesListed(true);
         docuResourceHandler.setWelcomeFiles(new String[]{"index.html"});
         docuResourceHandler.setResourceBase("./documentation/");
-        ContextHandler contextHandlerDocu = new ContextHandler("/documentation");
+        ContextHandler contextHandlerDocu = new ContextHandler(DOCU_PATH);
         contextHandlerDocu.setHandler(docuResourceHandler);
         contextHandlerCollection.addHandler(contextHandlerDocu);
 
+        // redirecting http://ip:port/ to the docu
+        RewriteHandler redirector = new RewriteHandler();
+        redirector.setRewriteRequestURI(true);
+        redirector.setRewritePathInfo(false);
+
+        RedirectPatternRule rootToDocuRedirectRule = new RedirectPatternRule();
+        rootToDocuRedirectRule.setPattern("/*");
+        rootToDocuRedirectRule.setLocation(DOCU_PATH);
+        redirector.addRule(rootToDocuRedirectRule);
+
+        ContextHandler rootContext = new ContextHandler("/");
+        rootContext.setHandler(redirector);
+        contextHandlerCollection.addHandler(rootContext);
+        
         server.setHandler(contextHandlerCollection);
 
         server.start();

@@ -5,7 +5,7 @@
 
   <groupId>org.opennms</groupId>
   <artifactId>opennms-pris-parent</artifactId>
-  <version>1.1.2</version>
+  <version>1.1.3-SNAPSHOT</version>
 
   <packaging>pom</packaging>
 
@@ -36,7 +36,7 @@
     <groovyVersion>2.3.3</groovyVersion>
     <guavaVersion>17.0</guavaVersion>
     <httpComponentsVersion>4.3.4</httpComponentsVersion>
-    <jettyServerVersion>9.2.1.v20140609</jettyServerVersion>
+    <jettyServerVersion>9.2.6.v20141205</jettyServerVersion>
     <junitVersion>4.11</junitVersion>
     <mavenResourcesPluginVersion>2.6</mavenResourcesPluginVersion>
     <mavenCompilerPluginVersion>3.1</mavenCompilerPluginVersion>
@@ -148,6 +148,13 @@
         <artifactId>jetty-server</artifactId>
         <version>${jettyServerVersion}</version>
       </dependency>
+      
+      <dependency>
+         <groupId>org.eclipse.jetty</groupId>
+         <artifactId>jetty-rewrite</artifactId>
+         <version>${jettyServerVersion}</version>
+      </dependency>
+        
 
       <!-- SPI -->
       <dependency>
