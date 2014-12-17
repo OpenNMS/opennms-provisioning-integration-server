@@ -81,11 +81,17 @@ public class HttpServerDriver implements Driver {
         contextHandlerRequisitions.setHandler(requisitionProviderHandler);
         contextHandlerCollection.addHandler(contextHandlerRequisitions);
 
-        // custom handling for provision
-        PushProvisionHandler pushProvisionHandler = new PushProvisionHandler();
-        ContextHandler contextHandlerPushRequisitions = new ContextHandler("/provision");
-        contextHandlerPushRequisitions.setHandler(pushProvisionHandler);
-        contextHandlerCollection.addHandler(contextHandlerPushRequisitions);
+        // custom handling for provision via Event
+        RestProvisionHandler eventProvisionHandler = new RestProvisionHandler();
+        ContextHandler contextHandlerEventRequisitions = new ContextHandler("/provisionEvent");
+        contextHandlerEventRequisitions.setHandler(eventProvisionHandler);
+        contextHandlerCollection.addHandler(contextHandlerEventRequisitions);
+
+        // custom handling for provision via Rest
+        EventProvisionHandler restProvisionHandler = new EventProvisionHandler();
+        ContextHandler contextHandlerRestRequisitions = new ContextHandler("/provisionRest");
+        contextHandlerRestRequisitions.setHandler(restProvisionHandler);
+        contextHandlerCollection.addHandler(contextHandlerRestRequisitions);
         
         // provide the documentation
         ResourceHandler docuResourceHandler = new ResourceHandler();

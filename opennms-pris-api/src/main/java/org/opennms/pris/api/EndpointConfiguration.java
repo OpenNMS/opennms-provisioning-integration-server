@@ -29,14 +29,14 @@ package org.opennms.pris.api;
  * Container for an endpoint configuration.
  * 
  */
-public interface InstanceConfiguration extends Configuration {
+public interface EndpointConfiguration extends Configuration {
    
     /**
-     * Returns the identifier of the Instance.
+     * Returns the identifier of the Endpoint.
      * 
      * @return the identifier string
      */
-    String getInstanceIdentifier();
+    String getEndpointIdentifier();
     
     /**
      * Return a decorator Configuration containing every key from the current
@@ -52,5 +52,5 @@ public interface InstanceConfiguration extends Configuration {
      * 
      * @return a subset configuration
      */
-    InstanceConfiguration subset(final String prefix);
+    EndpointConfiguration subset(final String prefix);
 }

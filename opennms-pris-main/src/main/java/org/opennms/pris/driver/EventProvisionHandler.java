@@ -36,15 +36,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.opennms.pris.Starter;
+import org.opennms.pris.api.EndpointConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class PushProvisionHandler extends AbstractHandler {
+public class EventProvisionHandler extends AbstractHandler {
     
-    private static final Logger LOGGER = LoggerFactory.getLogger(PushProvisionHandler.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(EventProvisionHandler.class);
 
-    private final Integer OPENNMS_EVENT_PORT = 5817;
-    private final String OPENNMS_HOST = "127.0.0.1";
     private final String UEI = "uei.opennms.org/internal/importer/reloadImport";
     
     @Override
@@ -55,24 +55,31 @@ public class PushProvisionHandler extends AbstractHandler {
             ServletException {
 
         String[] pathParts = request.getPathInfo().substring(1).split("/");
+        
 
         baseRequest.setHandled(true);
 
         // Get the instance for the request path
         String instance = pathParts[0];
+        String endpoint = pathParts[1];
 
         if (instance == null || instance.isEmpty() || instance.contains("favicon.ico")) {
             response.sendError(404, "No instance specified");
         } else {
             try {
                 LOGGER.debug("Handling request for instance: {}", instance);
-                //check if instance exists
-                //check if requisition is valid?
-                //build the url for the event
-
+                // check if instance exists
+                // get config for endpoint
+                // check if requisition is valid?
+                // build the url for the event
+                
+                EndpointConfiguration endpointConfig = Starter.getConfigManager().getEndpointConfig(endpoint);
+                String host = endpointConfig.getString("host");
+                Integer port = endpointConfig.getInt("port");
+                
                 //send the event
-                String provisionUrl = request.getRequestURL().toString().replaceFirst("provision", "requisitions");
-                send(provisionUrl);
+                String provisionUrl = request.getRequestURL().toString().replaceFirst("provisionEvent", "requisitions");
+                send(provisionUrl, host, port);
                 //return 200 ok
                 response.setStatus(200);
                 response.getWriter().append("All Good!").append(request.getRequestURL().toString() + " | " + request.getRequestURI()).close();
@@ -83,11 +90,11 @@ public class PushProvisionHandler extends AbstractHandler {
         }
     }
     
-    public void send(String url) throws IOException {
+    public void send(String url, String host, Integer port) throws IOException {
         Map<String, String> params = new HashMap<>();
         params.put("url", url);
         String eventXML = createEvent(params);
-        try (Socket clientSocket = new Socket(OPENNMS_HOST, OPENNMS_EVENT_PORT)) {
+        try (Socket clientSocket = new Socket(host, port)) {
             DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
             outToServer.writeBytes(eventXML);
         }

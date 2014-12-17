@@ -29,7 +29,9 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import org.opennms.pris.api.Configuration;
+import org.opennms.pris.api.EndpointConfiguration;
 import org.opennms.pris.api.InstanceConfiguration;
+import org.opennms.pris.config.EndpointApacheConfiguration;
 import org.opennms.pris.config.GlobalApacheConfiguration;
 import org.opennms.pris.config.InstanceApacheConfiguration;
 
@@ -127,5 +129,43 @@ public class ConfigManager {
     public InstanceConfiguration getInstanceConfig(final String instance) {
         return new InstanceApacheConfiguration(this.base.resolve("requisitions" + File.separator + instance),
                                                instance);
+    }
+    
+    
+    // ENDPOINTS
+    public Collection<String> getEndpoints() {
+        return this.getEndpoints("*");
+    }
+
+
+    public Collection<String> getEndpoints(final String glob) {
+        try (final DirectoryStream<Path> stream = Files.newDirectoryStream(this.base, glob)) {
+
+            // The list of found instances
+            final Collection<String> endpoints = new ArrayList<>();
+
+            // Loop over the stream of child files to find all instances
+            for (final Path path : stream) {
+                // An instance must be a directory and must contain the properties file
+                if (!Files.isDirectory(path) ||
+                    !Files.exists(path.resolve("endpoint.properties"))) {
+                    continue;
+                }
+
+                // Get the name of the folder relative to the base folder and add it to
+                // the list of known instances
+                endpoints.add(this.base.relativize(path).toString());
+            }
+
+            return endpoints;
+
+        } catch (final IOException ex) {
+            throw new RuntimeException("Unable to traverse config folder", ex);
+        }
+    }
+
+    public EndpointConfiguration getEndpointConfig(final String endpoint) {
+        return new EndpointApacheConfiguration(this.base.resolve("endpoints" + File.separator + endpoint),
+                                               endpoint);
     }
 }
