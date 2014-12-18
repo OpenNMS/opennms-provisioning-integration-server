@@ -23,7 +23,7 @@
  * http://www.opennms.org/ http://www.opennms.com/
  * *****************************************************************************
  */
-package org.opennms.pris.driver;
+package org.opennms.pris.driver.http;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -49,6 +49,7 @@ public class EventProvisionHandler extends AbstractHandler {
 
     private String instance;
     private String endpoint;
+    private String rescanExisting;
 
     @Override
     public void handle(final String target,
@@ -61,11 +62,13 @@ public class EventProvisionHandler extends AbstractHandler {
 
         initializeParameters(request, response);
         EndpointConfiguration endpointConfiguration = verifyEndpoint(endpoint, request, response);
-        InstanceConfiguration instanceConfiguration = verifyInstance(instance, request, response);
+        verifyInstance(instance, request, response);
 
         try {
             LOGGER.debug("Handling request for instance: {}", instance);
             String provisionUrl = request.getRequestURL().toString().replaceFirst("provisionEvent", "requisitions");
+            provisionUrl = provisionUrl.substring(0, provisionUrl.length() - rescanExisting.length());
+            
             String host = endpointConfiguration.getString("host");
             Integer port = endpointConfiguration.getInt("port");
             send(provisionUrl, host, port);
@@ -79,6 +82,7 @@ public class EventProvisionHandler extends AbstractHandler {
     public void send(String url, String host, Integer port) throws IOException {
         Map<String, String> params = new HashMap<>();
         params.put("url", url);
+        params.put("rescanExisting", rescanExisting);
         String eventXML = createEvent(params);
         try (Socket clientSocket = new Socket(host, port)) {
             DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
@@ -115,6 +119,7 @@ public class EventProvisionHandler extends AbstractHandler {
         sb.append("</event>");
         sb.append("</events>");
         sb.append("</log>");
+        LOGGER.debug("Event to send '{}'", sb.toString());
         return sb.toString();
     }
 
@@ -126,6 +131,16 @@ public class EventProvisionHandler extends AbstractHandler {
             endpoint = pathParts[1];
             LOGGER.debug("instance '{}'", instance);
             LOGGER.debug("endpoint '{}'", endpoint);
+            if (pathParts.length >= 3 && !pathParts[2].isEmpty()) {
+                if (pathParts[2].equals("true") || pathParts[2].equals("false") || pathParts[2].equals("dbonly")) {
+                    rescanExisting = pathParts[2];
+                } else {
+                    LOGGER.warn("Value '{}' for rescanExisting not valid. Ignoring parameter.", rescanExisting);
+                    rescanExisting = "true";
+                }
+            } else {
+                rescanExisting = "true";
+            }
         } catch (final Exception ex) {
             response.sendError(500, "wrong format of URL. Provide an http://ip:port/provisionEvent/instance/endpoint format");
         }

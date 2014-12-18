@@ -23,7 +23,7 @@
  * http://www.opennms.org/ http://www.opennms.com/
  * *****************************************************************************
  */
-package org.opennms.pris.driver;
+package org.opennms.pris.driver.file;
 
 import org.opennms.pris.model.Requisition;
 import org.opennms.pris.RequisitionGenerator;
@@ -39,6 +39,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collection;
 import org.opennms.pris.api.Configuration;
+import org.opennms.pris.driver.Driver;
 
 /**
  * A driver used to create a single XML serialized requisition in a file.

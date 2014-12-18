@@ -30,8 +30,8 @@ import com.google.common.collect.ImmutableMap;
 import java.util.Map;
 import org.opennms.pris.api.Configuration;
 import org.opennms.pris.driver.Driver;
-import org.opennms.pris.driver.FileDriver;
-import org.opennms.pris.driver.HttpServerDriver;
+import org.opennms.pris.driver.file.FileDriver;
+import org.opennms.pris.driver.http.HttpServerDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

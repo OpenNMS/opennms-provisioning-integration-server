@@ -23,7 +23,7 @@
  * http://www.opennms.org/ http://www.opennms.com/
  * *****************************************************************************
  */
-package org.opennms.pris.driver;
+package org.opennms.pris.driver.http;
 
 import java.net.InetSocketAddress;
 import org.eclipse.jetty.rewrite.handler.RedirectPatternRule;
@@ -33,6 +33,7 @@ import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.opennms.pris.api.Configuration;
+import org.opennms.pris.driver.Driver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
