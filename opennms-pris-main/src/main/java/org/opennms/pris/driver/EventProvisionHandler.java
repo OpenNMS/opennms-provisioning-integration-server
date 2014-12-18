@@ -23,7 +23,6 @@
  * http://www.opennms.org/ http://www.opennms.com/
  * *****************************************************************************
  */
-
 package org.opennms.pris.driver;
 
 import java.io.DataOutputStream;
@@ -38,15 +37,19 @@ import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.opennms.pris.Starter;
 import org.opennms.pris.api.EndpointConfiguration;
+import org.opennms.pris.api.InstanceConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class EventProvisionHandler extends AbstractHandler {
-    
+
     private static final Logger LOGGER = LoggerFactory.getLogger(EventProvisionHandler.class);
 
     private final String UEI = "uei.opennms.org/internal/importer/reloadImport";
-    
+
+    private String instance;
+    private String endpoint;
+
     @Override
     public void handle(final String target,
             final Request baseRequest,
@@ -54,42 +57,25 @@ public class EventProvisionHandler extends AbstractHandler {
             final HttpServletResponse response) throws IOException,
             ServletException {
 
-        String[] pathParts = request.getPathInfo().substring(1).split("/");
-        
-
         baseRequest.setHandled(true);
 
-        // Get the instance for the request path
-        String instance = pathParts[0];
-        String endpoint = pathParts[1];
+        initializeParameters(request, response);
+        EndpointConfiguration endpointConfiguration = verifyEndpoint(endpoint, request, response);
+        InstanceConfiguration instanceConfiguration = verifyInstance(instance, request, response);
 
-        if (instance == null || instance.isEmpty() || instance.contains("favicon.ico")) {
-            response.sendError(404, "No instance specified");
-        } else {
-            try {
-                LOGGER.debug("Handling request for instance: {}", instance);
-                // check if instance exists
-                // get config for endpoint
-                // check if requisition is valid?
-                // build the url for the event
-                
-                EndpointConfiguration endpointConfig = Starter.getConfigManager().getEndpointConfig(endpoint);
-                String host = endpointConfig.getString("host");
-                Integer port = endpointConfig.getInt("port");
-                
-                //send the event
-                String provisionUrl = request.getRequestURL().toString().replaceFirst("provisionEvent", "requisitions");
-                send(provisionUrl, host, port);
-                //return 200 ok
-                response.setStatus(200);
-                response.getWriter().append("All Good!").append(request.getRequestURL().toString() + " | " + request.getRequestURI()).close();
-            } catch (final Exception ex) {
-                response.sendError(500, ex.getMessage());
-                LOGGER.warn("Request failed", ex);
-            }
+        try {
+            LOGGER.debug("Handling request for instance: {}", instance);
+            String provisionUrl = request.getRequestURL().toString().replaceFirst("provisionEvent", "requisitions");
+            String host = endpointConfiguration.getString("host");
+            Integer port = endpointConfiguration.getInt("port");
+            send(provisionUrl, host, port);
+            response.setStatus(200);
+            response.getWriter().append("Send event " + UEI + " to endpint: " + endpoint + " at " + host + ":" + port + " to provision instance " + instance).close();
+        } catch (final Exception ex) {
+            response.sendError(500, "Sending event to OpenNMS failed: " + ex.getMessage());
         }
     }
-    
+
     public void send(String url, String host, Integer port) throws IOException {
         Map<String, String> params = new HashMap<>();
         params.put("url", url);
@@ -99,8 +85,8 @@ public class EventProvisionHandler extends AbstractHandler {
             outToServer.writeBytes(eventXML);
         }
     }
-    
-   private String createEvent(Map<String, String> parms) {
+
+    private String createEvent(Map<String, String> parms) {
         StringBuilder sb = new StringBuilder();
         sb.append("<log>");
         sb.append("<events>");
@@ -113,15 +99,15 @@ public class EventProvisionHandler extends AbstractHandler {
             sb.append("<parms>");
             for (Map.Entry<String, String> parm : parms.entrySet()) {
                 sb.append("<parm>");
-                
+
                 sb.append("<parmName><![CDATA[");
                 sb.append(parm.getKey());
                 sb.append("]]></parmName>");
-                
+
                 sb.append("<value type=\"string\" encoding=\"text\"><![CDATA[");
                 sb.append(parm.getValue());
                 sb.append("]]></value>");
-                
+
                 sb.append("</parm>");
             }
             sb.append("</parms>");
@@ -129,7 +115,47 @@ public class EventProvisionHandler extends AbstractHandler {
         sb.append("</event>");
         sb.append("</events>");
         sb.append("</log>");
-        System.out.println(sb.toString());
         return sb.toString();
+    }
+
+    private void initializeParameters(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+        try {
+            String[] pathParts = request.getPathInfo().substring(1).split("/");
+            instance = pathParts[0];
+            endpoint = pathParts[1];
+            LOGGER.debug("instance '{}'", instance);
+            LOGGER.debug("endpoint '{}'", endpoint);
+        } catch (final Exception ex) {
+            response.sendError(500, "wrong format of URL. Provide an http://ip:port/provisionEvent/instance/endpoint format");
+        }
+    }
+
+    private EndpointConfiguration verifyEndpoint(String endpoint, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        EndpointConfiguration endpointConfig = null;
+        try {
+            endpointConfig = Starter.getConfigManager().getEndpointConfig(endpoint);
+        } catch (final Exception ex) {
+            response.sendError(500, "Endpoint " + endpoint + " is unknown");
+        }
+        if (endpointConfig == null || endpointConfig.isEmpty()) {
+            response.sendError(500, "EndpointConfig for '" + endpoint + "' does not exist or is empty");
+        }
+
+        return endpointConfig;
+    }
+
+    private InstanceConfiguration verifyInstance(String instance, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        InstanceConfiguration instanceConfig = null;
+        try {
+            instanceConfig = Starter.getConfigManager().getInstanceConfig(instance);
+        } catch (final Exception ex) {
+            response.sendError(500, "Instance " + instance + " is unknown");
+        }
+        if (instanceConfig == null || instanceConfig.isEmpty()) {
+            response.sendError(500, "InstanceConfig for '" + instance + "' does not exist or is empty");
+        }
+
+        return instanceConfig;
     }
 }
