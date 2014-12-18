@@ -23,28 +23,34 @@
  * http://www.opennms.org/ http://www.opennms.com/
  * *****************************************************************************
  */
-
 package org.opennms.pris.driver.http;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.StringWriter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.eclipse.jetty.server.Request;
-import org.eclipse.jetty.server.handler.AbstractHandler;
 import org.opennms.pris.RequisitionGenerator;
-import org.opennms.pris.Starter;
 import org.opennms.pris.api.EndpointConfiguration;
 import org.opennms.pris.model.Requisition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class RestProvisionHandler extends AbstractHandler {
-    
+public class RestProvisionHandler extends PushProvisionHandler {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(RestProvisionHandler.class);
-   
+
     @Override
     public void handle(final String target,
             final Request baseRequest,
@@ -52,52 +58,52 @@ public class RestProvisionHandler extends AbstractHandler {
             final HttpServletResponse response) throws IOException,
             ServletException {
 
-        String[] pathParts = request.getPathInfo().substring(1).split("/");
-
         baseRequest.setHandled(true);
 
-        // Get the instance for the request path
-        String instance = pathParts[0];
-        String endpoint = pathParts[1];
-        String parameter = null;
-        if (pathParts.length > 2) {
-            parameter = pathParts[2];
-        }
+        this.initializeParameters(request, response);
+        EndpointConfiguration endpointConfiguration = this.verifyEndpoint(endpoint, request, response);
+        this.verifyInstance(instance, request, response);
 
-        if (instance == null || instance.isEmpty() || instance.contains("favicon.ico")) {
-            response.sendError(404, "No instance specified");
-        } else {
-            try {
-                LOGGER.debug("Handling request for instance: {}", instance);
-                // check if instance exists
-                // get config for endpoint
-                // check if requisition is valid?
-                // build the url for the event
-                
-                EndpointConfiguration endpointConfig = Starter.getConfigManager().getEndpointConfig(endpoint);
-                String url = endpointConfig.getString("url");
-                String user = endpointConfig.getString("user");
-                String password = endpointConfig.getString("password");
-                
-                final RequisitionGenerator requisitionProvider = new RequisitionGenerator(instance);
+        try {
+            LOGGER.debug("Handling request for instance: {}", instance);
 
-                final Requisition requisition = requisitionProvider.generate(instance);
-                
-                //send the event
-                send(url, user, password, requisition);
-                //return 200 ok
-                response.setStatus(200);
-                response.getWriter().append("All Good!").append(request.getRequestURL().toString() + " | " + request.getRequestURI()).close();
-            } catch (final Exception ex) {
-                response.sendError(500, ex.getMessage());
-                LOGGER.warn("Request failed", ex);
-            }
+            final RequisitionGenerator requisitionProvider = new RequisitionGenerator(instance);
+
+            // Generate the requisition
+            final Requisition requisition = requisitionProvider.generate(instance);
+
+            String url = endpointConfiguration.getString("url");
+            String user = endpointConfiguration.getString("user");
+            String password = endpointConfiguration.getString("password");
+            send(url, user, password, requisition, rescanExisting);
+            response.setStatus(200);
+            response.getWriter().append("Send requisition to OpenNMS via rest").close();
+        } catch (final Exception ex) {
+            response.sendError(500, "Sending requisition to OpenNMS via Rest failed: " + ex.getMessage());
         }
     }
-    
-    public void send(String url, String user, String password, Requisition requisition) throws IOException {
-        Map<String, String> params = new HashMap<>();
-        params.put("url", url);
-        //do the rest put with requisition data to url
+
+    private void send(String url, String user, String password, Requisition requisition, String rescanExisting) throws JAXBException, IOException {
+
+        //TODO http code to send the requisition and trigger the sync
+        // Create the marshaller for the requisition
+        final JAXBContext jaxbContext = JAXBContext.newInstance(Requisition.class);
+        final Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+        jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+        jaxbMarshaller.setProperty(Marshaller.JAXB_ENCODING, "utf-8");
+        StringWriter sw = new StringWriter();
+        jaxbMarshaller.marshal(requisition, sw);
+        StringEntity requisitionString = new StringEntity(sw.toString());
+        CloseableHttpClient httpclient = HttpClients.createDefault();
+        HttpPost httpPost = new HttpPost(url);
+        httpPost.setEntity(requisitionString);
+        
+        try (CloseableHttpResponse response2 = httpclient.execute(httpPost)) {
+            System.out.println(response2.getStatusLine());
+            HttpEntity entity2 = response2.getEntity();
+            // do something useful with the response body
+            // and ensure it is fully consumed
+            EntityUtils.consume(entity2);
+        }
     }
 }
