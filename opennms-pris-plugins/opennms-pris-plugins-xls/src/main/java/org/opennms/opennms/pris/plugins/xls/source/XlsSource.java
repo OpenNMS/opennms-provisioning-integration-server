@@ -120,10 +120,31 @@ public class XlsSource implements Source {
                                 
                                 if (getRelevantColumnID(OPTIONAL_UNIQUE_HEADERS.PREFIX_FOREIGN_ID) != null) {
                                     String foreignId = sheet.getCell(getRelevantColumnID(OPTIONAL_UNIQUE_HEADERS.PREFIX_FOREIGN_ID), row).getContents().trim();
-                                    if (!foreignId.trim().isEmpty()) {
+                                    if (!foreignId.isEmpty()) {
                                         node.setForeignId(foreignId);
                                     }                                
                                 }
+                                
+                                //adding parent data
+                                if (getRelevantColumnID(OPTIONAL_UNIQUE_HEADERS.PREFIX_PARENT_FOREIGN_SOURCE) != null) {
+                                    String parentForeignSource = sheet.getCell(getRelevantColumnID(OPTIONAL_UNIQUE_HEADERS.PREFIX_PARENT_FOREIGN_SOURCE), row).getContents().trim();
+                                    if (!parentForeignSource.isEmpty()) {
+                                        node.setParentForeignSource(parentForeignSource);
+                                    }
+                                }                                
+                                if (getRelevantColumnID(OPTIONAL_UNIQUE_HEADERS.PREFIX_PARENT_FOREIGN_ID) != null) {
+                                    String parentForeignId = sheet.getCell(getRelevantColumnID(OPTIONAL_UNIQUE_HEADERS.PREFIX_PARENT_FOREIGN_ID), row).getContents().trim();
+                                    if (!parentForeignId.isEmpty()) {
+                                        node.setParentForeignId(parentForeignId);
+                                    }
+                                }
+                                if (getRelevantColumnID(OPTIONAL_UNIQUE_HEADERS.PREFIX_PARENT_NODE_LABEL) != null) {
+                                    String parentNodeLabel = sheet.getCell(getRelevantColumnID(OPTIONAL_UNIQUE_HEADERS.PREFIX_PARENT_NODE_LABEL), row).getContents().trim();
+                                    if (!parentNodeLabel.isEmpty()) {
+                                        node.setParentNodeLabel(parentNodeLabel);
+                                    }
+                                }
+                                
                                 requisition.getNodes().add(node);
                             }
                             //adding categories
@@ -366,8 +387,11 @@ public class XlsSource implements Source {
      */
     private enum OPTIONAL_UNIQUE_HEADERS {
         PREFIX_INTERFACE_STATUS("InterfaceStatus"),
-        PREFIX_FOREIGN_ID("ID_");
-        
+        PREFIX_FOREIGN_ID("ID_"),
+        PREFIX_PARENT_FOREIGN_SOURCE("Parent_Foreign_Source"),
+        PREFIX_PARENT_FOREIGN_ID("Parent_Foreign_Id"),
+        PREFIX_PARENT_NODE_LABEL("Parent_Node_Label");
+                
         private final String HEADER;
 
         private OPTIONAL_UNIQUE_HEADERS(String header) {

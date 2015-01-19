@@ -50,6 +50,9 @@ public class JdbcSource implements Source {
     private static final String COLUMN_FOREIGN_ID = "Foreign_Id";
     private static final String INTERFACE_TYPE_PRIMARY = "P";
     private static final String INTERFACE_TYPE_SECONDARY = "S";
+    private static final String COLUMN_PARENT_NODE_LABEL = "Parent_Node_Label";
+    private static final String COLUMN_PARENT_FOREIGN_ID = "Parent_Foreign_Id";
+    private static final String COLUMN_PARENT_FOREIGN_SOURCE = "Parent_Foreign_Source";
 
     public JdbcSource(final InstanceConfiguration config) {
         this.config = config;
@@ -108,6 +111,21 @@ public class JdbcSource implements Source {
                         node.setNodeLabel(nodeLabel);
                     }
 
+                    String parentNodeLabel = getString(resultSet, COLUMN_PARENT_NODE_LABEL);
+                    if (parentNodeLabel != null) {
+                        node.setParentNodeLabel(parentNodeLabel);
+                    }
+                    
+                    String parentForeignId = getString(resultSet, COLUMN_PARENT_FOREIGN_ID);
+                    if (parentForeignId != null) {
+                        node.setParentForeignId(parentForeignId);
+                    }
+                    
+                    String parentForeignSource = getString(resultSet, COLUMN_PARENT_FOREIGN_SOURCE);
+                    if (parentForeignSource != null) {
+                        node.setParentForeignSource(parentForeignSource);
+                    }
+                    
                     String ipAddress = getString(resultSet, COLUMN_IP_ADDRESS);
 
                     if (ipAddress != null) {
