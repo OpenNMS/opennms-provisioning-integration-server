@@ -213,23 +213,23 @@ To include an image file, make sure it resides in the 'images/' directory relati
 
 [source]
 ----
-image::images/opennms-logo.png[]
+image::opennms-logo.png[]
 ----
 
 Which is rendered as:
 
-image::images/opennms-logo.png[]
+image::opennms-logo.png[]
 
 [source]
 ----
 .example.odp
-image::images/example.png[example.odp]
+image::example.png[example.odp]
 ----
 
 Which is rendered as:
 
 .example.odp
-image::images/example.png[example.odp]
+image::example.png[example.odp]
 
 === Attributes
 

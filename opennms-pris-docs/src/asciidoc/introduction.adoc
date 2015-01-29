@@ -21,7 +21,7 @@ The _PRIS_ components are shown in <<pris_overview>>.
 === Overview
 
 .OpenNMS PRIS overview
-image::images/pris-overview.png[OpenNMS PRIS overview]
+image::pris-overview.png[OpenNMS PRIS overview]
 
 The components from left to right are described as followed:
 

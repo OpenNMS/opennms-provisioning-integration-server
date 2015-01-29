@@ -71,7 +71,7 @@
           <headerFooter>true</headerFooter>
           <sourceDirectory>${asciidoc.source.directory}</sourceDirectory>
           <outputDirectory>${asciidoc.output.directory}</outputDirectory>
-          <imagesDir>./</imagesDir>
+          <imagesDir>images</imagesDir>
           <attributes>
             <docVersion>${project.version}</docVersion>
           </attributes>
