@@ -41,6 +41,9 @@ public class XlsSourceTest {
         RequisitionNode resultNode = resultRequisition.getNodes().get(0);
         assertEquals("TestNode", resultNode.getNodeLabel());
         assertEquals("TestNode", resultNode.getForeignId());
+        assertEquals("Test-Parent-Foreign-Source", resultNode.getParentForeignSource());
+        assertEquals("Test-Parent-Foreign-Id", resultNode.getParentForeignId());
+        assertEquals("Test-Parent-Node-Label", resultNode.getParentNodeLabel());
         
         assertEquals(RequisitionUtils.findAsset(resultNode, AssetField.vendor.name).getValue(), "Vater");
         assertEquals(RequisitionUtils.findAsset(resultNode, AssetField.city.name).getValue(), "Braunschweig");
@@ -58,10 +61,5 @@ public class XlsSourceTest {
         
         RequisitionCategory findCategory = RequisitionUtils.findCategory(resultNode, "Test");
         assertEquals("Test", findCategory.getName());
-    }
-
-    @Test
-    public void testGetXlsFile() {
-        System.out.println("getXlsFile");
     }
 }
