@@ -1,3 +1,6 @@
+// Allow GitHub image rendering
+:imagesdir: images
+
 [[introduction]]
 == Introduction
 If you have a large network and discovery doesn't help, it helps to find a source of truth for starting to fill your management system.
