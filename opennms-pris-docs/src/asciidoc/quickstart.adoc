@@ -6,7 +6,7 @@ The first requisition has a worksheet containing all routers and the second work
 This example can be found in `examples/source/xlsExample`.
 
 .Worksheet with Router
-image::images/myRouter.png[myRouter.png]
+image::../images/myRouter.png[myRouter.png]
 
 In line 5, 6 and 7 there is a router defined with more than one IP interface.
 All three interfaces will be manually provisioned.
@@ -16,7 +16,7 @@ For all other IP interfaces you can use the OpenNMS Provisiond mechanism scannin
 The server will also be categorized in _Backbone_ and _Office_.
 
 .Worksheet with Server
-image::images/myServer.png[myServer.png]
+image::../images/myServer.png[myServer.png]
 
 The _OpenNMS_ requisition should be provided via _HTTP_ and we use _OpenNMS Provisiond_ to synchronize it on a regular basis.
 We build the following file structure:
@@ -76,7 +76,7 @@ All changes will be applied from the next request against the server.
 With the given configuration you see the result of the OpenNMS requisitions with the URL http://localhost:8000/requisitions/myRouter and http://localhost:8000/requisitions/myServer which can be used in _OpenNMS Provisiond_.
 
 .Output of _PRIS_ server for both configured requisitions
-image::images/requisitions-http.png[requisitions-http.png]
+image::../images/requisitions-http.png[requisitions-http.png]
 
 To get the requisition provided from _PRIS_ automatically into OpenNMS you can configure Provisiond with a schedule.
 Create following to entries in `provisiond-configuration.xml` and they will automatically be synchronized every night at 0h:0m:0s and 1h:0m:0s.
