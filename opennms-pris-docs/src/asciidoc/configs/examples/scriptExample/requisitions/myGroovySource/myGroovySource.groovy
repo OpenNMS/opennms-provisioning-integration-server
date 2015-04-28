@@ -1,4 +1,3 @@
-import org.opennms.netmgt.model.PrimaryType
 import org.opennms.pris.model.*
 
 /**
@@ -12,7 +11,8 @@ import org.opennms.pris.model.*
  */
 
 // Name of the requisition. XML file name should be the same, e.g. $OPENNMS_HOME/etc/imports/pending/myGroovySource.xml
-Requisition requisition = new Requisition(instance)
+Requisition requisition = new Requisition()
+requisition.setForeignSource(instance)
 
 config.getInt("count").times {
     logger.info("Adding node: {}", it)
@@ -44,12 +44,12 @@ config.getInt("count").times {
     interfaceList.add(requisitionInterface)
 
     // Assign services to monitor to interface
-    monitoredServiceList.add(new RequisitionMonitoredService("ICMP"))
-    monitoredServiceList.add(new RequisitionMonitoredService("SNMP"))
-    monitoredServiceList.add(new RequisitionMonitoredService("HTTP"))
+    monitoredServiceList.add(new RequisitionMonitoredService(null, "ICMP"))
+    monitoredServiceList.add(new RequisitionMonitoredService(null, "SNMP"))
+    monitoredServiceList.add(new RequisitionMonitoredService(null, "HTTP"))
 
     // Assign services for monitoring to IP interface
-    requisitionInterface.setMonitoredServices(monitoredServiceList)
+    requisitionInterface.getMonitoredServices().addAll(monitoredServiceList)
 
     // Set Asset information
     assetCity.setName("city")
@@ -64,11 +64,11 @@ config.getInt("count").times {
     assetList.add(assetCountry)
 
     // Assign Interfaces and assets to the node
-    requisitionNode.setInterfaces(interfaceList)
-    requisitionNode.setAssets(assetList)
+    requisitionNode.getInterfaces().addAll(interfaceList)
+    requisitionNode.getAssets().addAll(assetList)
 
     // Put new node into requisition
-    requisition.putNode(requisitionNode)
+    requisition.getNodes().add(requisitionNode)
 }
 
 return requisition

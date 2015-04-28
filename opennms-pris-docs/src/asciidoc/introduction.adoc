@@ -1,3 +1,6 @@
+// Allow GitHub image rendering
+:imagesdir: images
+
 [[introduction]]
 == Introduction
 If you have a large network and discovery doesn't help, it helps to find a source of truth for starting to fill your management system.
@@ -21,7 +24,7 @@ The _PRIS_ components are shown in <<pris_overview>>.
 === Overview
 
 .OpenNMS PRIS overview
-image::images/pris-overview.png[OpenNMS PRIS overview]
+image::pris-overview.png[OpenNMS PRIS overview]
 
 The components from left to right are described as followed:
 
