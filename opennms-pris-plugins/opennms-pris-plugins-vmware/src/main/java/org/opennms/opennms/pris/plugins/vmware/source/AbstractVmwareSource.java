@@ -155,7 +155,7 @@ public abstract class AbstractVmwareSource implements Source {
      * @throws RemoteException the remote exception
      */
     private Map<String, String> getCustomAttributes(ManagedEntity entity) throws RemoteException {
-        final Map<String, String> attributes = new TreeMap<String, String>();
+        final Map<String, String> attributes = new TreeMap<>();
 
         // Get all custom attribute field definition
         CustomFieldDef[] defs = entity.getAvailableField();
