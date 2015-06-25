@@ -94,11 +94,12 @@ public class InterfaceUtils {
 
     public void initListsFromConfigs() {
         try {
-            List<String> rawBlackedList = Files.readAllLines(Paths.get("./", "blackList.properties"), Charset.forName("UTF-8"));
+            List<String> rawBlackedList = Files.readAllLines(Paths.get(config.getBasePath() + "", "blackList.properties"), Charset.forName("UTF-8"));
             for (String rawBlacked : rawBlackedList) {
                 addIpBlack(rawBlacked);
             }
-            List<String> rawWhiteList = Files.readAllLines(Paths.get("./", "whiteList.properties"), Charset.forName("UTF-8"));
+            
+            List<String> rawWhiteList = Files.readAllLines(Paths.get(config.getBasePath() + "", "whiteList.properties"), Charset.forName("UTF-8"));
             for (String rawWhite : rawWhiteList) {
                 addIpWhite(rawWhite);
             }
@@ -106,6 +107,19 @@ public class InterfaceUtils {
             LOGGER.error("blackList and or whiteList could not be read from files, using empty lists.", ex);
             ipBlackList = new ArrayList<>();
             ipWhiteList = new ArrayList<>();
+        }
+    }
+    
+    public void initLists(List<String> whiteIPs, List<String> blackIPs) {
+        if (whiteIPs != null ) {
+            for (String whiteIP : whiteIPs) {
+                addIpWhite(whiteIP);
+            }
+        }
+        if (blackIPs != null) {
+            for (String blackIP : blackIPs) {
+                addIpBlack(blackIP);
+            }
         }
     }
 }

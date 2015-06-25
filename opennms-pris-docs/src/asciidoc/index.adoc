@@ -26,6 +26,7 @@ include::source/source.http.adoc[]
 include::source/source.jdbc.adoc[]
 include::source/source.merge.adoc[]
 include::source/source.script.adoc[]
+include::source/source.vmware.adoc[]
 include::source/source.xls.adoc[]
 include::source/source.ocs.adoc[]
 

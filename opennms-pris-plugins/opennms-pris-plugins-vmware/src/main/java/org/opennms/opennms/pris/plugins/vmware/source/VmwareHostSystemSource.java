@@ -1,30 +1,28 @@
-/*******************************************************************************
+/**
+ * *****************************************************************************
  * This file is part of OpenNMS(R).
  *
- * Copyright (C) 2014 The OpenNMS Group, Inc.
- * OpenNMS(R) is Copyright (C) 1999-2014 The OpenNMS Group, Inc.
+ * Copyright (C) 2014 The OpenNMS Group, Inc. OpenNMS(R) is Copyright (C)
+ * 1999-2014 The OpenNMS Group, Inc.
  *
  * OpenNMS(R) is a registered trademark of The OpenNMS Group, Inc.
  *
- * OpenNMS(R) is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published
- * by the Free Software Foundation, either version 3 of the License,
- * or (at your option) any later version.
+ * OpenNMS(R) is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any later
+ * version.
  *
- * OpenNMS(R) is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * OpenNMS(R) is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with OpenNMS(R). If not, see:
- * http://www.gnu.org/licenses/
+ * You should have received a copy of the GNU General Public License along with
+ * OpenNMS(R). If not, see: http://www.gnu.org/licenses/
  *
- * For more information contact:
- * OpenNMS(R) Licensing <license@opennms.org>
- * http://www.opennms.org/
- * http://www.opennms.com/
- *******************************************************************************/
+ * For more information contact: OpenNMS(R) Licensing <license@opennms.org>
+ * http://www.opennms.org/ http://www.opennms.com/
+ ******************************************************************************
+ */
 package org.opennms.opennms.pris.plugins.vmware.source;
 
 import com.vmware.vim25.HostNetworkInfo;
@@ -39,6 +37,7 @@ import org.slf4j.LoggerFactory;
 
 import java.rmi.RemoteException;
 import java.util.HashSet;
+import org.opennms.pris.util.InterfaceUtils;
 
 /**
  *
@@ -47,6 +46,9 @@ public class VmwareHostSystemSource extends AbstractVmwareSource {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(VmwareHostSystemSource.class);
 
+    private Requisition requisition;
+    private InterfaceUtils interfaceUtils;
+    
     /**
      * Constant for searching in VI Java API only for "HostSystem"
      */
@@ -58,9 +60,11 @@ public class VmwareHostSystemSource extends AbstractVmwareSource {
 
     @Override
     public Object dump() throws Exception {
-
-        Requisition requisition = new Requisition()
-                .withForeignSource(this.getInstance());
+        
+        interfaceUtils = new InterfaceUtils(this.getConfig());
+        interfaceUtils.initListsFromConfigs();
+        
+        requisition = new Requisition().withForeignSource(this.getInstance());
 
         // Connection to vCenter
         ServiceInstance serviceInstance = new ServiceInstance(getUrl(), getUsername(), getPassword(), true);
@@ -109,29 +113,8 @@ public class VmwareHostSystemSource extends AbstractVmwareSource {
                 LOGGER.debug("Try to assign asset comment field with VMware getAboutInfo()");
                 requisitionNode.getAssets().add(new RequisitionAsset(AssetField.comment.name, "Management Server IP: " + getVcenterIp() + ", Full name: " + serviceInstance.getAboutInfo().getFullName() + ", vCenter OS: " + serviceInstance.getAboutInfo().getOsType()));
 
-                // Get all IP addresses from HostSystem
-                LOGGER.debug("------ START :: building IP interfaces for node: '{}'", hostSystem.getName());
-                HashSet<HostVirtualNic> allHostVirtualNics = getAllHostSystemIpAddresses(hostSystem);
-                LOGGER.debug("Virtual NICs found: '{}'", allHostVirtualNics.size());
+                addInterfacesToHostSystem(hostSystem, requisitionNode);
 
-                // Go through all virtual nics and assign for each IP address a IP interface in the OpenNMS node
-                for (HostVirtualNic hostVirtualNic : allHostVirtualNics) {
-                    // Assign all ip interfaces to an requisition
-                    RequisitionInterface requisitionInterface = new RequisitionInterface();
-                    requisitionInterface.setIpAddr(hostVirtualNic.getSpec().getIp().getIpAddress());
-
-                    // Assign VMware network port group as interface description
-                    requisitionInterface.setDescr(hostVirtualNic.getPortgroup());
-
-                    // Set SNMP primary interface to N
-                    requisitionInterface.setSnmpPrimary(PrimaryType.NOT_ELIGIBLE);
-
-                    // 3 = not monitored / 1 = monitored
-                    requisitionInterface.setStatus(1);
-                    requisitionNode.getInterfaces().add(requisitionInterface);
-                }
-                LOGGER.debug("------ E N D :: building IP interfaces for node: '{}'", hostSystem.getName());
-                requisition.getNodes().add(requisitionNode);
             }
             LOGGER.debug("--- E N D :: building requisition for node: '{}'", hostSystem.getName());
         }
@@ -185,6 +168,39 @@ public class VmwareHostSystemSource extends AbstractVmwareSource {
         return hostVirtualNicsResult;
     }
 
+    private void addInterfacesToHostSystem(HostSystem hostSystem, RequisitionNode requisitionNode) {
+        // Get all IP addresses from HostSystem
+        LOGGER.debug("------ START :: building IP interfaces for node: '{}'", hostSystem.getName());
+        HashSet<HostVirtualNic> allHostVirtualNics = getAllHostSystemIpAddresses(hostSystem);
+        LOGGER.debug("Virtual NICs found: '{}'", allHostVirtualNics.size());
+
+        // Go through all virtual nics and assign for each IP address a IP interface in the OpenNMS node
+        for (HostVirtualNic hostVirtualNic : allHostVirtualNics) {
+            // Assign all ip interfaces to an requisition
+            RequisitionInterface requisitionInterface = new RequisitionInterface();
+            requisitionInterface.setIpAddr(hostVirtualNic.getSpec().getIp().getIpAddress());
+
+            // Assign VMware network port group as interface description
+            requisitionInterface.setDescr(hostVirtualNic.getPortgroup());
+
+            // Set SNMP primary interface to N
+            requisitionInterface.setSnmpPrimary(PrimaryType.SECONDARY);
+
+            // 3 = not monitored / 1 = monitored
+            requisitionInterface.setStatus(1);
+
+            requisitionInterface.setManaged(true);
+            
+            if (interfaceUtils.isIpWhiteListed(requisitionInterface.getIpAddr()) && !interfaceUtils.isIpBlackListed(requisitionInterface.getIpAddr())) {
+                requisitionInterface.setSnmpPrimary(PrimaryType.PRIMARY);
+                requisitionInterface.getMonitoredServices().add(new RequisitionMonitoredService(null, "VMwareCim-HostSystem"));
+            }
+            requisitionNode.getInterfaces().add(requisitionInterface);
+        }
+        LOGGER.debug("------ E N D :: building IP interfaces for node: '{}'", hostSystem.getName());
+        requisition.getNodes().add(requisitionNode);
+    }
+
     /**
      * Factory used in the RequisitionProvider to initialize this Source.
      */
@@ -231,4 +247,3 @@ public class VmwareHostSystemSource extends AbstractVmwareSource {
         }
     }
 }
-
