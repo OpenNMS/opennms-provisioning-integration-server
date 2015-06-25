@@ -1,0 +1,40 @@
+
+[[vmware-sources]]
+=== VMware Sources
+The two VMware-sources provide requisitions based on data from a VCenter.
+The sources gather data about VMware-hosts or VMware-guest systems from a VCenter and provide a ready to use Requisition for OpenNMS.
+Generating Requistions for Host-Systems and Guest-Systems is split into separate sources.
+The two sources `vmware.hostsystem` and `vmware.guest` share share the following parameters:
+
+[options="header",cols="1,^1,10"]
+|========================
+| Parameter                  | Required | Description
+| `source.vmware.vcenter.ip` | *        | IP-address of the VCenter
+| `source.vmware.username`   | *        | user name for VCenter connection
+| `source.vmware.password`   | *        | password for VCenter connection
+| `mapper`                   | *        | Mapper script for changing the requisition. For no operation use `echo`; for a JSR-223 script set to `script`
+| `mapper.file`              |          | If set `mapper` is set to `script`, relative path to your JSR-223 script for modifying the requisition
+|========================
+
+The following column-headers will be mapped from the result set to the OpenNMS requisition:
+
+This source also supports all asset fields by using `Asset_` as a prefix followed by the `asset-field-name`.
+The city field of the assets can be addressed like this: `yourvalue AS Asset_City` and is not case-sensitive.
+
+Every row of the result set will be checked for the listed column headers.
+The provided data will be added to the corresponding node.
+Multiple result rows with matching `Foreign_Id` will be added to the same node.
+
+NOTE: To use additional JDBC drivers, just drop the JAR files into the `opennms-pris/lib` directory and set the `source.driver` and `source.url` accordingly.
+
+.Example configuration to import nodes from phpIPAM MySQL database into OpenNMS
+[source,bash]
+----
+include::{docdir}/configs/examples/jdbcExample/requisitions/phpipam/requisition.properties[]
+----
+
+.Example configuration to import nodes from another OpenNMS database
+[source,bash]
+----
+include::{docdir}/configs/examples/jdbcExample/requisitions/opennms/requisition.properties[]
+----
