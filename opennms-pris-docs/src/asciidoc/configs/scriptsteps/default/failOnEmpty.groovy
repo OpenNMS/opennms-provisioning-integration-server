@@ -12,7 +12,7 @@ logger.info("starting failOnEmpty.groovy")
 logger.debug("Amount of nodes in the requisition '{}'", (requisition.getNodes().size()))
 
 if (requisition.getNodes().size() == 0) {
-  throw new Exception("The requisition had no nodes. The failOnEmpty.groovy script is failing the request on purpose.")
+  throw new Exception("The requisition '" + requisition.getForeignSource()  + "' had no nodes. The failOnEmpty.groovy script is failing the request on purpose.")
 }
 logger.info("done with failOnEmpty.groovy")
 
