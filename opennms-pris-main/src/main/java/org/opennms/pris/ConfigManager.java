@@ -28,8 +28,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
+import org.apache.commons.configuration.PropertiesConfiguration;
 import org.opennms.pris.api.Configuration;
 import org.opennms.pris.api.InstanceConfiguration;
+import org.opennms.pris.config.AbstractApacheConfiguration;
 import org.opennms.pris.config.GlobalApacheConfiguration;
 import org.opennms.pris.config.InstanceApacheConfiguration;
 
@@ -128,4 +131,23 @@ public class ConfigManager {
         return new InstanceApacheConfiguration(this.base.resolve("requisitions" + File.separator + instance),
                                                instance);
     }
+    
+    public InstanceConfiguration getInstanceConfigWithGlobals(final String instance) {
+        AbstractApacheConfiguration instanceConfig = (AbstractApacheConfiguration)this.getInstanceConfig(instance);
+        instanceConfig.getConfiguration().addProperty("requisition", instance);
+        
+        AbstractApacheConfiguration globalConfig = this.globalConfig;
+        
+        Iterator<String> keys = globalConfig.getConfiguration().getKeys();
+        while (keys.hasNext()) {
+            String key = keys.next();
+            if (!instanceConfig.containsKey(key)) {
+                instanceConfig.getConfiguration().addProperty(key, globalConfig.getString(key));
+            }
+        }
+        
+        return (InstanceConfiguration)instanceConfig;
+    }
+    
+    
 }

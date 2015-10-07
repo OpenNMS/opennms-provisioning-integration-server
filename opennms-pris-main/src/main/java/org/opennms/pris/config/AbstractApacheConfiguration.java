@@ -31,6 +31,10 @@ public abstract class AbstractApacheConfiguration implements Configuration {
     
     private final org.apache.commons.configuration.Configuration config;
 
+    public org.apache.commons.configuration.Configuration getConfiguration() {
+        return config;
+    }
+    
     protected AbstractApacheConfiguration(final org.apache.commons.configuration.Configuration config) {
         this.config = config;
     }
