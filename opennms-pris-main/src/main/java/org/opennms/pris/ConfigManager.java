@@ -53,7 +53,7 @@ public class ConfigManager {
     private final Path base;
 
     // The global configuration
-    private final GlobalApacheConfiguration globalConfig;
+    private GlobalApacheConfiguration globalConfig;
 
     public ConfigManager() {
         // Get the config base folder and fall back to the CWD
@@ -134,6 +134,7 @@ public class ConfigManager {
         InstanceConfiguration instanceConfig = this.getInstanceConfig(instance);
         instanceConfig.addProperty("requisition", instance);
         
+        globalConfig = new GlobalApacheConfiguration(this.base);
         Iterator<String> keys = globalConfig.getKeys();
         while (keys.hasNext()) {
             String key = keys.next();
