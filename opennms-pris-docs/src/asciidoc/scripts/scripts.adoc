@@ -81,3 +81,21 @@ Every script step can reference variables from the runtime of PRIS. The followin
 ----
 include::{docdir}/configs/scriptsteps/default/sample.groovy[]
 ----
+
+The following two script steps provide a mechanism to fail the requisition on purpose if the amount of nodes has changed to drastically to the previous run.
+The setup contains of two scripts that have to be included as script steps in order.
+
+.Example script step 7
+[source,java]
+----
+include::{docdir}/configs/scriptsteps/default/failOnSizeChange.groovy[]
+----
+
+The persistens of the previous requistion size is provided by the second script step of the setup.
+
+.Example script step 8
+[source,java]
+----
+include::{docdir}/configs/scriptsteps/default/persistRequisitionSize.groovy[]
+----
+
