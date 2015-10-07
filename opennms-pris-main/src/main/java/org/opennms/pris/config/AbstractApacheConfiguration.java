@@ -20,10 +20,10 @@
 package org.opennms.pris.config;
 
 import com.google.common.base.Joiner;
-import com.google.common.collect.ImmutableList;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import org.opennms.pris.api.Configuration;
 
@@ -129,5 +129,15 @@ public abstract class AbstractApacheConfiguration implements Configuration {
                       final int defaultValue) {
         return this.config.getInt(key,
                                   defaultValue);
+    }
+    
+    @Override
+    public Iterator<String> getKeys() {
+        return config.getKeys();
+    }
+    
+    @Override
+    public void addProperty(String key, String string) {
+        config.addProperty(key, string);
     }
 }
