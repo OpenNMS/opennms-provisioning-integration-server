@@ -9,10 +9,10 @@ It gives you several steps to integrate, transform, clean up, and merge your ext
 The result of _PRIS_ is the OpenNMS requisition model which can be read from OpenNMS Provisiond.
 
 The service is used to provide an integration point for _OpenNMS_ external inventories or home brew inventories.
-With pris the data is normalized to the _OpenNMS_ requisition model and can be consumed from _OpenNMS provisiond_.
+With _PRIS_ the data is normalized to the _OpenNMS_ requisition model and can be consumed from _OpenNMS provisiond_.
 It is highly specialized to enrich the requisition model with _SNMP_ information i.e. _SNMP_ interfaces, generic _SNMP_ attributes like system location, system contact, and system description.
 Besides that, _Provisiond_ can also run service detectors against IP interfaces and allows to run policies to control the monitoring behavior.
-_Pris_ is an instance in front of _Provisiond_, it allows to aggregate information from different sources and manipulate them in a flexible way.
+_PRIS_ is an instance in front of _Provisiond_, it allows to aggregate information from different sources and manipulate them in a flexible way.
 
 The output from _PRIS_ is provided as _XML_ over _HTTP_ and can be used in _Provisiond_ to import and discover services and SNMP data from.
 In OpenNMS a requisition is a set of nodes (networked devices) that you want to import into OpenNMS for monitoring and management.
@@ -75,8 +75,8 @@ After extracting the archive the file structure should look like this:
 <4> Libraries for the different sources which can be used with _PRIS_
 <5> Main application file
 <6> Init script for CentOS or Debian systems running in HTTP mode
-<7> Start script to run PRIS on a Linux console
-<8> Start script to run PRIS on a Windows
+<7> Start script to run _PRIS_ on a Linux console
+<8> Start script to run _PRIS_ on a Windows
 <9> Configuration directory for all requisitions to integrate inventories
 <10> Default folder for scripts which are used in requisition configurations to manipulate the inventory import
 <11> Drop-in for your custom created scripts

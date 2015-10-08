@@ -24,9 +24,9 @@ loglevel = INFO
 | OFF   |
 |==================
 
-NOTE: Changing the log level requires a restart if you run PRIS as a daemon in HTTP mode.
+NOTE: Changing the log level requires a restart if you run _PRIS_ as a daemon in _HTTP_ mode.
 
-The driver is configured in +global.properties+ which is located in the root application directory.
+The driver is configured in `global.properties` which is located in the root application directory.
 
 ----
 /opt/opennms-pris
