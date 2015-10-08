@@ -26,18 +26,19 @@
 package org.opennms.pris.api;
 
 import java.nio.file.Path;
+import java.util.Iterator;
 import java.util.List;
 
 /**
  * Container for a configuration.
- * 
+ *
  * @author Dustin Frisch <fooker@lab.sh>
  */
 public interface Configuration {
-    
+
     /**
      * Returns the path to the configuration.
-     * 
+     *
      * @return the absolute path to the configuration folder.
      */
     Path getBasePath();
@@ -46,7 +47,7 @@ public interface Configuration {
      * Check if the configuration is empty.
      *
      * @return {@code true} if the configuration contains no property,
-     *         {@code false} otherwise
+     * {@code false} otherwise
      */
     boolean isEmpty();
 
@@ -56,7 +57,7 @@ public interface Configuration {
      * @param key the key whose presence in this configuration is to be tested
      *
      * @return {@literal true} if the configuration contains a value for this
-     *         key, {@literal false} otherwise
+     * key, {@literal false} otherwise
      */
     boolean containsKey(final String key);
 
@@ -72,8 +73,8 @@ public interface Configuration {
     /**
      * Get a boolean associated with the given configuration key.
      *
-     * If the key doesn't map to an existing object, the default value
-     * is returned.
+     * If the key doesn't map to an existing object, the default value is
+     * returned.
      *
      * @param key The configuration key
      * @param defaultValue The default value
@@ -81,32 +82,32 @@ public interface Configuration {
      * @return The associated boolean
      */
     boolean getBoolean(final String key,
-                       final boolean defaultValue);
+            final boolean defaultValue);
 
     /**
      * Get a int associated with the given configuration key.
      *
      * @param key The configuration key
-     * 
+     *
      * @return The associated int
      */
     int getInt(final String key);
 
     /**
      * Get a int associated with the given configuration key.
-     * 
-     * If the key doesn't map to an existing object, the default value
-     * is returned.
+     *
+     * If the key doesn't map to an existing object, the default value is
+     * returned.
      *
      * @param key The configuration key
      * @param defaultValue The default value
-     * 
+     *
      * @return The associated int
      */
     int getInt(final String key,
-               final int defaultValue);
+            final int defaultValue);
 
-   /**
+    /**
      * Get a path associated with the given configuration key.
      *
      * The returned path is resolved to the base directory of the instance
@@ -118,9 +119,9 @@ public interface Configuration {
      */
     Path getPath(final String key);
 
-   /**
+    /**
      * Get all paths associated with the given configuration key.
-     * 
+     *
      * The returned paths are resolved to the base directory of the instance
      * configuration.
      *
@@ -130,12 +131,11 @@ public interface Configuration {
      */
     List<Path> getPaths(final String key);
 
-        
     /**
      * Get a path associated with the given configuration key.
      *
-     * If the key doesn't map to an existing object, the default value
-     * is returned.
+     * If the key doesn't map to an existing object, the default value is
+     * returned.
      *
      * The returned path is resolved to the base directory if the instance
      * configuration.
@@ -143,11 +143,11 @@ public interface Configuration {
      * @param key The configuration key
      * @param defaultValue The default value
      *
-     * @return The associated path if key is found and has valid
-     *         format, default value otherwise
+     * @return The associated path if key is found and has valid format, default
+     * value otherwise
      */
     Path getPath(final String key,
-                 final Path defaultValue);
+            final Path defaultValue);
 
     /**
      * Get a string associated with the given configuration key.
@@ -161,17 +161,17 @@ public interface Configuration {
     /**
      * Get a string associated with the given configuration key.
      *
-     * If the key doesn't map to an existing object, the default value
-     * is returned.
+     * If the key doesn't map to an existing object, the default value is
+     * returned.
      *
      * @param key The configuration key
      * @param defaultValue The default value
      *
-     * @return The associated string if key is found and has valid
-     *         format, default value otherwise
+     * @return The associated string if key is found and has valid format,
+     * default value otherwise
      */
     String getString(final String key,
-                     final String defaultValue);
+            final String defaultValue);
 
     /**
      * Get an array of strings associated with the given configuration key.
@@ -183,5 +183,21 @@ public interface Configuration {
      * @return The associated string array if key is found
      */
     String[] getStringArray(final String key);
+
+    /**
+     * Get the list of the keys contained in the configuration. The returned
+     * iterator can be used to obtain all defined keys. Note that the exact
+     * behavior of the iterator's {@code remove()} method is specific to a
+     * concrete implementation. It <em>may</em> remove the corresponding
+     * property from the configuration, but this is not guaranteed. In any case
+     * it is no replacement for calling {@link #clearProperty(String)} for this
+     * property. So it is highly recommended to avoid using the iterator's
+     * {@code remove()} method.
+     *
+     * @return An Iterator.
+     */
+    Iterator<String> getKeys();
+
     
+    void addProperty(String key, String string);
 }
