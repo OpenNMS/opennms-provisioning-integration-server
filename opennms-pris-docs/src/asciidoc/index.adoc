@@ -38,6 +38,9 @@ include::mapper/mapper.assetfield.adoc[]
 // Scripts
 include::scripts/scripts.adoc[]
 
+// Provision to OpenNMS
+include::provision.adoc[]
+
 // Advanced config
 include::advanced-config.adoc[]
 
