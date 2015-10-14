@@ -28,6 +28,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import org.opennms.pris.api.Configuration;
 import org.opennms.pris.api.InstanceConfiguration;
 import org.opennms.pris.config.GlobalApacheConfiguration;
@@ -52,7 +53,7 @@ public class ConfigManager {
     private final Path base;
 
     // The global configuration
-    private final GlobalApacheConfiguration globalConfig;
+    private GlobalApacheConfiguration globalConfig;
 
     public ConfigManager() {
         // Get the config base folder and fall back to the CWD
@@ -128,4 +129,20 @@ public class ConfigManager {
         return new InstanceApacheConfiguration(this.base.resolve("requisitions" + File.separator + instance),
                                                instance);
     }
+    
+    public InstanceConfiguration getInstanceConfigWithGlobals(final String instance) {
+        InstanceConfiguration instanceConfig = this.getInstanceConfig(instance);
+        instanceConfig.addProperty("requisition", instance);
+        
+        globalConfig = new GlobalApacheConfiguration(this.base);
+        Iterator<String> keys = globalConfig.getKeys();
+        while (keys.hasNext()) {
+            String key = keys.next();
+            if (!instanceConfig.containsKey(key)) {
+                instanceConfig.addProperty(key, globalConfig.getString(key));
+            }
+        }
+       
+        return instanceConfig;
+    }    
 }

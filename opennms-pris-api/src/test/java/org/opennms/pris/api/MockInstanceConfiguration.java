@@ -21,8 +21,8 @@ package org.opennms.pris.api;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -134,6 +134,16 @@ public class MockInstanceConfiguration implements InstanceConfiguration {
 
     @Override
     public InstanceConfiguration subset(String prefix) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void addProperty(String key, String string) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public Iterator<String> getKeys() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

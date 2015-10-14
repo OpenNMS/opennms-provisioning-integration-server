@@ -4,7 +4,7 @@
 This source is provided to give you the flexibility of building your own source without the need to compile from source.
 The source uses https://www.jcp.org/en/jsr/detail?id=223[JSR-223 Scripting Engine].
 The script language can be changed by setting the property `source.lang` in your `requisition.properties` file.
-By default groovy 2.3.3 and beanshell 2.0b5 are ready to use. If you want to use other supported languages, you might need to provide the language jar in the `lib` folder of PRIS.
+By default groovy 2.3.3 and beanshell 2.0b5 are ready to use. If you want to use other supported languages, you might need to provide the language jar in the `lib` folder of _PRIS_.
 
 [options="header",cols="1,^1,10"]
 |========================

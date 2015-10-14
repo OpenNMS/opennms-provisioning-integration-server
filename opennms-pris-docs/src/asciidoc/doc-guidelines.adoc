@@ -30,7 +30,7 @@ The cheatsheets are really useful!
 [[community-docs-overall-flow]]
 === Overall Flow
 
-The documentation for the OpenNMS PRIS is organized in as _Maven Module_.
+The documentation for _OpenNMS PRIS_ is organized in as _Maven Module_.
 After building, the documentation is generated as HTML output on the file system.
 The output is generated in the `target/generated` sources folder.
 Asciidoc documents have the +.asciidoc+ file extension.
@@ -40,7 +40,7 @@ The structure is organized as the following:
 Note that different ways to add documentation works best for different cases:
 
 * Tutorials and How To's should be published on the http://wiki.opennms.org[OpenNMS Wiki].
-For example, You want to explain how you used the JDBC source to integrate OpenNMS PRIS with your vendor specific inventory database.
+For example, You want to explain how you used the JDBC source to integrate _OpenNMS PRIS_ with your vendor specific inventory database.
 
 * The documentation you can find in the source code can be characterized as a non-emotional technical documentation which explains concepts in detail and should be complete.
 

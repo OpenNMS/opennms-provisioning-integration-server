@@ -111,7 +111,8 @@ public class RequisitionGenerator {
      */
     public RequisitionGenerator(final String instance) {
         // Get the configuration for the instance
-        this.config = Starter.getConfigManager().getInstanceConfig(instance);
+//        this.config = Starter.getConfigManager().getInstanceConfig(instance);
+        this.config = Starter.getConfigManager().getInstanceConfigWithGlobals(instance);
 
         // Create the source
         final String sourceName = this.config.getString("source");
