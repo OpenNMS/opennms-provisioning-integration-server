@@ -70,7 +70,7 @@ fi
 # }
 start() {
    echo -n "Starting ${NAME}: "
-   if [ -f "${PID_FILE}" ] && [ $(cat ${PID_FILE}) != "" ]; then
+   if [ -f "${PID_FILE}" ] && [ "$(cat ${PID_FILE})" != "" ]; then
       echo "FAILED"
       echo "${NAME}-daemon with process id: $(cat ${PID_FILE}) already running."
       exit 4
@@ -81,9 +81,7 @@ start() {
         echo "FAILED"
         exit 5
       fi
-      # wait a second to fork before we collect a PID
-      sleep 1
-      pgrep -f ${PROG} > ${PID_FILE}
+      echo "$!" > ${PID_FILE}
       if [ $? -eq 0 ]; then
         echo "Ok"
       else
