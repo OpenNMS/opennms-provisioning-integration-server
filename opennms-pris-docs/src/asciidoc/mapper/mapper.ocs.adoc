@@ -85,7 +85,7 @@ If it is blacklisted, no interface is added to the node. (+selectManagementNetwo
 The IP address of an +snmpDevice+ is elected as management interface as long as it is not blacklisted.
 If it is blacklisted, no interface is added to the node. (+selectIpAddress+)
 
-===== Strict ip-filter "WhiteAndBackOnly"
+===== Strict ip-filter "WhiteAndBlackOnly"
 This filter implements a strict black- and whitelist approach.
 Computers and +snmpDevices+ are handled independently.
 
