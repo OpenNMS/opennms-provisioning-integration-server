@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  
+    <parent>
+        <groupId>org.opennms</groupId>
+        <artifactId>opennms-pris-parent</artifactId>
+        <version>1.1.5-SNAPSHOT</version>
+    </parent>
+    
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>opennms-pris-feature</artifactId>
+    
+    <packaging>pom</packaging>
+    <name>OpenNMS provisioning Integration Server :: feature </name>
+    <description>Create a feature with the defined dependencies set.</description>
+
+    <dependencies>
+    
+	<dependency>
+		<groupId>org.opennms.core</groupId>
+		<artifactId>org.opennms.core.api</artifactId>
+		<version>${opennmsVersion}</version>
+	</dependency>
+
+	<dependency>
+		<groupId>org.jvnet.jaxb2_commons</groupId>
+		<artifactId>jaxb2-basics-runtime</artifactId>
+		<version>0.6.5.1</version>
+	</dependency>
+
+	<dependency>
+		<groupId>ch.qos.logback</groupId>
+		<artifactId>logback-classic</artifactId>
+	</dependency>
+
+	<dependency>
+		<groupId>ch.qos.logback</groupId>
+		<artifactId>logback-core</artifactId>
+		<version>${chQosLogbackVersion}</version>
+	</dependency>
+
+	<dependency>
+		<groupId>org.eclipse.jetty</groupId>
+		<artifactId>jetty-server</artifactId>
+	</dependency>
+	
+	<dependency>
+		<groupId>javax.servlet</groupId>
+		<artifactId>javax.servlet-api</artifactId>
+		<version>3.1.0</version>
+	</dependency>
+
+	<dependency>
+		<groupId>org.eclipse.jetty</groupId>
+		<artifactId>jetty-rewrite</artifactId>
+	</dependency>
+
+	<dependency>
+		<groupId>org.eclipse.jetty</groupId>
+		<artifactId>jetty-http</artifactId>
+		<version>${jettyServerVersion}</version>
+	</dependency>
+
+	<dependency>
+		<groupId>org.eclipse.jetty</groupId>
+		<artifactId>jetty-util</artifactId>
+		<version>${jettyServerVersion}</version>
+	</dependency>
+
+	<dependency>
+		<groupId>org.eclipse.jetty</groupId>
+		<artifactId>jetty-io</artifactId>
+		<version>${jettyServerVersion}</version>
+	</dependency>
+
+	<dependency>
+		<groupId>commons-configuration</groupId>
+		<artifactId>commons-configuration</artifactId>
+	</dependency>
+
+	<dependency>
+		<groupId>commons-lang</groupId>
+		<artifactId>commons-lang</artifactId>
+		<version>2.6</version>
+	</dependency>
+
+	<dependency>
+		<groupId>com.google.guava</groupId>
+		<artifactId>guava</artifactId>
+	</dependency>
+<!-- 	<dependency>
+		<groupId>org.jvnet.sorcerer</groupId>
+		<artifactId>sorcerer-javac</artifactId>
+		<version>0.8</version>
+		<scope>provided</scope>
+	</dependency> -->
+	
+	
+<!-- https://mvnrepository.com/artifact/com.sun.xml.bind/jaxb-osgi -->
+	<dependency>
+	    <groupId>com.sun.xml.bind</groupId>
+	    <artifactId>jaxb-osgi</artifactId>
+	    <version>2.2.11</version>
+	</dependency>
+
+	<dependency>
+		<groupId>org.opennms.core</groupId>
+		<artifactId>org.opennms.core.lib</artifactId>
+		<version>${opennmsVersion}</version>
+	</dependency>
+	
+	<dependency>
+		<groupId>commons-io</groupId>
+		<artifactId>commons-io</artifactId>
+		</dependency>
+    
+    <dependency>
+		<groupId>org.opennms</groupId>
+		<artifactId>opennms-util</artifactId>
+    </dependency>
+
+    <dependency>
+    	<groupId>${project.groupId}</groupId>
+        <artifactId>opennms-pris-plugins-defaults</artifactId>
+        <version>${project.version}</version>
+    </dependency>
+        
+    <dependency>
+    	<groupId>${project.groupId}</groupId>
+        <artifactId>opennms-pris-api</artifactId>
+        <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+    	<groupId>${project.groupId}</groupId>
+        <artifactId>opennms-pris-main</artifactId>
+        <version>${project.version}</version>
+    </dependency>
+    
+        <dependency>
+    	<groupId>${project.groupId}</groupId>
+        <artifactId>opennms-pris-plugins-ocs</artifactId>
+        <version>${project.version}</version>
+    </dependency>
+    
+            <dependency>
+    	<groupId>${project.groupId}</groupId>
+        <artifactId>opennms-pris-plugins-script</artifactId>
+        <version>${project.version}</version>
+    </dependency>
+    
+    <dependency>
+    	<groupId>${project.groupId}</groupId>
+        <artifactId>opennms-pris-model</artifactId>
+        <version>${project.version}</version>
+    </dependency>
+
+        <dependency>
+            <groupId>postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${postgresqlDriverVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${mysqlConnectorVersion}</version>
+        </dependency>
+
+	<dependency>
+		<groupId>org.opennms</groupId>
+		<artifactId>ocs.inventory.client</artifactId>
+		<version>1.0.1</version>
+	</dependency>
+        
+    <dependency>
+    	<groupId>${project.groupId}</groupId>
+        <artifactId>opennms-pris-plugins-jdbc</artifactId>
+        <version>${project.version}</version>
+    </dependency>
+
+	<dependency>
+		<groupId>commons-codec</groupId>
+		<artifactId>commons-codec</artifactId>
+		<version>1.10</version>
+	</dependency>
+
+	<dependency>
+		<groupId>${project.groupId}</groupId>
+		<artifactId>opennms-pris-plugins-script</artifactId>
+		<version>${project.version}</version>
+	</dependency>
+	
+	<dependency>
+		<groupId>${project.groupId}</groupId>
+		<artifactId>opennms-pris-plugins-xls</artifactId>
+		<version>${project.version}</version>
+	</dependency>
+
+	<dependency>
+		<groupId>net.sourceforge.jexcelapi</groupId>
+		<artifactId>jxl</artifactId>
+		<version>2.6.12</version>
+	</dependency>
+    
+<!-- 	<dependency>
+	    <groupId>org.slf4j</groupId>
+	    <artifactId>slf4j-simple</artifactId>
+	    <version>${slf4jVersion}</version>
+	</dependency> -->
+	      
+<!--     <dependency> -->
+<!--       <groupId>org.opennms</groupId> -->
+<!--       <artifactId>opennms-pris-api</artifactId> -->
+<!--       <version>1.1.5-SNAPSHOT</version> -->
+<!--     </dependency> -->
+    
+<!--     <dependency> -->
+<!--       <groupId>org.opennms</groupId> -->
+<!--       <artifactId>opennms-util</artifactId> -->
+<!--       <version>${opennmsVersion}</version> -->
+<!--     </dependency> -->
+
+    
+    </dependencies>
+    
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.opennms.maven.plugins</groupId>
+                <artifactId>features-maven-plugin</artifactId>
+                <version>1.2.0</version>
+                <executions>
+                    <execution>
+                         <id>features.xml</id>
+				            <phase>process-resources</phase>
+				            <goals>
+				              <goal>generate-features-xml</goal>
+				            </goals>
+	                        <configuration>
+	                        <bundles> 
+	                        <bundle>wrap:mvn:org.jvnet.sorcerer/sorcerer-javac/0.8</bundle>
+	                        <bundle>wrap:mvn:org.apache.httpcomponents/httpclient/${httpComponentsVersion}</bundle>
+	                        <bundle>wrap:mvn:org.apache.httpcomponents/httpcore/4.3.2</bundle>
+	                        <bundle>wrap:mvn:postgresql/postgresql/${postgresqlDriverVersion}</bundle>
+	                        <bundle>wrap:mvn:net.sourceforge.jexcelapi/jxl/2.6.12</bundle>
+	                        </bundles>
+	                            <karafVersion>2.4.3</karafVersion>
+	                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+    
+    <pluginRepositories>
+    <pluginRepository>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <id>opennms-repo</id>
+      <name>OpenNMS Repository</name>
+      <url>http://maven.opennms.org/content/groups/opennms.org-release</url>
+    </pluginRepository>
+  </pluginRepositories>
+
+</project>

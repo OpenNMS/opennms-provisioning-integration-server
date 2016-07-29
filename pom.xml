@@ -18,6 +18,7 @@
     <module>opennms-pris-docs</module>
     <module>opennms-pris-dist</module>
     <module>opennms-pris-plugins</module>
+    <module>opennms-pris-feature</module>
   </modules>
 
   <properties>
@@ -54,8 +55,10 @@
     <asciidoc.images.directory>images</asciidoc.images.directory>
   </properties>
 
-  <dependencies>
-    <!-- Logging -->
+  <dependencyManagement>
+    <dependencies>
+    
+     <!-- Logging -->
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
@@ -82,10 +85,7 @@
       <version>${junitVersion}</version>
       <scope>test</scope>
     </dependency>
-  </dependencies>
-
-  <dependencyManagement>
-    <dependencies>
+    
       <!-- Logging -->
       <dependency>
         <groupId>ch.qos.logback</groupId>

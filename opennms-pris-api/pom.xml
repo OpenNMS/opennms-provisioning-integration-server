@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
   
     <parent>
@@ -11,27 +10,24 @@
   
     <artifactId>opennms-pris-api</artifactId>
   
-    <packaging>jar</packaging>
+    <packaging>bundle</packaging>
   
     <name>OpenNMS :: Provisioning Integration Server :: API</name>
-  
-    <dependencies>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>opennms-pris-model</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.opennms</groupId>
-            <artifactId>opennms-util</artifactId>
-        </dependency>
-    </dependencies>
-    
-    
-    <build>
-        <plugins>
-            <!-- Package test classes in JAR -->
+	  <build>
+	    <plugins>
+	      <plugin>
+	        <groupId>org.apache.felix</groupId>
+	        <artifactId>maven-bundle-plugin</artifactId>
+	        <extensions>true</extensions>
+	        <configuration>
+	          <instructions>
+	            <Bundle-RequiredExecutionEnvironment>JavaSE-1.8</Bundle-RequiredExecutionEnvironment>
+	            <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
+	            <Bundle-Version>${project.version}</Bundle-Version>
+	          </instructions>
+	        </configuration>
+	      </plugin>
+	       <!-- Package test classes in JAR -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -44,6 +40,20 @@
                     </execution>
                 </executions>
             </plugin>
-        </plugins>
-    </build>
+	    </plugins>
+	  </build>
+    <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>opennms-pris-model</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.opennms</groupId>
+            <artifactId>opennms-util</artifactId>
+            <version>${opennmsVersion}</version>
+        </dependency>
+    </dependencies>
+    
 </project>

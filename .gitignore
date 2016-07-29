@@ -9,3 +9,6 @@ target/
 **/*nbactions.xml
 *.iws
 *.ipr
+*.project
+*.classpath
+*.settings
