@@ -42,7 +42,7 @@
     <mavenCompilerPluginVersion>3.5.1</mavenCompilerPluginVersion>
     <metainfServicesVersion>1.7</metainfServicesVersion>
     <mysqlConnectorVersion>5.1.39</mysqlConnectorVersion>
-    <opennmsVersion>18.0.1</opennmsVersion>
+    <opennmsVersion>19.0.0-SNAPSHOT</opennmsVersion>
     <postgresqlDriverVersion>9.4.1210.jre7</postgresqlDriverVersion>
     <slf4jVersion>1.7.21</slf4jVersion>
     <wagonPluginVersion>1.0-beta-5</wagonPluginVersion>
