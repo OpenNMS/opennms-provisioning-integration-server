@@ -17,7 +17,7 @@ The documentation will be automatically build from Markdown to HTML and you can 
 # Compiling from source
 This guide describes how you can checkout the source code from GitHub and how you can compile from source. The following parts are required:
 
-* [OpenJDK] or [Oracle Java Development Kit] with javac Version >= 1.7
+* [OpenJDK] or [Oracle Java Development Kit] with javac Version 8
 * Apache [Maven]
 * [git-scm]
 * `java`, `javac`, `git` and `mvn` should be in your search path
