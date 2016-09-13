@@ -2329,9 +2329,9 @@
     </dependency>
   </dependencies>
   <properties>
-    <apacheDerbyVersion>10.10.1.1</apacheDerbyVersion>
-    <mysqlConnectorVersion>5.1.28</mysqlConnectorVersion>
-    <postgresqlDriverVersion>9.1-901-1.jdbc4</postgresqlDriverVersion>
+    <apacheDerbyVersion>10.12.1.1</apacheDerbyVersion>
+    <mysqlConnectorVersion>5.1.39</mysqlConnectorVersion>
+    <postgresqlDriverVersion>9.4.1210.jre7</postgresqlDriverVersion>
   </properties>
 </project>
 

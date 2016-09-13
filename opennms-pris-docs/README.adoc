@@ -9,7 +9,7 @@ The documentation as AsciiDoc source is compiled into HTML files and will be dis
 == Build from source
 It is possible to build the documentation from source. It requires the following components:
 
-* Java Development Kit 1.7+, OpenJDK or Oracle Java
+* Java Development Kit 8, OpenJDK or Oracle Java
 * Maven
 * Internet connectivity for downloading the package dependencies with Maven
 
