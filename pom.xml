@@ -5,7 +5,7 @@
 
   <groupId>org.opennms</groupId>
   <artifactId>opennms-pris-parent</artifactId>
-  <version>1.1.4</version>
+  <version>1.1.5</version>
 
   <packaging>pom</packaging>
 
@@ -27,24 +27,24 @@
     <github.global.server>github</github.global.server>
 
     <!-- Version settings -->
-    <apacheDerbyVersion>10.10.2.0</apacheDerbyVersion>
-    <asciidoctorVersion>1.5.2</asciidoctorVersion>
+    <apacheDerbyVersion>10.12.1.1</apacheDerbyVersion>
+    <asciidoctorVersion>1.5.3</asciidoctorVersion>
     <beanshellVersion>2.0b5</beanshellVersion>
-    <chQosLogbackVersion>1.1.2</chQosLogbackVersion>
+    <chQosLogbackVersion>1.1.7</chQosLogbackVersion>
     <commonsConfigurationVersion>1.10</commonsConfigurationVersion>
-    <commonsIoVersion>2.4</commonsIoVersion>
-    <groovyVersion>2.3.3</groovyVersion>
-    <guavaVersion>17.0</guavaVersion>
-    <httpComponentsVersion>4.3.4</httpComponentsVersion>
-    <jettyServerVersion>9.2.6.v20141205</jettyServerVersion>
-    <junitVersion>4.11</junitVersion>
-    <mavenResourcesPluginVersion>2.6</mavenResourcesPluginVersion>
-    <mavenCompilerPluginVersion>3.1</mavenCompilerPluginVersion>
-    <metainfServicesVersion>1.5</metainfServicesVersion>
-    <mysqlConnectorVersion>5.1.31</mysqlConnectorVersion>
-    <opennmsVersion>14.0.0</opennmsVersion>
-    <postgresqlDriverVersion>9.1-901-1.jdbc4</postgresqlDriverVersion>
-    <slf4jVersion>1.7.7</slf4jVersion>
+    <commonsIoVersion>2.5</commonsIoVersion>
+    <groovyVersion>2.4.7</groovyVersion>
+    <guavaVersion>19.0</guavaVersion>
+    <httpComponentsVersion>4.5.2</httpComponentsVersion>
+    <jettyServerVersion>9.3.11.v20160721</jettyServerVersion>
+    <junitVersion>4.12</junitVersion>
+    <mavenResourcesPluginVersion>3.0.1</mavenResourcesPluginVersion>
+    <mavenCompilerPluginVersion>3.5.1</mavenCompilerPluginVersion>
+    <metainfServicesVersion>1.7</metainfServicesVersion>
+    <mysqlConnectorVersion>5.1.39</mysqlConnectorVersion>
+    <opennmsVersion>18.0.1</opennmsVersion>
+    <postgresqlDriverVersion>9.4.1210.jre7</postgresqlDriverVersion>
+    <slf4jVersion>1.7.21</slf4jVersion>
     <wagonPluginVersion>1.0-beta-5</wagonPluginVersion>
     <wagonSshVersion>1.0-beta-6</wagonSshVersion>
 
