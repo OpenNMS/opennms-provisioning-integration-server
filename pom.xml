@@ -45,6 +45,7 @@
     <opennmsVersion>19.0.0-SNAPSHOT</opennmsVersion>
     <postgresqlDriverVersion>9.4.1210.jre7</postgresqlDriverVersion>
     <slf4jVersion>1.7.21</slf4jVersion>
+    <updatePolicy>interval:60</updatePolicy>
     <wagonPluginVersion>1.0-beta-5</wagonPluginVersion>
     <wagonSshVersion>1.0-beta-6</wagonSshVersion>
 
@@ -203,10 +204,23 @@
       </snapshots>
       <releases>
         <enabled>true</enabled>
+        <updatePolicy>${updatePolicy}</updatePolicy>
       </releases>
       <id>opennms-release</id>
       <name>OpenNMS Release Maven Repository</name>
       <url>http://maven.opennms.org/content/groups/opennms.org-release/</url>
+    </repository>
+    <repository>
+      <snapshots>
+        <enabled>true</enabled>
+        <updatePolicy>${updatePolicy}</updatePolicy>
+      </snapshots>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <id>opennms-snapshot</id>
+      <name>OpenNMS Snapshot Maven Repository</name>
+      <url>http://maven.opennms.org/content/groups/opennms.org-snapshot/</url>
     </repository>
   </repositories>
 
