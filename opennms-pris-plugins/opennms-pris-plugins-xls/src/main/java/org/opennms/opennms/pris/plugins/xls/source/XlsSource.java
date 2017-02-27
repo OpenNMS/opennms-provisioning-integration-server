@@ -108,6 +108,7 @@ public class XlsSource implements Source {
                     RequisitionNode node = new RequisitionNode();
                     RequisitionInterface reqInterface;
                     Integer row = 1;
+
                     while (row < sheet.getRows()) {
                         //TODO clean this if
                         if (!sheet.getCell(getRelevantColumnID(REQUIRED_UNIQUE_PREFIXES.PREFIX_NODE), row).getContents().trim().isEmpty()) {
@@ -124,7 +125,14 @@ public class XlsSource implements Source {
                                         node.setForeignId(foreignId);
                                     }                                
                                 }
-                                
+
+                                if (getRelevantColumnID(OPTIONAL_UNIQUE_HEADERS.PREFIX_LOCATION) != null) {
+                                    String location = sheet.getCell(getRelevantColumnID(OPTIONAL_UNIQUE_HEADERS.PREFIX_LOCATION), row).getContents().trim();
+                                    if (!location.isEmpty()) {
+                                        node.setLocation(location);
+                                    }
+                                }
+
                                 //adding parent data
                                 if (getRelevantColumnID(OPTIONAL_UNIQUE_HEADERS.PREFIX_PARENT_FOREIGN_SOURCE) != null) {
                                     String parentForeignSource = sheet.getCell(getRelevantColumnID(OPTIONAL_UNIQUE_HEADERS.PREFIX_PARENT_FOREIGN_SOURCE), row).getContents().trim();
@@ -388,6 +396,7 @@ public class XlsSource implements Source {
     private enum OPTIONAL_UNIQUE_HEADERS {
         PREFIX_INTERFACE_STATUS("InterfaceStatus"),
         PREFIX_FOREIGN_ID("ID_"),
+        PREFIX_LOCATION("Location"),
         PREFIX_PARENT_FOREIGN_SOURCE("Parent_Foreign_Source"),
         PREFIX_PARENT_FOREIGN_ID("Parent_Foreign_Id"),
         PREFIX_PARENT_NODE_LABEL("Parent_Node_Label");

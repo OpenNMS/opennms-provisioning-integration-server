@@ -42,6 +42,7 @@ public class JdbcSource implements Source {
      * Columns which have to be mapped from the SQL result set to an OpenNMS requisition
      */
     private static final String COLUMN_NODE_LABEL = "Node_Label";
+    private static final String COLUMN_LOCATION = "Location";
     private static final String COLUMN_CATEGORY = "Cat";
     private static final String COLUMN_SERVICE = "Svc";
     private static final String COLUMN_IP_ADDRESS = "Ip_Address";
@@ -109,6 +110,12 @@ public class JdbcSource implements Source {
 
                     if (nodeLabel != null) {
                         node.setNodeLabel(nodeLabel);
+                    }
+
+                    String location = getString(resultSet, COLUMN_LOCATION);
+
+                    if (location != null) {
+                        node.setLocation(location);
                     }
 
                     String parentNodeLabel = getString(resultSet, COLUMN_PARENT_NODE_LABEL);

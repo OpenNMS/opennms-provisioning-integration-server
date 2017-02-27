@@ -1,17 +1,10 @@
 package org.opennms.opennms.pris.plugins.jdbc.source;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 import org.opennms.pris.api.MockInstanceConfiguration;
 import org.opennms.pris.model.Requisition;
+
+import java.sql.*;
 
 public class JdbcSourceTest {
 
@@ -22,10 +15,11 @@ public class JdbcSourceTest {
     private final String CONNECTION_URL_DROP = "jdbc:derby:memory:testDB;drop=true";
 
     private final String INSTANCE = "Test-Instance";
-    
+
     private final String SQL_CREATE_ALL = "CREATE TABLE node ("
             + "foreignId INT,"
             + "nodeLabel VARCHAR(255),"
+            + "location VARCHAR(255),"
             + "parentNodeLabel VARCHAR(255),"
             + "parentForeignId VARCHAR(255),"
             + "parentForeignSource VARCHAR(255),"
@@ -41,6 +35,7 @@ public class JdbcSourceTest {
 
     private final String SQL_SELECT_STATEMENT_TEST_1 = "SELECT foreignId AS Foreign_Id, "
             + "nodelabel AS Node_Label,"
+            + "location AS Location,"
             + "parentNodeLabel AS Parent_Node_Label,"
             + "parentForeignId AS Parent_Foreign_Id,"
             + "parentForeignSource AS Parent_Foreign_Source,"
@@ -67,13 +62,13 @@ public class JdbcSourceTest {
         Statement stmnt = connection.createStatement();
         stmnt.executeUpdate(SQL_CREATE_ALL);
 
-        insertRow("1", "node1", "", "", "", "192.168.0.1", "P", "1", "description1", "city1", "state1", "service1", "category1");
-        insertRow("2", "node2", "ParentNodeLabel", "", "",  "192.168.0.2", "P", "3", "description2", "city2", "state2", "service2", "category2");
-        insertRow("3", "node3", "", "ParentId", "ParentSouce", "192.168.0.3", "P", "1", "description3", "city3", "state3", "service3", "category3");
+        insertRow("1", "node1", "", "", "", "", "192.168.0.1", "P", "1", "description1", "city1", "state1", "service1", "category1");
+        insertRow("2", "node2", "Test-Location", "ParentNodeLabel", "", "", "192.168.0.2", "P", "3", "description2", "city2", "state2", "service2", "category2");
+        insertRow("3", "node3", "", "", "ParentId", "ParentSouce", "192.168.0.3", "P", "1", "description3", "city3", "state3", "service3", "category3");
     }
 
-    private void insertRow(String foreignId, String nodeLabel, String parentNodeLabel, String parentForeignId, String parentForeignSource, String ipAddress, String ifType, String ifStatus, String description, String city, String state, String serviceName, String categoryName) throws SQLException {
-        String DML = "INSERT INTO node (foreignId, nodeLabel, parentNodeLabel, parentForeignId, parentForeignSource, ipAddress, ifType, ifStatus, description, city, state, serviceName, categoryName) VALUES (" + foreignId + ", '" + nodeLabel + "', '" +  parentNodeLabel + "', '" + parentForeignId + "', '" + parentForeignSource + "', '" + ipAddress + "', '" + ifType + "', '" + ifStatus + "', '" + description + "', '" + city + "', '" + state + "', '" + serviceName + "', '" + categoryName + "')";
+    private void insertRow(String foreignId, String nodeLabel, String location, String parentNodeLabel, String parentForeignId, String parentForeignSource, String ipAddress, String ifType, String ifStatus, String description, String city, String state, String serviceName, String categoryName) throws SQLException {
+        String DML = "INSERT INTO node (foreignId, nodeLabel, location, parentNodeLabel, parentForeignId, parentForeignSource, ipAddress, ifType, ifStatus, description, city, state, serviceName, categoryName) VALUES (" + foreignId + ", '" + nodeLabel + "', '" + location + "', '" + parentNodeLabel + "', '" + parentForeignId + "', '" + parentForeignSource + "', '" + ipAddress + "', '" + ifType + "', '" + ifStatus + "', '" + description + "', '" + city + "', '" + state + "', '" + serviceName + "', '" + categoryName + "')";
         Statement stmnt = connection.createStatement();
         stmnt.executeUpdate(DML);
     }
@@ -94,7 +89,7 @@ public class JdbcSourceTest {
         Statement selectAll = connection.createStatement();
         ResultSet selectAllResult = selectAll.executeQuery(SQL_SELECT_STATEMENT_TEST_1);
         while (selectAllResult.next()) {
-            System.out.println("Results: " + selectAllResult.getString("Foreign_Id") + " " + selectAllResult.getString("Node_Label"));
+            System.out.println("Results: " + selectAllResult.getString("Foreign_Id") + " " + selectAllResult.getString("Node_Label")  + " " + selectAllResult.getString("Location"));
         }
     }
 
@@ -111,6 +106,7 @@ public class JdbcSourceTest {
         Requisition requisition = (Requisition) jdbcSource.dump();
         Assert.assertEquals(INSTANCE, requisition.getForeignSource());
         Assert.assertEquals(3, requisition.getNodes().size());
+        Assert.assertEquals("Test-Location", requisition.getNodes().get(1).getLocation());
         Assert.assertEquals("ParentNodeLabel", requisition.getNodes().get(1).getParentNodeLabel());
     }
 }
