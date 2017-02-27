@@ -29,7 +29,7 @@
     <!-- Version settings -->
     <apacheDerbyVersion>10.13.1.1</apacheDerbyVersion>
     <asciidoctorVersion>1.5.3</asciidoctorVersion>
-    <beanshellVersion>2.0b4</beanshellVersion>
+    <beanshellVersion>2.0b5</beanshellVersion>
     <chQosLogbackVersion>1.2.1</chQosLogbackVersion>
     <commonsConfigurationVersion>1.10</commonsConfigurationVersion>
     <commonsIoVersion>2.5</commonsIoVersion>
