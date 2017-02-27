@@ -4,7 +4,11 @@ import org.junit.*;
 import org.opennms.pris.api.MockInstanceConfiguration;
 import org.opennms.pris.model.Requisition;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class JdbcSourceTest {
 
