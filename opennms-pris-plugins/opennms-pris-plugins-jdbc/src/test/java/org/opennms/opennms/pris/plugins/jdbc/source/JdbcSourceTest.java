@@ -69,9 +69,9 @@ public class JdbcSourceTest {
         Statement stmnt = connection.createStatement();
         stmnt.executeUpdate(SQL_CREATE_ALL);
 
-        insertRow("1", "node1", "", "", "", "", "192.168.0.1", "P", "1", "description1", "city1", "state1", "service1", "category1");
+        insertRow("1", "node1", null, null, null, null, "192.168.0.1", "P", "1", "description1", "city1", "state1", "service1", "category1");
         insertRow("2", "node2", "Test-Location", "ParentNodeLabel", "", "", "192.168.0.2", "P", "3", "description2", "city2", "state2", "service2", "category2");
-        insertRow("3", "node3", "", "", "ParentId", "ParentSouce", "192.168.0.3", "P", "1", "description3", "city3", "state3", "service3", "category3");
+        insertRow("3", "node3", null, null, "ParentId", "ParentSouce", "192.168.0.3", "P", "1", "description3", "city3", "state3", "service3", "category3");
     }
 
     private void insertRow(String foreignId, String nodeLabel, String location, String parentNodeLabel, String parentForeignId, String parentForeignSource, String ipAddress, String ifType, String ifStatus, String description, String city, String state, String serviceName, String categoryName) throws SQLException {
