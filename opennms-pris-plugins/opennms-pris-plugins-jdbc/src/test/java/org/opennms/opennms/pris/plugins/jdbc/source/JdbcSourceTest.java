@@ -1,14 +1,18 @@
 package org.opennms.opennms.pris.plugins.jdbc.source;
 
-import org.junit.*;
-import org.opennms.pris.api.MockInstanceConfiguration;
-import org.opennms.pris.model.Requisition;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.opennms.pris.api.MockInstanceConfiguration;
+import org.opennms.pris.model.Requisition;
 
 public class JdbcSourceTest {
 
@@ -19,7 +23,6 @@ public class JdbcSourceTest {
     private final String CONNECTION_URL_DROP = "jdbc:derby:memory:testDB;drop=true";
 
     private final String INSTANCE = "Test-Instance";
-
     private final String SQL_CREATE_ALL = "CREATE TABLE node ("
             + "foreignId INT,"
             + "nodeLabel VARCHAR(255),"

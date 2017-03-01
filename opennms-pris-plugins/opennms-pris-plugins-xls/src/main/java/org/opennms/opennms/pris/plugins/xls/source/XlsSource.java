@@ -19,8 +19,6 @@
  */
 package org.opennms.opennms.pris.plugins.xls.source;
 
-import org.opennms.opennms.pris.plugins.xls.source.exceptions.InvalidInterfaceException;
-import org.opennms.opennms.pris.plugins.xls.source.exceptions.MissingRequiredColumnHeaderException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -31,12 +29,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import jxl.Cell;
-import jxl.Sheet;
-import jxl.Workbook;
-import jxl.WorkbookSettings;
-import jxl.read.biff.BiffException;
+
 import org.kohsuke.MetaInfServices;
+import org.opennms.opennms.pris.plugins.xls.source.exceptions.InvalidInterfaceException;
+import org.opennms.opennms.pris.plugins.xls.source.exceptions.MissingRequiredColumnHeaderException;
+import org.opennms.pris.api.InstanceConfiguration;
+import org.opennms.pris.api.Source;
+import org.opennms.pris.model.AssetField;
 import org.opennms.pris.model.PrimaryType;
 import org.opennms.pris.model.Requisition;
 import org.opennms.pris.model.RequisitionAsset;
@@ -44,11 +43,14 @@ import org.opennms.pris.model.RequisitionCategory;
 import org.opennms.pris.model.RequisitionInterface;
 import org.opennms.pris.model.RequisitionMonitoredService;
 import org.opennms.pris.model.RequisitionNode;
-import org.opennms.pris.model.AssetField;
-import org.opennms.pris.api.InstanceConfiguration;
-import org.opennms.pris.api.Source;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import jxl.Cell;
+import jxl.Sheet;
+import jxl.Workbook;
+import jxl.WorkbookSettings;
+import jxl.read.biff.BiffException;
 
 public class XlsSource implements Source {
 
@@ -108,7 +110,6 @@ public class XlsSource implements Source {
                     RequisitionNode node = new RequisitionNode();
                     RequisitionInterface reqInterface;
                     Integer row = 1;
-
                     while (row < sheet.getRows()) {
                         //TODO clean this if
                         if (!sheet.getCell(getRelevantColumnID(REQUIRED_UNIQUE_PREFIXES.PREFIX_NODE), row).getContents().trim().isEmpty()) {

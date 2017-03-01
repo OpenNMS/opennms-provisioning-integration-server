@@ -27,27 +27,27 @@
     <github.global.server>github</github.global.server>
 
     <!-- Version settings -->
-    <apacheDerbyVersion>10.13.1.1</apacheDerbyVersion>
+    <apacheDerbyVersion>10.12.1.1</apacheDerbyVersion>
     <asciidoctorVersion>1.5.3</asciidoctorVersion>
     <beanshellVersion>2.0b5</beanshellVersion>
-    <chQosLogbackVersion>1.2.1</chQosLogbackVersion>
+    <chQosLogbackVersion>1.1.7</chQosLogbackVersion>
     <commonsConfigurationVersion>1.10</commonsConfigurationVersion>
     <commonsIoVersion>2.5</commonsIoVersion>
-    <groovyVersion>2.4.8</groovyVersion>
-    <guavaVersion>21.0</guavaVersion>
+    <groovyVersion>2.4.7</groovyVersion>
+    <guavaVersion>19.0</guavaVersion>
     <httpComponentsVersion>4.5.2</httpComponentsVersion>
-    <jettyServerVersion>9.4.2.v20170220</jettyServerVersion>
+    <jettyServerVersion>9.3.11.v20160721</jettyServerVersion>
     <junitVersion>4.12</junitVersion>
-    <mavenResourcesPluginVersion>3.0.2</mavenResourcesPluginVersion>
-    <mavenCompilerPluginVersion>3.6.1</mavenCompilerPluginVersion>
+    <mavenResourcesPluginVersion>3.0.1</mavenResourcesPluginVersion>
+    <mavenCompilerPluginVersion>3.5.1</mavenCompilerPluginVersion>
     <metainfServicesVersion>1.7</metainfServicesVersion>
-    <mysqlConnectorVersion>6.0.5</mysqlConnectorVersion>
-    <opennmsVersion>19.0.1</opennmsVersion>
-    <postgresqlDriverVersion>42.0.0.jre7</postgresqlDriverVersion>
-    <slf4jVersion>1.7.24</slf4jVersion>
+    <mysqlConnectorVersion>5.1.39</mysqlConnectorVersion>
+    <opennmsVersion>19.0.0-SNAPSHOT</opennmsVersion>
+    <postgresqlDriverVersion>9.4.1210.jre7</postgresqlDriverVersion>
+    <slf4jVersion>1.7.21</slf4jVersion>
     <updatePolicy>interval:60</updatePolicy>
-    <wagonPluginVersion>2.12</wagonPluginVersion>
-    <wagonSshVersion>2.12</wagonSshVersion>
+    <wagonPluginVersion>1.0-beta-5</wagonPluginVersion>
+    <wagonSshVersion>1.0-beta-6</wagonSshVersion>
 
     <!-- Ascii doc settings for documention -->
     <asciidoc.source.directory>${basedir}/src/asciidoc</asciidoc.source.directory>
