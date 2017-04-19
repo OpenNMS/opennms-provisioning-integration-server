@@ -20,6 +20,7 @@ These `column names` have to start with certain prefixes to be recognized.
 |========================
 | Prefixes                  | Required | Description
 | `Node_`                   | *        | will be interpreted as node label. It is also used as `foreignId` if no `ID_` header is present.
+| `Location`                |          | The monitoring location for the node. When not set, the node is monitored from the _OpenNMS_ server, otherwise from the _Minion_ associated with the `Location`.
 | `IP_`                     | *        | will be interpreted as an IP address as a new interface on the node.
 | `MgmtType_`               | *        | is interpreted as `snmp-primary` flag and controls how the interface can be used to communicate with the SNMP agent. Valid are `P` (Primary), `S` (Secondary) and `N` (None).
 | `ID_`                     |          | will be interpreted as `foreignId` for the node. If no `foreignId` is definded the `Node_` value is used as `foreignId`.

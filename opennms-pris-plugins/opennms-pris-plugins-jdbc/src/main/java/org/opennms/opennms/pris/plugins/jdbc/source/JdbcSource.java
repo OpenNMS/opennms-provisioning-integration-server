@@ -19,15 +19,26 @@
  */
 package org.opennms.opennms.pris.plugins.jdbc.source;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 import org.kohsuke.MetaInfServices;
 import org.opennms.pris.api.InstanceConfiguration;
 import org.opennms.pris.api.Source;
-import org.opennms.pris.model.*;
+import org.opennms.pris.model.AssetField;
+import org.opennms.pris.model.PrimaryType;
+import org.opennms.pris.model.Requisition;
+import org.opennms.pris.model.RequisitionAsset;
+import org.opennms.pris.model.RequisitionCategory;
+import org.opennms.pris.model.RequisitionInterface;
+import org.opennms.pris.model.RequisitionMonitoredService;
+import org.opennms.pris.model.RequisitionNode;
 import org.opennms.pris.util.RequisitionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.sql.*;
 
 /**
  * A JDBC data source allows to connect to an SQL database and extract data in a given format. The result set is mapped to an OpenNMS requisition.
@@ -42,6 +53,7 @@ public class JdbcSource implements Source {
      * Columns which have to be mapped from the SQL result set to an OpenNMS requisition
      */
     private static final String COLUMN_NODE_LABEL = "Node_Label";
+    private static final String COLUMN_LOCATION = "Location";
     private static final String COLUMN_CATEGORY = "Cat";
     private static final String COLUMN_SERVICE = "Svc";
     private static final String COLUMN_IP_ADDRESS = "Ip_Address";
@@ -109,6 +121,11 @@ public class JdbcSource implements Source {
 
                     if (nodeLabel != null) {
                         node.setNodeLabel(nodeLabel);
+                    }
+
+                    String location = getString(resultSet, COLUMN_LOCATION);
+                    if (location != null) {
+                        node.setLocation(location);
                     }
 
                     String parentNodeLabel = getString(resultSet, COLUMN_PARENT_NODE_LABEL);

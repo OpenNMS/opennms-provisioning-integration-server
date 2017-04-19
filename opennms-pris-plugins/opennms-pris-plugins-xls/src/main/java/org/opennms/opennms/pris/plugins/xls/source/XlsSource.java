@@ -19,8 +19,6 @@
  */
 package org.opennms.opennms.pris.plugins.xls.source;
 
-import org.opennms.opennms.pris.plugins.xls.source.exceptions.InvalidInterfaceException;
-import org.opennms.opennms.pris.plugins.xls.source.exceptions.MissingRequiredColumnHeaderException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -31,12 +29,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import jxl.Cell;
-import jxl.Sheet;
-import jxl.Workbook;
-import jxl.WorkbookSettings;
-import jxl.read.biff.BiffException;
+
 import org.kohsuke.MetaInfServices;
+import org.opennms.opennms.pris.plugins.xls.source.exceptions.InvalidInterfaceException;
+import org.opennms.opennms.pris.plugins.xls.source.exceptions.MissingRequiredColumnHeaderException;
+import org.opennms.pris.api.InstanceConfiguration;
+import org.opennms.pris.api.Source;
+import org.opennms.pris.model.AssetField;
 import org.opennms.pris.model.PrimaryType;
 import org.opennms.pris.model.Requisition;
 import org.opennms.pris.model.RequisitionAsset;
@@ -44,11 +43,14 @@ import org.opennms.pris.model.RequisitionCategory;
 import org.opennms.pris.model.RequisitionInterface;
 import org.opennms.pris.model.RequisitionMonitoredService;
 import org.opennms.pris.model.RequisitionNode;
-import org.opennms.pris.model.AssetField;
-import org.opennms.pris.api.InstanceConfiguration;
-import org.opennms.pris.api.Source;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import jxl.Cell;
+import jxl.Sheet;
+import jxl.Workbook;
+import jxl.WorkbookSettings;
+import jxl.read.biff.BiffException;
 
 public class XlsSource implements Source {
 
@@ -124,7 +126,14 @@ public class XlsSource implements Source {
                                         node.setForeignId(foreignId);
                                     }                                
                                 }
-                                
+
+                                if (getRelevantColumnID(OPTIONAL_UNIQUE_HEADERS.PREFIX_LOCATION) != null) {
+                                    String location = sheet.getCell(getRelevantColumnID(OPTIONAL_UNIQUE_HEADERS.PREFIX_LOCATION), row).getContents().trim();
+                                    if (!location.isEmpty()) {
+                                        node.setLocation(location);
+                                    }
+                                }
+
                                 //adding parent data
                                 if (getRelevantColumnID(OPTIONAL_UNIQUE_HEADERS.PREFIX_PARENT_FOREIGN_SOURCE) != null) {
                                     String parentForeignSource = sheet.getCell(getRelevantColumnID(OPTIONAL_UNIQUE_HEADERS.PREFIX_PARENT_FOREIGN_SOURCE), row).getContents().trim();
@@ -388,6 +397,7 @@ public class XlsSource implements Source {
     private enum OPTIONAL_UNIQUE_HEADERS {
         PREFIX_INTERFACE_STATUS("InterfaceStatus"),
         PREFIX_FOREIGN_ID("ID_"),
+        PREFIX_LOCATION("Location"),
         PREFIX_PARENT_FOREIGN_SOURCE("Parent_Foreign_Source"),
         PREFIX_PARENT_FOREIGN_ID("Parent_Foreign_Id"),
         PREFIX_PARENT_NODE_LABEL("Parent_Node_Label");
