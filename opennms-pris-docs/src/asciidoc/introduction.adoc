@@ -105,3 +105,6 @@ To control the daemon behavior the `service start | stop` commands are supported
 
 In other cases the `opennms-pris.sh` or `opennms-pris.bat` scripts run the daemon in foreground on all other Linux systems or _Microsoft Windows_.
 If you want to run _PRIS_ on _Microsoft Windows_ you probably have to look into a link:http://nssm.cc/usage[wrapper] for the `opennms-pris.bat` file.
+
+NOTE: If you want to run _PRIS_ as non-root user, create a user with `adduser pris` and change the user in the init scripts.
+      Be aware, user can't start applications which listen on ports < 1024.
