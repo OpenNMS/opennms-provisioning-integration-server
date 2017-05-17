@@ -7,7 +7,6 @@ Version: {docVersion}
 :toclevels: 4
 :numbered:
 
-
 // Introduction
 include::introduction.adoc[]
 
@@ -46,3 +45,6 @@ include::advanced-config.adoc[]
 
 // How to contribute documentation
 include::doc-guidelines.adoc[]
+
+// Release Notes
+include::release-notes.adoc[]

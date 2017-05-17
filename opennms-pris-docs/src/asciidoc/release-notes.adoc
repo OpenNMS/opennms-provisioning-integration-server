@@ -1,0 +1,13 @@
+
+[releasenotes-changelog-1.1.6]
+== Release Notes 1.1.6
+
+=== Bug
+
+* Initscript does not work with systemd (Issue http://issues.opennms.org/browse/PRIS-133[PRIS-133])
+* Fault in windows opennms-pris.bat script (Issue http://issues.opennms.org/browse/PRIS-138[PRIS-138])
+
+=== Enhancement
+
+* Add support for locations in XLS and JDBC data sources (Issue http://issues.opennms.org/browse/PRIS-136[PRIS-136])
+* Bump version dependencies (Issue http://issues.opennms.org/browse/PRIS-137[PRIS-137])
