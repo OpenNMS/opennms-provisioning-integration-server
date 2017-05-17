@@ -44,6 +44,7 @@ public class XlsSourceTest {
         assertEquals("Test-Parent-Foreign-Source", resultNode.getParentForeignSource());
         assertEquals("Test-Parent-Foreign-Id", resultNode.getParentForeignId());
         assertEquals("Test-Parent-Node-Label", resultNode.getParentNodeLabel());
+        assertEquals("Test-Location", resultNode.getLocation());
         
         assertEquals(RequisitionUtils.findAsset(resultNode, AssetField.vendor.name).getValue(), "Vater");
         assertEquals(RequisitionUtils.findAsset(resultNode, AssetField.city.name).getValue(), "Braunschweig");

@@ -19,9 +19,10 @@
         
         <fileSet>
             <includes>
-                <include>opennms-pris.sh</include>
                 <include>opennms-pris.bat</include>
+                <include>opennms-pris.init</include>
                 <include>opennms-pris.service</include>
+                <include>opennms-pris.sh</include>
             </includes>
             <directory>${project.basedir}/src/main/resources</directory>
             <outputDirectory>./</outputDirectory>
