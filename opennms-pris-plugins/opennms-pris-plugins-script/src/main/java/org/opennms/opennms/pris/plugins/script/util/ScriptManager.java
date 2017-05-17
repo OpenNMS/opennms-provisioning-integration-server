@@ -20,6 +20,7 @@
  */
 package org.opennms.opennms.pris.plugins.script.util;
 
+import com.google.common.collect.ImmutableMap;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
@@ -42,10 +43,10 @@ public class ScriptManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ScriptManager.class);
 
-    public static Object execute(final InstanceConfiguration config,
+    private static Object executeScript(final InstanceConfiguration config,
                                  final Map<String, Object> bindings) throws IOException, ScriptException {
         
-        Requisition requisition = null;
+        Object requisition = null;
         // Get the path to the script
         final List<Path> scripts = config.getPaths("file");
         
@@ -74,17 +75,25 @@ public class ScriptManager {
         
         // Overwrite initial requisition with the requisition from the previous script, if there was any.
         if (requisition != null) {
-            scriptBindings.put("requisition", requisition);
+            scriptBindings.put("requisition", (Requisition) requisition);
         }
 
         // Evaluate the script and return the requisition created in the script
         try (final Reader scriptReader = Files.newBufferedReader(script, StandardCharsets.UTF_8)) {
             LOGGER.debug("Start Script {}", script);
-            requisition = (Requisition) scriptEngine.eval(scriptReader, scriptBindings);
+            requisition = scriptEngine.eval(scriptReader, scriptBindings);
             LOGGER.debug("Done  Script {}", script);
         }
     }
         return requisition;
     }
 
+    public static Object executeToObject(InstanceConfiguration config, ImmutableMap<String, Object> build) throws IOException, ScriptException {
+        return executeScript(config, build);
+    }
+    
+    public static Requisition executeToRequisition(InstanceConfiguration config, ImmutableMap<String, Object> build) throws IOException, ScriptException {
+        return (Requisition) executeScript(config, build);
+    }
+    
 }
