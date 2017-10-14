@@ -28,26 +28,26 @@
 
     <!-- Version settings -->
     <apacheDerbyVersion>10.13.1.1</apacheDerbyVersion>
-    <asciidoctorVersion>1.5.3</asciidoctorVersion>
+    <asciidoctorVersion>1.5.6</asciidoctorVersion>
     <beanshellVersion>2.0b5</beanshellVersion>
-    <chQosLogbackVersion>1.2.1</chQosLogbackVersion>
+    <chQosLogbackVersion>1.2.3</chQosLogbackVersion>
     <commonsConfigurationVersion>1.10</commonsConfigurationVersion>
     <commonsIoVersion>2.5</commonsIoVersion>
-    <groovyVersion>2.4.9</groovyVersion>
-    <guavaVersion>21.0</guavaVersion>
+    <groovyVersion>2.4.12</groovyVersion>
+    <guavaVersion>23.0</guavaVersion>
     <httpComponentsVersion>4.5.3</httpComponentsVersion>
-    <jettyServerVersion>9.4.2.v20170220</jettyServerVersion>
+    <jettyServerVersion>9.4.7.v20170914</jettyServerVersion>
     <junitVersion>4.12</junitVersion>
     <mavenResourcesPluginVersion>3.0.2</mavenResourcesPluginVersion>
-    <mavenCompilerPluginVersion>3.6.1</mavenCompilerPluginVersion>
+    <mavenCompilerPluginVersion>3.7.0</mavenCompilerPluginVersion>
     <metainfServicesVersion>1.7</metainfServicesVersion>
-    <mysqlConnectorVersion>6.0.5</mysqlConnectorVersion>
-    <opennmsVersion>19.0.1</opennmsVersion>
-    <postgresqlDriverVersion>42.0.0.jre7</postgresqlDriverVersion>
-    <slf4jVersion>1.7.24</slf4jVersion>
+    <mysqlConnectorVersion>6.0.6</mysqlConnectorVersion>
+    <opennmsVersion>20.1.0</opennmsVersion>
+    <postgresqlDriverVersion>42.1.4</postgresqlDriverVersion>
+    <slf4jVersion>1.7.25</slf4jVersion>
     <updatePolicy>interval:60</updatePolicy>
-    <wagonPluginVersion>2.12</wagonPluginVersion>
-    <wagonSshVersion>2.12</wagonSshVersion>
+    <wagonPluginVersion>3.0.0</wagonPluginVersion>
+    <wagonSshVersion>3.0.0</wagonSshVersion>
 
     <!-- Ascii doc settings for documention -->
     <asciidoc.source.directory>${basedir}/src/asciidoc</asciidoc.source.directory>
