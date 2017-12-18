@@ -2,19 +2,19 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-  
+
     <parent>
         <groupId>org.opennms</groupId>
         <artifactId>opennms-pris-parent</artifactId>
-        <version>1.1.6</version>
+        <version>NEXT-MAJOR</version>
     </parent>
-  
+
     <artifactId>opennms-pris-model</artifactId>
-  
+
     <packaging>jar</packaging>
-  
+
     <name>OpenNMS :: Provisioning Integration Server :: Model</name>
-    
+
     <dependencies>
         <dependency>
             <groupId>org.jvnet.jaxb2_commons</groupId>
@@ -22,7 +22,7 @@
             <version>0.6.5.1</version>
         </dependency>
     </dependencies>
-    
+
     <build>
         <plugins>
             <!-- Copy the XSDs to the project -->
@@ -50,7 +50,7 @@
                     </execution>
                 </executions>
             </plugin>
-            
+
             <!-- Compile XSDs into classes -->
             <plugin>
                 <groupId>org.jvnet.jaxb2.maven2</groupId>
@@ -70,16 +70,16 @@
                     <verbose>true</verbose>
                     <debug>true</debug>
                     -->
-                    
+
                     <!-- Configure generated code -->
                     <enableIntrospection>true</enableIntrospection>
 
                     <!-- Specify XSDs -->
                     <schemaDirectory>${basedir}/target/xsds</schemaDirectory>
-                    
+
                     <!-- Specify bindings -->
                     <bindingDirectory>${basedir}/src/main/xjb</bindingDirectory>
-                    
+
                     <args>
                         <arg>-XtoString</arg>
                         <arg>-Xequals</arg>
@@ -87,7 +87,7 @@
                         <arg>-Xfluent-api</arg>
                         <arg>-Xvalue-constructor</arg>
                     </args>
-                    
+
                     <plugins>
                         <dependency>
                             <groupId>org.jvnet.jaxb2_commons</groupId>

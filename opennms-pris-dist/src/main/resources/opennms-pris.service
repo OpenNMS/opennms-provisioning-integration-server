@@ -4,7 +4,7 @@ Description=OpenNMS Provisioning Integration Server
 [Service]
 Type=Simple
 WorkingDirectory=/opt/opennms-pris/
-ExecStart=/usr/bin/java -cp ./lib/*:./opennms-pris.jar org.opennms.pris.Starter
+ExecStart=/usr/bin/java ${JAVA_OPTS} -cp ./lib/*:./opennms-pris.jar org.opennms.pris.Starter
 ExecStop=/bin/kill -TERM $MAINPID
 User=root
 

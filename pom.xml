@@ -5,7 +5,7 @@
 
   <groupId>org.opennms</groupId>
   <artifactId>opennms-pris-parent</artifactId>
-  <version>1.1.6</version>
+  <version>NEXT-MAJOR</version>
 
   <packaging>pom</packaging>
 
@@ -149,13 +149,13 @@
         <artifactId>jetty-server</artifactId>
         <version>${jettyServerVersion}</version>
       </dependency>
-      
+
       <dependency>
          <groupId>org.eclipse.jetty</groupId>
          <artifactId>jetty-rewrite</artifactId>
          <version>${jettyServerVersion}</version>
       </dependency>
-        
+
 
       <!-- SPI -->
       <dependency>
@@ -164,22 +164,22 @@
         <version>${metainfServicesVersion}</version>
         <scope>provided</scope>
       </dependency>
-      
+
       <dependency>
         <groupId>org.codehaus.groovy</groupId>
         <artifactId>groovy-all</artifactId>
         <version>${groovyVersion}</version>
       </dependency>
-      
+
       <dependency>
         <groupId>org.beanshell</groupId>
         <artifactId>bsh</artifactId>
         <version>${beanshellVersion}</version>
       </dependency>
-      
+
     </dependencies>
   </dependencyManagement>
-  
+
   <build>
     <plugins>
       <plugin>

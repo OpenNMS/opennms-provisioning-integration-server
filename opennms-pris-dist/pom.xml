@@ -3,17 +3,17 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    
+
     <parent>
         <groupId>org.opennms</groupId>
         <artifactId>opennms-pris-parent</artifactId>
-        <version>1.1.6</version>
+        <version>NEXT-MAJOR</version>
     </parent>
-    
+
     <artifactId>opennms-pris-dist</artifactId>
-    
+
     <packaging>pom</packaging>
-    
+
     <name>OpenNMS :: Provisioning Integration Server :: Distribution</name>
 
     <dependencies>
@@ -23,13 +23,13 @@
             <version>${project.version}</version>
             <type>pom</type>
         </dependency>
-    
+
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>opennms-pris-main</artifactId>
             <version>${project.version}</version>
         </dependency>
-    
+
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>opennms-pris-plugins-defaults</artifactId>
@@ -64,6 +64,7 @@
 
     <build>
         <!-- Build fat JAR -->
+        <finalName>pris</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -92,13 +93,13 @@
                     </execution>
                 </executions>
             </plugin>
-            
+
             <!-- Build release archives -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>2.4</version>
-                
+
                 <executions>
                     <execution>
                         <id>make-assembly</id>
@@ -108,7 +109,7 @@
                         </goals>
                     </execution>
                 </executions>
-                
+
                 <configuration>
                     <descriptors>
                         <descriptor>src/assembly/assembly.xml</descriptor>

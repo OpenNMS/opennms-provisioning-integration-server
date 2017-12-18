@@ -4,13 +4,11 @@
 #
 # Usage example:
 #   changeversion.sh -o 1.0.4-SNAPSHOT -n 1.0.5-SNAPSHOT
-# 
+#
 # Created:
 #   ronny@opennms.org
 #
 
-# Change to project root and save current work directory
-cd ..
 CWD=$(pwd)
 
 # Turn on debug mode
@@ -18,7 +16,7 @@ CWD=$(pwd)
 
 #
 # Function print usage help text
-# 
+#
 printUsage() {
   echo ""
   echo "Script to change the version number in pom.xml files"
@@ -53,8 +51,7 @@ while [ $# -gt 0 ] ; do
 done
 
 # Go through all pom.xml files and replace the given version number
-for i in $(find ${CWD} -name "pom.xml"); do 
+for i in $(find ${CWD} -name "pom.xml"); do
   cat ${i} | sed -e "s/${OLD_VERSION}/${NEW_VERSION}/g" > ${i}.new;
   mv ${i}.new ${i};
 done
-
