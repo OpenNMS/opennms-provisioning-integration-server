@@ -68,7 +68,7 @@ jobs:
           root: *workspace_root
           paths:
             - pris-release-archive.tar.gz
-            - opennms-pris-dist/target/pris-release-archive.zip
+            - pris-release-archive.zip
             - version.txt
 
   build_docker_image:
@@ -191,6 +191,61 @@ jobs:
             command: |
               docker push opennms/pris:bleeding
 
+  publish_latest_2_GitHub:
+      <<: *defaults
+      docker:
+        - image: circleci/golang
+
+      steps:
+        - *attach_workspace
+        - run:
+            name: Install ghr tool to create GitHub releases and upload artifacts
+            command: |
+              go get -u github.com/tcnksm/ghr
+        - run:
+            name: Collect artifacts to publish latest release on GitHub
+            command: |
+              mkdir github-latest
+              cp /tmp/workspace/pris-release-archive.tar.gz github-latest/pris-$(cat /tmp/workspace/version.txt)-archive.tar.gz
+              cp /tmp/workspace/pris-release-archive.zip github-latest/pris-$(cat /tmp/workspace/version.txt)-archive.zip
+        - run:
+            name: Publish latest archives to GitHub
+            command: |
+              ghr -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} $(cat /tmp/workspace/version.txt) github-latest
+
+  publish_bleeding_2_GitHub:
+      <<: *defaults
+      docker:
+        - image: circleci/golang
+
+      steps:
+        - *attach_workspace
+        - run:
+            name: Install ghr tool to create GitHub releases and upload artifacts
+            command: |
+              go get -u github.com/tcnksm/ghr
+        - run:
+            name: Collect artifacts to publish bleeding release on GitHub
+            command: |
+              mkdir github-bleeding
+              cp /tmp/workspace/pris-release-archive.tar.gz github-bleeding/pris-bleeding-archive.tar.gz
+              cp /tmp/workspace/pris-release-archive.zip github-bleeding/pris-bleeding-archive.zip
+        - run:
+            name: Publish bleeding archives to GitHub
+            command: |
+              ghr -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} bleeding-$(cat /tmp/workspace/version.txt) github-bleeding
+workflows:
+  version: 2
+  build_and_deploy:
+    jobs:
+      - compile_n_junit
+      - publish_latest_2_GitHub:
+          requires:
+            - compile_n_junit
+      - publish_bleeding_2_GitHub:
+          requires:
+            - compile_n_junit
+
 workflows:
   version: 2
   build_and_deploy:
@@ -202,6 +257,20 @@ workflows:
       - smoke_test:
           requires:
             - build_docker_image
+      - publish_latest_2_GitHub:
+          filters:
+            branches:
+              only:
+                - /release-.*/
+          requires:
+            - smoke_test
+      - publish_bleeding_2_GitHub:
+          filters:
+            branches:
+              only:
+                - master
+          requires:
+            - smoke_test
       - publish_latest_2_DockerHub:
           filters:
             branches:
