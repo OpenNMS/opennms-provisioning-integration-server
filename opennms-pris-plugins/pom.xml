@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.opennms</groupId>
         <artifactId>opennms-pris-parent</artifactId>
-        <version>NEXT-MAJOR</version>
+        <version>NEXT-RELEASE</version>
     </parent>
 
     <artifactId>opennms-pris-plugins</artifactId>

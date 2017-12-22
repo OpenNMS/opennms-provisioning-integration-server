@@ -15,14 +15,16 @@ The project is divided in the following Maven modules:
 * `opennms-pris-model` The OpenNMS requisition model
 * `opennms-pris-plugins` plugins which implement specific data sources such as XLS, scripts, JDBC or OCS Inventory
 
-## Resources
+## General Project Information
 
-* CI/CD Status: [![CircleCI](https://circleci.com/gh/indigo423/opennms-provisioning-integration-server.svg?style=svg)](https://circleci.com/gh/indigo423/opennms-provisioning-integration-server)
+* CI/CD Status: [![CircleCI](https://circleci.com/gh/opennms/opennms-provisioning-integration-server.svg?style=svg)](https://circleci.com/gh/opennms/opennms-provisioning-integration-server)
+* Container Image Info: [![](https://images.microbadger.com/badges/version/opennms/opennms-provisioning-integration-server.svg)](https://microbadger.com/images/opennms/opennms-provisioning-integration-server "Get your own version badge on microbadger.com") [![](https://images.microbadger.com/badges/image/opennms/opennms-provisioning-integration-server.svg)](https://microbadger.com/images/opennms/opennms-provisioning-integration-server "Get your own image badge on microbadger.com") [![](https://images.microbadger.com/badges/license/opennms/opennms-provisioning-integration-server.svg)](https://microbadger.com/images/opennms/opennms-provisioning-integration-server "Get your own license badge on microbadger.com")
 * CI/CD System: [CircleCI]
-* DockerHub: [PRIS on DockerHub]
-* Issue- and Bug-Tracking: [PRIS Project in OpenNMS JIRA]
+* Docker Container Image Repository: [DockerHub]
+* Issue- and Bug-Tracking: [GitHub issue]
 * Source code: [GitHub]
 * Chat: [IRC] or [Web Chat]
+* Maintainer: ronny@opennms.org
 
 ## Run PRIS as a Docker Container
 
@@ -166,6 +168,6 @@ The CI/CD workflows can be found in the `.circleci` directory.
 [yED]: http://www.yworks.com/en/products_yed_about.html
 [PRIS on DockerHub]: https://hub.docker.com/r/opennms/pris
 [PRIS Project in OpenNMS JIRA]: https://issues.opennms.org/projects/PRIS
-[CircleCI]: https://circleci.com/gh/indigo423/opennms-provisioning-integration-server
+[CircleCI]: https://circleci.com/gh/opennms/opennms-provisioning-integration-server
 [Web Chat]: https://chats.opennms.org/opennms-discuss
 [IRC]: irc://freenode.org/#opennms 

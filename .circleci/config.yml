@@ -11,6 +11,17 @@ defaults: &defaults
     attach_workspace:
       at: *workspace_root
 
+references:
+  container_config: &container_config
+    docker:
+      - image: docker:17.11.0-ce-git
+
+  dockerhub_login: &dockerhub_login
+    run:
+      name: DockerHub Login
+      command: |
+        docker login -u ${dockerhub_login} -p ${dockerhub_pass}
+
 jobs:
   compile_n_junit:
     <<: *defaults
@@ -30,7 +41,7 @@ jobs:
           name: Set version number
           command: |
             echo "Set version number for build to: ${VERSION}"
-            bin/changeversion.sh -o NEXT-MAJOR -n ${VERSION}
+            bin/changeversion.sh -o NEXT-RELEASE -n ${VERSION}
       - run:
           name: Validate Maven project
           command: |
@@ -73,8 +84,7 @@ jobs:
 
   build_docker_image:
     <<: *defaults
-    docker:
-      - image: docker:17.11.0-ce-git
+    <<: *container_config
 
     steps:
       - setup_remote_docker
@@ -99,8 +109,7 @@ jobs:
 
   smoke_test:
     <<: *defaults
-    docker:
-      - image: docker:17.11.0-ce
+    <<: *container_config
 
     steps:
       - setup_remote_docker
@@ -140,58 +149,38 @@ jobs:
             docker stop ${PRIS_CONTAINER_ID}
             docker rmi opennms/pris:$(cat /tmp/workspace/version.txt)
 
-  publish_latest_2_DockerHub:
-      <<: *defaults
-      docker:
-        - image: docker:17.11.0-ce
 
-      steps:
-        - setup_remote_docker
-        - *attach_workspace
-        - run:
-            name: DockerHub Login
-            command: |
-              docker login -u ${dockerhub_login} -p ${dockerhub_pass}
-        - run:
-            name: Load Docker Container Image file
-            command: |
-              docker image load -i /tmp/workspace/pris-docker-image
-        - run:
-            name: Tag Docker Container Images as latest release
-            command: |
-              docker tag opennms/pris:$(cat /tmp/workspace/version.txt) opennms/pris:latest
-        - run:
-            name: Publish latest release Docker Container Image to DockerHub
-            command: |
-              docker push opennms/pris:latest
-              docker push opennms/pris:$(cat /tmp/workspace/version.txt)
+  publish_dockerhub:
+    <<: *defaults
+    <<: *container_config
 
-  publish_bleeding_2_DockerHub:
-      <<: *defaults
-      docker:
-        - image: docker:17.11.0-ce
+    steps:
+      - setup_remote_docker
+      - *attach_workspace
+      - *dockerhub_login
+      - run:
+          name: Load Docker Container Image file
+          command: |
+            docker image load -i /tmp/workspace/pris-docker-image
+      - run:
+          name: Tag Docker Container Images and upload to DockerHub
+          command: |
+            case "${CIRCLE_BRANCH}" in
+              master)
+                docker tag opennms/pris:$(cat /tmp/workspace/version.txt) opennms/pris:bleeding
+                docker push opennms/pris:bleeding
+                ;;
+              release*)
+                docker tag opennms/pris:$(cat /tmp/workspace/version.txt) opennms/pris:latest
+                docker push opennms/pris:latest
+                docker push opennms/pris:$(cat /tmp/workspace/version.txt)
+                ;;
+              *)
+                echo "This is not a branch build which needs to be published"
+                ;;
+            esac
 
-      steps:
-        - setup_remote_docker
-        - *attach_workspace
-        - run:
-            name: DockerHub Login
-            command: |
-              docker login -u ${dockerhub_login} -p ${dockerhub_pass}
-        - run:
-            name: Load Docker Container Image file
-            command: |
-              docker image load -i /tmp/workspace/pris-docker-image
-        - run:
-            name: Tag Docker Container Images as bleeding edge
-            command: |
-              docker tag opennms/pris:$(cat /tmp/workspace/version.txt) opennms/pris:bleeding
-        - run:
-            name: Publish bleeding edge Docker Container Image to DockerHub
-            command: |
-              docker push opennms/pris:bleeding
-
-  publish_latest_2_GitHub:
+  publish_github:
       <<: *defaults
       docker:
         - image: circleci/golang
@@ -203,48 +192,25 @@ jobs:
             command: |
               go get -u github.com/tcnksm/ghr
         - run:
-            name: Collect artifacts to publish latest release on GitHub
+            name: Collect artifacts and publish archives to GitHub
             command: |
-              mkdir github-latest
-              cp /tmp/workspace/pris-release-archive.tar.gz github-latest/pris-$(cat /tmp/workspace/version.txt)-archive.tar.gz
-              cp /tmp/workspace/pris-release-archive.zip github-latest/pris-$(cat /tmp/workspace/version.txt)-archive.zip
-        - run:
-            name: Publish latest archives to GitHub
-            command: |
-              ghr -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} $(cat /tmp/workspace/version.txt) github-latest
-
-  publish_bleeding_2_GitHub:
-      <<: *defaults
-      docker:
-        - image: circleci/golang
-
-      steps:
-        - *attach_workspace
-        - run:
-            name: Install ghr tool to create GitHub releases and upload artifacts
-            command: |
-              go get -u github.com/tcnksm/ghr
-        - run:
-            name: Collect artifacts to publish bleeding release on GitHub
-            command: |
-              mkdir github-bleeding
-              cp /tmp/workspace/pris-release-archive.tar.gz github-bleeding/pris-bleeding-archive.tar.gz
-              cp /tmp/workspace/pris-release-archive.zip github-bleeding/pris-bleeding-archive.zip
-        - run:
-            name: Publish bleeding archives to GitHub
-            command: |
-              ghr -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} bleeding-$(cat /tmp/workspace/version.txt) github-bleeding
-workflows:
-  version: 2
-  build_and_deploy:
-    jobs:
-      - compile_n_junit
-      - publish_latest_2_GitHub:
-          requires:
-            - compile_n_junit
-      - publish_bleeding_2_GitHub:
-          requires:
-            - compile_n_junit
+              case "${CIRCLE_BRANCH}" in
+                master)
+                  mkdir github-bleeding
+                  cp /tmp/workspace/pris-release-archive.tar.gz github-bleeding/pris-bleeding-$(cat /tmp/workspace/version.txt)-.tar.gz
+                  cp /tmp/workspace/pris-release-archive.zip github-bleeding/pris-bleeding-$(cat /tmp/workspace/version.txt).zip
+                  ghr -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} bleeding-$(cat /tmp/workspace/version.txt) github-bleeding
+                  ;;
+                release*)
+                  mkdir github-latest
+                  cp /tmp/workspace/pris-release-archive.tar.gz github-latest/pris-release-$(cat /tmp/workspace/version.txt).tar.gz
+                  cp /tmp/workspace/pris-release-archive.zip github-latest/pris-release-$(cat /tmp/workspace/version.txt).zip
+                  ghr -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} $(cat /tmp/workspace/version.txt) github-latest
+                  ;;
+                *)
+                  echo "This is not a branch build which needs to be published"
+                  ;;
+              esac
 
 workflows:
   version: 2
@@ -257,33 +223,20 @@ workflows:
       - smoke_test:
           requires:
             - build_docker_image
-      - publish_latest_2_GitHub:
-          filters:
-            branches:
-              only:
-                - /release-.*/
-          requires:
-            - smoke_test
-      - publish_bleeding_2_GitHub:
+      - publish_github:
           filters:
             branches:
               only:
                 - master
-          requires:
-            - smoke_test
-      - publish_latest_2_DockerHub:
-          filters:
-            branches:
-              only:
                 - /release-.*/
           requires:
             - smoke_test
-            - build_docker_image
-      - publish_bleeding_2_DockerHub:
+      - publish_dockerhub:
           filters:
             branches:
               only:
                 - master
+                - /release-.*/
           requires:
             - smoke_test
             - build_docker_image

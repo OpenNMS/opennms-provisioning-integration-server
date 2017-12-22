@@ -5,7 +5,7 @@
 
   <groupId>org.opennms</groupId>
   <artifactId>opennms-pris-parent</artifactId>
-  <version>NEXT-MAJOR</version>
+  <version>NEXT-RELEASE</version>
 
   <packaging>pom</packaging>
 
