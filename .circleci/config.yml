@@ -206,8 +206,8 @@ jobs:
             name: Collect artifacts to publish latest release on GitHub
             command: |
               mkdir github-latest
-              cp /tmp/workspace/pris-release-archive.tar.gz github-latest/pris-$(cat /tmp/workspace/version.txt)-archive.tar.gz
-              cp /tmp/workspace/pris-release-archive.zip github-latest/pris-$(cat /tmp/workspace/version.txt)-archive.zip
+              cp /tmp/workspace/pris-release-archive.tar.gz github-latest/pris-release-$(cat /tmp/workspace/version.txt).tar.gz
+              cp /tmp/workspace/pris-release-archive.zip github-latest/pris-release-$(cat /tmp/workspace/version.txt).zip
         - run:
             name: Publish latest archives to GitHub
             command: |
@@ -228,8 +228,8 @@ jobs:
             name: Collect artifacts to publish bleeding release on GitHub
             command: |
               mkdir github-bleeding
-              cp /tmp/workspace/pris-release-archive.tar.gz github-bleeding/pris-bleeding-archive.tar.gz
-              cp /tmp/workspace/pris-release-archive.zip github-bleeding/pris-bleeding-archive.zip
+              cp /tmp/workspace/pris-release-archive.tar.gz github-bleeding/pris-bleeding-$(cat /tmp/workspace/version.txt)-.tar.gz
+              cp /tmp/workspace/pris-release-archive.zip github-bleeding/pris-bleeding-$(cat /tmp/workspace/version.txt).zip
         - run:
             name: Publish bleeding archives to GitHub
             command: |
