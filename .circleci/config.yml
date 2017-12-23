@@ -20,7 +20,7 @@ references:
     run:
       name: DockerHub Login
       command: |
-        docker login -u ${dockerhub_login} -p ${dockerhub_pass}
+        docker login -u ${DOCKERHUB_LOGIN} -p ${DOCKERHUB_PASS}
 
 jobs:
   compile_n_junit:
@@ -38,7 +38,7 @@ jobs:
           command: |
             echo "export VERSION=$(git describe)-b${CIRCLE_BUILD_NUM}" >> ${BASH_ENV}
       - run:
-          name: Set version number
+          name: Set version number and ensure lower case
           command: |
             echo "Set version number for build to: ${VERSION}"
             bin/changeversion.sh -o NEXT-RELEASE -n ${VERSION}
@@ -95,11 +95,12 @@ jobs:
           command: |
             cd Docker
             cp /tmp/workspace/pris-release-archive.tar.gz deploy/pris-release-archive.tar.gz
-            docker build --build-arg OPENNMS_PRIS_VERSION=$(cat /tmp/workspace/version.txt) -t opennms/pris:$(cat /tmp/workspace/version.txt) .
+            echo "docker build --build-arg OPENNMS_PRIS_VERSION=$(cat /tmp/workspace/version.txt) -t pris:$(cat /tmp/workspace/version.txt) ."
+            docker build --build-arg OPENNMS_PRIS_VERSION=$(cat /tmp/workspace/version.txt) -t pris:$(cat /tmp/workspace/version.txt) .
       - run:
           name: Persist Docker Container Image
           command: |
-            docker image save opennms/pris:$(cat /tmp/workspace/version.txt) -o /tmp/workspace/pris-docker-image
+            docker image save pris:$(cat /tmp/workspace/version.txt) -o /tmp/workspace/pris-docker-image
       - store_artifacts:
           path: /tmp/workspace/pris-docker-image
       - persist_to_workspace:
@@ -121,7 +122,7 @@ jobs:
       - run:
           name: Run PRIS Docker Container Image and keep Container ID
           command: |
-            echo "export PRIS_CONTAINER_ID=$(docker run --rm --detach --name pris_$(cat /tmp/workspace/version.txt) opennms/pris:$(cat /tmp/workspace/version.txt))" >> ${BASH_ENV}
+            echo "export PRIS_CONTAINER_ID=$(docker run --rm --detach --name pris_$(cat /tmp/workspace/version.txt) pris:$(cat /tmp/workspace/version.txt))" >> ${BASH_ENV}
             sleep 3
       - run:
           name: Smoke test against application landing page with redirect to documentation
@@ -147,8 +148,7 @@ jobs:
           command: |
             source ${BASH_ENV}
             docker stop ${PRIS_CONTAINER_ID}
-            docker rmi opennms/pris:$(cat /tmp/workspace/version.txt)
-
+            docker rmi pris:$(cat /tmp/workspace/version.txt)
 
   publish_dockerhub:
     <<: *defaults
@@ -159,21 +159,47 @@ jobs:
       - *attach_workspace
       - *dockerhub_login
       - run:
+          name: Set DockerHub project user and ensure lower case
+          command: |
+            if [ -z ${DOCKERHUB_PROJECT_USER+x} ]; then
+                DOCKERHUB_PROJECT_USER=$(echo "${CIRCLE_PROJECT_USERNAME}" | tr '[:upper:]' '[:lower:]')
+                echo "export DOCKERHUB_PROJECT_USER=${DOCKERHUB_PROJECT_USER}" >> ${BASH_ENV}
+                echo "Use CIRCLE_PROJECT_USERNAME instead which is set to ${DOCKERHUB_PROJECT_USER}."
+            else
+                DOCKERHUB_PROJECT_USER=$(echo "${DOCKERHUB_PROJECT_USER}" | tr '[:upper:]' '[:lower:]')
+                echo "export DOCKERHUB_PROJECT_USER=${DOCKERHUB_PROJECT_USER}" >> ${BASH_ENV}
+                echo "Overwrite DOCKERHUB_PROJECT_USER with ${DOCKERHUB_PROJECT_USER}."
+            fi
+      - run:
+          name: Set DockerHub project name and ensure lower case
+          command: |
+            if [ -z ${DOCKERHUB_PROJECT_NAME+x} ]; then
+                DOCKERHUB_PROJECT_NAME=$(echo "${CIRCLE_PROJECT_REPONAME}" | tr '[:upper:]' '[:lower:]')
+                echo "export DOCKERHUB_PROJECT_NAME=${DOCKERHUB_PROJECT_NAME}" >> ${BASH_ENV}
+                echo "Use CIRCLE_PROJECT_REPONAME instead which is set to ${DOCKERHUB_PROJECT_NAME}."
+            else
+                DOCKERHUB_PROJECT_NAME=$(echo "${DOCKERHUB_PROJECT_NAME}" | tr '[:upper:]' '[:lower:]')
+                echo "export DOCKERHUB_PROJECT_NAME=${DOCKERHUB_PROJECT_NAME}" >> ${BASH_ENV}
+                echo "Overwrite DOCKERHUB_PROJECT_NAME with ${DOCKERHUB_PROJECT_NAME}."
+            fi
+      - run:
           name: Load Docker Container Image file
           command: |
             docker image load -i /tmp/workspace/pris-docker-image
       - run:
           name: Tag Docker Container Images and upload to DockerHub
           command: |
+            source ${BASH_ENV}
             case "${CIRCLE_BRANCH}" in
               master)
-                docker tag opennms/pris:$(cat /tmp/workspace/version.txt) opennms/pris:bleeding
-                docker push opennms/pris:bleeding
+                docker tag pris:$(cat /tmp/workspace/version.txt) ${DOCKERHUB_PROJECT_USER}/${DOCKERHUB_PROJECT_NAME}:bleeding
+                docker push ${DOCKERHUB_PROJECT_USER}/${DOCKERHUB_PROJECT_NAME}:bleeding
                 ;;
               release*)
-                docker tag opennms/pris:$(cat /tmp/workspace/version.txt) opennms/pris:latest
-                docker push opennms/pris:latest
-                docker push opennms/pris:$(cat /tmp/workspace/version.txt)
+                docker tag pris:$(cat /tmp/workspace/version.txt) ${DOCKERHUB_PROJECT_USER}/${DOCKERHUB_PROJECT_NAME}:latest
+                docker tag pris:$(cat /tmp/workspace/version.txt) ${DOCKERHUB_PROJECT_USER}/${DOCKERHUB_PROJECT_NAME}:$(cat /tmp/workspace/version.txt)
+                docker push ${DOCKERHUB_PROJECT_USER}/${DOCKERHUB_PROJECT_NAME}:latest
+                docker push ${DOCKERHUB_PROJECT_USER}/${DOCKERHUB_PROJECT_NAME}:$(cat /tmp/workspace/version.txt)
                 ;;
               *)
                 echo "This is not a branch build which needs to be published"
@@ -197,7 +223,7 @@ jobs:
               case "${CIRCLE_BRANCH}" in
                 master)
                   mkdir github-bleeding
-                  cp /tmp/workspace/pris-release-archive.tar.gz github-bleeding/pris-bleeding-$(cat /tmp/workspace/version.txt)-.tar.gz
+                  cp /tmp/workspace/pris-release-archive.tar.gz github-bleeding/pris-bleeding-$(cat /tmp/workspace/version.txt).tar.gz
                   cp /tmp/workspace/pris-release-archive.zip github-bleeding/pris-bleeding-$(cat /tmp/workspace/version.txt).zip
                   ghr -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} bleeding-$(cat /tmp/workspace/version.txt) github-bleeding
                   ;;
