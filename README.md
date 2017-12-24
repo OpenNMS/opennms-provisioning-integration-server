@@ -17,7 +17,7 @@ The project is divided in the following Maven modules:
 
 ## General Project Information
 
-* CI/CD Status: [![CircleCI](https://circleci.com/gh/opennms/opennms-provisioning-integration-server.svg?style=svg)](https://circleci.com/gh/opennms/opennms-provisioning-integration-server)
+* CI/CD Status: [![CircleCI](https://circleci.com/gh/OpenNMS/opennms-provisioning-integration-server.svg?style=svg)](https://circleci.com/gh/OpenNMS/opennms-provisioning-integration-server)
 * Container Image Info: [![](https://images.microbadger.com/badges/version/opennms/opennms-provisioning-integration-server.svg)](https://microbadger.com/images/opennms/opennms-provisioning-integration-server "Get your own version badge on microbadger.com") [![](https://images.microbadger.com/badges/image/opennms/opennms-provisioning-integration-server.svg)](https://microbadger.com/images/opennms/opennms-provisioning-integration-server "Get your own image badge on microbadger.com") [![](https://images.microbadger.com/badges/license/opennms/opennms-provisioning-integration-server.svg)](https://microbadger.com/images/opennms/opennms-provisioning-integration-server "Get your own license badge on microbadger.com")
 * CI/CD System: [CircleCI]
 * Docker Container Image Repository: [DockerHub]
