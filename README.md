@@ -21,10 +21,11 @@ The project is divided in the following Maven modules:
 * Container Image Info: [![](https://images.microbadger.com/badges/version/opennms/opennms-provisioning-integration-server.svg)](https://microbadger.com/images/opennms/opennms-provisioning-integration-server "Get your own version badge on microbadger.com") [![](https://images.microbadger.com/badges/image/opennms/opennms-provisioning-integration-server.svg)](https://microbadger.com/images/opennms/opennms-provisioning-integration-server "Get your own image badge on microbadger.com") [![](https://images.microbadger.com/badges/license/opennms/opennms-provisioning-integration-server.svg)](https://microbadger.com/images/opennms/opennms-provisioning-integration-server "Get your own license badge on microbadger.com")
 * CI/CD System: [CircleCI]
 * Docker Container Image Repository: [DockerHub]
-* Issue- and Bug-Tracking: [GitHub issue]
+* Issue- and Bug-Tracking: [JIRA]
 * Source code: [GitHub]
 * Chat: [IRC] or [Web Chat]
 * Maintainer: ronny@opennms.org
+* Illustrations created in documentation with [yED]
 
 ## Run PRIS as a Docker Container
 
@@ -158,23 +159,16 @@ You can download build artifacts like Docker images from your branch from [Circl
 
 The CI/CD workflows can be found in the `.circleci` directory.
 
-# General information
-
-* Maintainer: ronny@opennms.org
-* License: GPLv3
-* Illustrations created with [yED]
-
 [GitHub]: https://github.com/OpenNMS/opennms-provisioning-integration-server.git
+[CircleCI]: https://circleci.com/gh/opennms/opennms-provisioning-integration-server
 [DockerHub]: https://hub.docker.com/r/opennms/pris
+[DockerHub Tag]: https://hub.docker.com/r/opennms/pris/tags/
+[JIRA]: https://issues.opennms.org/projects/PRIS
 [OpenJDK]: http://openjdk.java.net/
 [Oracle Java Development Kit]: http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html
 [Maven]: http://maven.apache.org/
 [git-scm]: http://git-scm.com/
-[nvie]: http://nvie.com/posts/a-successful-git-branching-model/
 [yED]: http://www.yworks.com/en/products_yed_about.html
-[PRIS on DockerHub]: https://hub.docker.com/r/opennms/pris
-[PRIS Project in OpenNMS JIRA]: https://issues.opennms.org/projects/PRIS
-[CircleCI]: https://circleci.com/gh/opennms/opennms-provisioning-integration-server
 [Web Chat]: https://chats.opennms.org/opennms-discuss
 [IRC]: irc://freenode.org/#opennms
-[DockerHub Tag]: https://hub.docker.com/r/opennms/pris/tags/
+
