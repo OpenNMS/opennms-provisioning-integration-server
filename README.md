@@ -28,6 +28,12 @@ The project is divided in the following Maven modules:
 
 ## Run PRIS as a Docker Container
 
+Docker Tags
+
+* `bleeding` floating tag for a build from develop bleeding edge branch
+* `latest` floating tag for a build from latest stable release
+* to run a specific stable version see the [DockerHub Tag] section
+
 Current releases of PRIS are published on [DockerHub].
 You can download and start the container image with:
 
@@ -170,4 +176,5 @@ The CI/CD workflows can be found in the `.circleci` directory.
 [PRIS Project in OpenNMS JIRA]: https://issues.opennms.org/projects/PRIS
 [CircleCI]: https://circleci.com/gh/opennms/opennms-provisioning-integration-server
 [Web Chat]: https://chats.opennms.org/opennms-discuss
-[IRC]: irc://freenode.org/#opennms 
+[IRC]: irc://freenode.org/#opennms
+[DockerHub Tag]: https://hub.docker.com/r/opennms/pris/tags/
