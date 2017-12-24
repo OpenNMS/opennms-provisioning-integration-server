@@ -225,7 +225,7 @@ jobs:
                   mkdir github-bleeding
                   cp /tmp/workspace/pris-release-archive.tar.gz github-bleeding/pris-bleeding-$(cat /tmp/workspace/version.txt).tar.gz
                   cp /tmp/workspace/pris-release-archive.zip github-bleeding/pris-bleeding-$(cat /tmp/workspace/version.txt).zip
-                  ghr -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} bleeding-$(cat /tmp/workspace/version.txt) github-bleeding
+                  ghr -prerelease -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} bleeding-$(cat /tmp/workspace/version.txt) github-bleeding
                   ;;
                 release*)
                   mkdir github-latest
