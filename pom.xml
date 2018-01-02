@@ -1,233 +1,224 @@
 <?xml version="1.0"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-  <groupId>org.opennms</groupId>
-  <artifactId>opennms-pris-parent</artifactId>
-  <version>NEXT-RELEASE</version>
+    <groupId>org.opennms</groupId>
+    <artifactId>opennms-pris-parent</artifactId>
+    <version>NEXT-RELEASE</version>
 
-  <packaging>pom</packaging>
+    <packaging>pom</packaging>
 
-  <name>OpenNMS :: Provisioning Integration Server :: Parent</name>
+    <name>OpenNMS :: Provisioning Integration Server :: Parent</name>
 
-  <modules>
-    <module>opennms-pris-model</module>
-    <module>opennms-pris-api</module>
-    <module>opennms-pris-main</module>
-    <module>opennms-pris-docs</module>
-    <module>opennms-pris-dist</module>
-    <module>opennms-pris-plugins</module>
-  </modules>
+    <modules>
+        <module>opennms-pris-model</module>
+        <module>opennms-pris-api</module>
+        <module>opennms-pris-main</module>
+        <module>opennms-pris-docs</module>
+        <module>opennms-pris-dist</module>
+        <module>opennms-pris-plugins</module>
+    </modules>
 
-  <properties>
-    <!-- Build settings -->
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <github.global.server>github</github.global.server>
+    <properties>
+        <!-- Build settings -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <github.global.server>github</github.global.server>
 
-    <!-- Version settings -->
-    <apacheDerbyVersion>10.13.1.1</apacheDerbyVersion>
-    <asciidoctorVersion>1.5.3</asciidoctorVersion>
-    <beanshellVersion>2.0b5</beanshellVersion>
-    <chQosLogbackVersion>1.2.1</chQosLogbackVersion>
-    <commonsConfigurationVersion>1.10</commonsConfigurationVersion>
-    <commonsIoVersion>2.5</commonsIoVersion>
-    <groovyVersion>2.4.9</groovyVersion>
-    <guavaVersion>21.0</guavaVersion>
-    <httpComponentsVersion>4.5.3</httpComponentsVersion>
-    <jettyServerVersion>9.4.2.v20170220</jettyServerVersion>
-    <junitVersion>4.12</junitVersion>
-    <mavenResourcesPluginVersion>3.0.2</mavenResourcesPluginVersion>
-    <mavenCompilerPluginVersion>3.6.1</mavenCompilerPluginVersion>
-    <metainfServicesVersion>1.7</metainfServicesVersion>
-    <mysqlConnectorVersion>6.0.5</mysqlConnectorVersion>
-    <opennmsVersion>19.0.1</opennmsVersion>
-    <postgresqlDriverVersion>42.0.0.jre7</postgresqlDriverVersion>
-    <slf4jVersion>1.7.24</slf4jVersion>
-    <updatePolicy>interval:60</updatePolicy>
-    <wagonPluginVersion>2.12</wagonPluginVersion>
-    <wagonSshVersion>2.12</wagonSshVersion>
+        <!-- Version settings -->
+        <apacheDerbyVersion>10.14.1.0</apacheDerbyVersion>
+        <asciidoctorVersion>1.5.6</asciidoctorVersion>
+        <beanshellVersion>2.0b5</beanshellVersion>
+        <chQosLogbackVersion>1.2.3</chQosLogbackVersion>
+        <commonsConfigurationVersion>1.10</commonsConfigurationVersion>
+        <commonsIoVersion>2.6</commonsIoVersion>
+        <groovyVersion>2.4.13</groovyVersion>
+        <guavaVersion>23.6-jre</guavaVersion>
+        <httpComponentsVersion>4.5.4</httpComponentsVersion>
+        <jettyServerVersion>9.4.8.v20171121</jettyServerVersion>
+        <junitVersion>4.12</junitVersion>
+        <mavenResourcesPluginVersion>3.0.2</mavenResourcesPluginVersion>
+        <mavenCompilerPluginVersion>3.7.0</mavenCompilerPluginVersion>
+        <metainfServicesVersion>1.7</metainfServicesVersion>
+        <mysqlConnectorVersion>8.0.8-dmr</mysqlConnectorVersion>
+        <opennmsVersion>21.0.2</opennmsVersion>
+        <postgresqlDriverVersion>42.1.4</postgresqlDriverVersion>
+        <slf4jVersion>1.7.25</slf4jVersion>
+        <updatePolicy>interval:60</updatePolicy>
+        <wagonPluginVersion>3.0.0</wagonPluginVersion>
+        <wagonSshVersion>3.0.0</wagonSshVersion>
 
-    <!-- Ascii doc settings for documention -->
-    <asciidoc.source.directory>${basedir}/src/asciidoc</asciidoc.source.directory>
-    <asciidoc.output.directory>${basedir}/target/generated-docs</asciidoc.output.directory>
-    <asciidoc.images.directory>images</asciidoc.images.directory>
-  </properties>
+        <!-- Ascii doc settings for documention -->
+        <asciidoc.source.directory>${basedir}/src/asciidoc</asciidoc.source.directory>
+        <asciidoc.output.directory>${basedir}/target/generated-docs</asciidoc.output.directory>
+        <asciidoc.images.directory>images</asciidoc.images.directory>
+    </properties>
 
-  <dependencies>
-    <!-- Logging -->
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-      <version>${slf4jVersion}</version>
-    </dependency>
-
-    <!-- Helper APIs -->
-    <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
-      <version>${guavaVersion}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>commons-io</groupId>
-      <artifactId>commons-io</artifactId>
-      <version>${commonsIoVersion}</version>
-    </dependency>
-
-    <!-- Tests -->
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>${junitVersion}</version>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
-
-  <dependencyManagement>
     <dependencies>
-      <!-- Logging -->
-      <dependency>
-        <groupId>ch.qos.logback</groupId>
-        <artifactId>logback-classic</artifactId>
-        <version>${chQosLogbackVersion}</version>
-      </dependency>
+        <!-- Logging -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4jVersion}</version>
+        </dependency>
 
-      <!-- Configuration -->
-      <dependency>
-        <groupId>commons-configuration</groupId>
-        <artifactId>commons-configuration</artifactId>
-        <version>${commonsConfigurationVersion}</version>
-      </dependency>
+        <!-- Helper APIs -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guavaVersion}</version>
+        </dependency>
 
-      <!-- OpenNMS -->
-
-    <dependency>
-        <groupId>org.opennms</groupId>
-        <artifactId>opennms-provision-persistence</artifactId>
-        <version>${opennmsVersion}</version>
-        <classifier>xsds</classifier>
-        <scope>compile</scope>
-      </dependency>
-
-      <dependency>
-        <groupId>org.opennms</groupId>
-        <artifactId>opennms-util</artifactId>
-        <version>${opennmsVersion}</version>
-        <exclusions>
-          <exclusion>
-            <groupId>org.opennms.dependencies</groupId>
-            <artifactId>spring-dependencies</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>org.opennms.core</groupId>
-            <artifactId>org.opennms.core.lib</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>org.opennms.dependencies</groupId>
-            <artifactId>jaxb-dependencies</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>org.opennms.dependencies</groupId>
-            <artifactId>dnsjava-dependencies</artifactId>
-          </exclusion>
-          <exclusion>
+        <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>xalan</groupId>
-            <artifactId>serializer</artifactId>
-          </exclusion>
-        </exclusions>
-      </dependency>
+            <version>${commonsIoVersion}</version>
+        </dependency>
 
-      <!-- Web-Server -->
-      <dependency>
-        <groupId>org.eclipse.jetty</groupId>
-        <artifactId>jetty-server</artifactId>
-        <version>${jettyServerVersion}</version>
-      </dependency>
-
-      <dependency>
-         <groupId>org.eclipse.jetty</groupId>
-         <artifactId>jetty-rewrite</artifactId>
-         <version>${jettyServerVersion}</version>
-      </dependency>
-
-
-      <!-- SPI -->
-      <dependency>
-        <groupId>org.kohsuke.metainf-services</groupId>
-        <artifactId>metainf-services</artifactId>
-        <version>${metainfServicesVersion}</version>
-        <scope>provided</scope>
-      </dependency>
-
-      <dependency>
-        <groupId>org.codehaus.groovy</groupId>
-        <artifactId>groovy-all</artifactId>
-        <version>${groovyVersion}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.beanshell</groupId>
-        <artifactId>bsh</artifactId>
-        <version>${beanshellVersion}</version>
-      </dependency>
-
+        <!-- Tests -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junitVersion}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
-  </dependencyManagement>
 
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>${mavenCompilerPluginVersion}</version>
-        <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
-          <compilerArgument>-Xlint:all</compilerArgument>
-          <showWarnings>true</showWarnings>
-          <showDeprecation>true</showDeprecation>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
+    <dependencyManagement>
+        <dependencies>
+            <!-- Logging -->
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${chQosLogbackVersion}</version>
+            </dependency>
 
-  <repositories>
-    <repository>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <releases>
-        <enabled>true</enabled>
-        <updatePolicy>${updatePolicy}</updatePolicy>
-      </releases>
-      <id>opennms-release</id>
-      <name>OpenNMS Release Maven Repository</name>
-      <url>http://maven.opennms.org/content/groups/opennms.org-release/</url>
-    </repository>
-    <repository>
-      <snapshots>
-        <enabled>true</enabled>
-        <updatePolicy>${updatePolicy}</updatePolicy>
-      </snapshots>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-      <id>opennms-snapshot</id>
-      <name>OpenNMS Snapshot Maven Repository</name>
-      <url>http://maven.opennms.org/content/groups/opennms.org-snapshot/</url>
-    </repository>
-  </repositories>
+            <!-- Configuration -->
+            <dependency>
+                <groupId>commons-configuration</groupId>
+                <artifactId>commons-configuration</artifactId>
+                <version>${commonsConfigurationVersion}</version>
+            </dependency>
 
-  <distributionManagement>
-    <repository>
-      <id>opennms-pris-docs</id>
-      <url>scp://www.opennms.eu/var/www/docs/opennms-pris/</url>
-    </repository>
-  </distributionManagement>
+            <!-- OpenNMS -->
+            <dependency>
+                <groupId>org.opennms</groupId>
+                <artifactId>opennms-provision-persistence</artifactId>
+                <version>${opennmsVersion}</version>
+                <classifier>xsds</classifier>
+                <scope>compile</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.opennms</groupId>
+                <artifactId>opennms-util</artifactId>
+                <version>${opennmsVersion}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.opennms.dependencies</groupId>
+                        <artifactId>spring-dependencies</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.opennms.core</groupId>
+                        <artifactId>org.opennms.core.lib</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.opennms.dependencies</groupId>
+                        <artifactId>jaxb-dependencies</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.opennms.dependencies</groupId>
+                        <artifactId>dnsjava-dependencies</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>commons-io</groupId>
+                        <artifactId>commons-io</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>xalan</groupId>
+                        <artifactId>serializer</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <!-- Web-Server -->
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-server</artifactId>
+                <version>${jettyServerVersion}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-rewrite</artifactId>
+                <version>${jettyServerVersion}</version>
+            </dependency>
+
+            <!-- SPI -->
+            <dependency>
+                <groupId>org.kohsuke.metainf-services</groupId>
+                <artifactId>metainf-services</artifactId>
+                <version>${metainfServicesVersion}</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.codehaus.groovy</groupId>
+                <artifactId>groovy-all</artifactId>
+                <version>${groovyVersion}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.beanshell</groupId>
+                <artifactId>bsh</artifactId>
+                <version>${beanshellVersion}</version>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${mavenCompilerPluginVersion}</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <compilerArgument>-Xlint:all</compilerArgument>
+                    <showWarnings>true</showWarnings>
+                    <showDeprecation>true</showDeprecation>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <repositories>
+        <repository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>${updatePolicy}</updatePolicy>
+            </releases>
+            <id>opennms-release</id>
+            <name>OpenNMS Release Maven Repository</name>
+            <url>http://maven.opennms.org/content/groups/opennms.org-release/</url>
+        </repository>
+        <repository>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>${updatePolicy}</updatePolicy>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <id>opennms-snapshot</id>
+            <name>OpenNMS Snapshot Maven Repository</name>
+            <url>http://maven.opennms.org/content/groups/opennms.org-snapshot/</url>
+        </repository>
+    </repositories>
 </project>
