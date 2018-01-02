@@ -48,6 +48,7 @@
         <updatePolicy>interval:60</updatePolicy>
         <wagonPluginVersion>3.0.0</wagonPluginVersion>
         <wagonSshVersion>3.0.0</wagonSshVersion>
+        <mavenShadePluginVersion>3.1.0</mavenShadePluginVersion>
 
         <!-- Ascii doc settings for documention -->
         <asciidoc.source.directory>${basedir}/src/asciidoc</asciidoc.source.directory>
