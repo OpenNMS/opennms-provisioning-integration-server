@@ -59,7 +59,7 @@ services:
     image: opennms/pris:latest
     environment:
       - TZ=Europe/Berlin
-      - JAVA_OPTS=-XX:+PrintGCDetails
+      - JAVA_OPTS=-XX:+PrintGCDetails -XX:+UnlockExperimentalVMOptions
     volumes:
       - pris.data:/opt/opennms-pris/requisitions
       - pris.data:/opt/opennms-pris/scriptsteps
