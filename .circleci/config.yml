@@ -5,16 +5,28 @@ defaults: &defaults
   working_directory: /home/circleci/pris
 
   workspace_root: &workspace_root
-    /tmp/workspace
+    .
 
   attach_workspace: &attach_workspace
     attach_workspace:
       at: *workspace_root
 
 references:
-  container_config: &container_config
+  docker_container_config: &docker_container_config
     docker:
       - image: docker:17.11.0-ce-git
+
+  java_container_config: &java_container_config
+    docker:
+      - image: circleci/openjdk:8-jdk
+
+  hugo_container_config: &hugo_container_config
+    docker:
+      - image: opennms/hugo:latest
+
+  go_container_config: &go_container_config
+    docker:
+      - image: circleci/golang
 
   dockerhub_login: &dockerhub_login
     run:
@@ -25,11 +37,9 @@ references:
 jobs:
   compile_n_junit:
     <<: *defaults
-    docker:
-      - image: circleci/openjdk:8-jdk
+    <<: *java_container_config
 
     steps:
-      - *attach_workspace
       - checkout
       - restore_cache:
           key: pris-repository-{{ checksum "pom.xml" }}
@@ -41,7 +51,7 @@ jobs:
           name: Set version number and ensure lower case
           command: |
             echo "Set version number for build to: ${VERSION}"
-            bin/changeversion.sh -o NEXT-RELEASE -n ${VERSION}
+            bin/changeversion.sh -o BLEEDING -n ${VERSION}
       - run:
           name: Validate Maven project
           command: |
@@ -53,56 +63,70 @@ jobs:
       - run:
           name: Run Unit tests
           command: |
-            mvn test
-      - run:
-          name: Package into distributable format
-          command: |
-            mvn package -DskipTests
+            mvn verify
       - save_cache:
+          key: pris-repository-{{ checksum "pom.xml" }}
           paths:
             - ~/.m2
-          key: pris-repository-{{ checksum "pom.xml" }}
-      - store_artifacts:
-          path: opennms-pris-dist/target/pris-release-archive.tar.gz
-      - store_artifacts:
-          path: opennms-pris-dist/target/pris-release-archive.zip
-      - run:
-          name: Persist PRIS release archive in workspace
-          command: |
-            cp opennms-pris-dist/target/pris-release-archive.tar.gz /tmp/workspace
-            cp opennms-pris-dist/target/pris-release-archive.zip /tmp/workspace
       - run:
           name: Persist version number
           command: |
-            echo ${VERSION} > /tmp/workspace/version.txt
+            echo ${VERSION} > version.txt
       - persist_to_workspace:
           root: *workspace_root
-          paths:
-            - pris-release-archive.tar.gz
-            - pris-release-archive.zip
-            - version.txt
+          paths: .
 
-  build_docker_image:
+  build_docs:
     <<: *defaults
-    <<: *container_config
+    <<: *hugo_container_config
 
     steps:
       - setup_remote_docker
       - *attach_workspace
-      - checkout
+      - run:
+          name: Generate documentation
+          command: |
+            cd docs
+            hugo -d ../public
+      - persist_to_workspace:
+          root: *workspace_root
+          paths: public
+
+  package:
+    <<: *defaults
+    <<: *java_container_config
+
+    steps:
+      - setup_remote_docker
+      - *attach_workspace
+      - run:
+          name: Package into tar.gz and zip format
+          command: |
+            mvn package -DskipTests
+      - persist_to_workspace:
+          root: *workspace_root
+          paths: opennms-pris-dist/target
+
+  build_docker_image:
+    <<: *defaults
+    <<: *docker_container_config
+
+    steps:
+      - setup_remote_docker
+      - *attach_workspace
       - run:
           name: Build Docker Container Image
           command: |
-            cd Docker
-            cp /tmp/workspace/pris-release-archive.tar.gz deploy/pris-release-archive.tar.gz
-            echo "docker build --build-arg OPENNMS_PRIS_VERSION=$(cat /tmp/workspace/version.txt) -t pris:$(cat /tmp/workspace/version.txt) ."
-            docker build --build-arg OPENNMS_PRIS_VERSION=$(cat /tmp/workspace/version.txt) -t pris:$(cat /tmp/workspace/version.txt) .
+            cp opennms-pris-dist/target/pris-release-archive.tar.gz docker/deploy/pris-release-archive.tar.gz
+            cd docker
+            echo "docker build --build-arg OPENNMS_PRIS_VERSION=$(cat ../version.txt) -t pris:$(cat ../version.txt) ."
+            docker build --build-arg OPENNMS_PRIS_VERSION=$(cat ../version.txt) -t pris:$(cat ../version.txt) .
       - run:
           name: Persist Docker Container Image
           command: |
-            docker image save pris:$(cat /tmp/workspace/version.txt) -o /tmp/workspace/pris-docker-image
+            docker image save pris:$(cat version.txt) -o pris-docker-image
       - store_artifacts:
-          path: /tmp/workspace/pris-docker-image
+          path: pris-docker-image
       - persist_to_workspace:
           root: *workspace_root
           paths:
@@ -110,7 +134,7 @@ jobs:
 
   smoke_test:
     <<: *defaults
-    <<: *container_config
+    <<: *docker_container_config
 
     steps:
       - setup_remote_docker
@@ -118,17 +142,17 @@ jobs:
       - run:
           name: Load PRIS Docker Container Image
           command: |
-            docker image load -i /tmp/workspace/pris-docker-image
+            docker image load -i pris-docker-image
       - run:
           name: Run PRIS Docker Container Image and keep Container ID
           command: |
-            echo "export PRIS_CONTAINER_ID=$(docker run --rm --detach --name pris_$(cat /tmp/workspace/version.txt) pris:$(cat /tmp/workspace/version.txt))" >> ${BASH_ENV}
+            echo "export PRIS_CONTAINER_ID=$(docker run --rm --detach --name pris_$(cat version.txt) pris:$(cat version.txt))" >> ${BASH_ENV}
             sleep 3
       - run:
-          name: Smoke test against application landing page with redirect to documentation
+          name: Smoke test against documentation
           command: |
             source ${BASH_ENV}
-            docker exec ${PRIS_CONTAINER_ID} curl -L -f -I http://localhost:8000
+            docker exec ${PRIS_CONTAINER_ID} curl -f http://localhost:8000 | grep "PRIS for OpenNMS"
       - run:
           name: Smoke test against example requisition named MyRouter
           command: |
@@ -148,11 +172,11 @@ jobs:
           command: |
             source ${BASH_ENV}
             docker stop ${PRIS_CONTAINER_ID}
-            docker rmi pris:$(cat /tmp/workspace/version.txt)
+            docker rmi pris:$(cat version.txt)
 
   publish_dockerhub:
     <<: *defaults
-    <<: *container_config
+    <<: *docker_container_config
 
     steps:
       - setup_remote_docker
@@ -185,21 +209,21 @@ jobs:
       - run:
           name: Load Docker Container Image file
           command: |
-            docker image load -i /tmp/workspace/pris-docker-image
+            docker image load -i pris-docker-image
       - run:
           name: Tag Docker Container Images and upload to DockerHub
           command: |
             source ${BASH_ENV}
             case "${CIRCLE_BRANCH}" in
               master)
-                docker tag pris:$(cat /tmp/workspace/version.txt) ${DOCKERHUB_PROJECT_USER}/${DOCKERHUB_PROJECT_NAME}:bleeding
+                docker tag pris:$(cat version.txt) ${DOCKERHUB_PROJECT_USER}/${DOCKERHUB_PROJECT_NAME}:bleeding
                 docker push ${DOCKERHUB_PROJECT_USER}/${DOCKERHUB_PROJECT_NAME}:bleeding
                 ;;
               release*)
-                docker tag pris:$(cat /tmp/workspace/version.txt) ${DOCKERHUB_PROJECT_USER}/${DOCKERHUB_PROJECT_NAME}:latest
-                docker tag pris:$(cat /tmp/workspace/version.txt) ${DOCKERHUB_PROJECT_USER}/${DOCKERHUB_PROJECT_NAME}:$(cat /tmp/workspace/version.txt)
+                docker tag pris:$(cat version.txt) ${DOCKERHUB_PROJECT_USER}/${DOCKERHUB_PROJECT_NAME}:latest
+                docker tag pris:$(cat version.txt) ${DOCKERHUB_PROJECT_USER}/${DOCKERHUB_PROJECT_NAME}:$(cat version.txt)
                 docker push ${DOCKERHUB_PROJECT_USER}/${DOCKERHUB_PROJECT_NAME}:latest
-                docker push ${DOCKERHUB_PROJECT_USER}/${DOCKERHUB_PROJECT_NAME}:$(cat /tmp/workspace/version.txt)
+                docker push ${DOCKERHUB_PROJECT_USER}/${DOCKERHUB_PROJECT_NAME}:$(cat version.txt)
                 ;;
               *)
                 echo "This is not a branch build which needs to be published"
@@ -208,8 +232,7 @@ jobs:
 
   publish_github:
       <<: *defaults
-      docker:
-        - image: circleci/golang
+      <<: *go_container_config
 
       steps:
         - *attach_workspace
@@ -223,15 +246,15 @@ jobs:
               case "${CIRCLE_BRANCH}" in
                 master)
                   mkdir github-bleeding
-                  cp /tmp/workspace/pris-release-archive.tar.gz github-bleeding/pris-bleeding-$(cat /tmp/workspace/version.txt).tar.gz
-                  cp /tmp/workspace/pris-release-archive.zip github-bleeding/pris-bleeding-$(cat /tmp/workspace/version.txt).zip
-                  ghr -prerelease -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} bleeding-$(cat /tmp/workspace/version.txt) github-bleeding
+                  cp pris-release-archive.tar.gz github-bleeding/pris-bleeding-$(cat version.txt).tar.gz
+                  cp pris-release-archive.zip github-bleeding/pris-bleeding-$(cat version.txt).zip
+                  ghr -prerelease -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} bleeding-$(cat version.txt) github-bleeding
                   ;;
                 release*)
                   mkdir github-latest
-                  cp /tmp/workspace/pris-release-archive.tar.gz github-latest/pris-release-$(cat /tmp/workspace/version.txt).tar.gz
-                  cp /tmp/workspace/pris-release-archive.zip github-latest/pris-release-$(cat /tmp/workspace/version.txt).zip
-                  ghr -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} $(cat /tmp/workspace/version.txt) github-latest
+                  cp pris-release-archive.tar.gz github-latest/pris-release-$(cat version.txt).tar.gz
+                  cp pris-release-archive.zip github-latest/pris-release-$(cat version.txt).zip
+                  ghr -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} $(cat version.txt) github-latest
                   ;;
                 *)
                   echo "This is not a branch build which needs to be published"
@@ -243,9 +266,15 @@ workflows:
   build_and_deploy:
     jobs:
       - compile_n_junit
-      - build_docker_image:
+      - build_docs:
           requires:
             - compile_n_junit
+      - package:
+          requires:
+            - build_docs
+      - build_docker_image:
+          requires:
+            - package
       - smoke_test:
           requires:
             - build_docker_image

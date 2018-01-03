@@ -5,7 +5,7 @@
 
     <groupId>org.opennms</groupId>
     <artifactId>opennms-pris-parent</artifactId>
-    <version>NEXT-RELEASE</version>
+    <version>BLEEDING</version>
 
     <packaging>pom</packaging>
 
@@ -15,7 +15,6 @@
         <module>opennms-pris-model</module>
         <module>opennms-pris-api</module>
         <module>opennms-pris-main</module>
-        <module>opennms-pris-docs</module>
         <module>opennms-pris-dist</module>
         <module>opennms-pris-plugins</module>
     </modules>
@@ -28,7 +27,6 @@
 
         <!-- Version settings -->
         <apacheDerbyVersion>10.14.1.0</apacheDerbyVersion>
-        <asciidoctorVersion>1.5.6</asciidoctorVersion>
         <beanshellVersion>2.0b5</beanshellVersion>
         <chQosLogbackVersion>1.2.3</chQosLogbackVersion>
         <commonsConfigurationVersion>1.10</commonsConfigurationVersion>
@@ -49,11 +47,6 @@
         <wagonPluginVersion>3.0.0</wagonPluginVersion>
         <wagonSshVersion>3.0.0</wagonSshVersion>
         <mavenShadePluginVersion>3.1.0</mavenShadePluginVersion>
-
-        <!-- Ascii doc settings for documention -->
-        <asciidoc.source.directory>${basedir}/src/asciidoc</asciidoc.source.directory>
-        <asciidoc.output.directory>${basedir}/target/generated-docs</asciidoc.output.directory>
-        <asciidoc.images.directory>images</asciidoc.images.directory>
     </properties>
 
     <dependencies>

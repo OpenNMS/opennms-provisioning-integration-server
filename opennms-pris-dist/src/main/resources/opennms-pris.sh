@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Set debug on
 # set -x

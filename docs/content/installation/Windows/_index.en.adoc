@@ -1,0 +1,17 @@
+---
+title: Microsoft Windows
+weight: 15
+chapter: false
+---
+
+To install _PRIS_ on Microsoft Windows you have to install a current link:https://developer.oracle.com/java[Oracle 8 JRE].
+
+{{% notice info %}}
+Make sure your `java` binary is in your search path.
+{{% /notice %}}
+
+Download and extract the latest stable release as ZIP archive from link:https://github.com/OpenNMS/opennms-provisioning-integration-server/releases/latest[GitHub].
+Extract the ZIP archive in a directory.
+You can start _PRIS_ in background using the `opennms-pris.bat` file.
+
+If you want to start _PRIS_ as a Windows Service you can have a look at the link:http://nssm.cc/usage[NSSM Tool] which allows you to add custom Java applications as service.

@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.opennms</groupId>
         <artifactId>opennms-pris-plugins</artifactId>
-        <version>NEXT-RELEASE</version>
+        <version>BLEEDING</version>
     </parent>
 
     <artifactId>opennms-pris-plugins-xls</artifactId>

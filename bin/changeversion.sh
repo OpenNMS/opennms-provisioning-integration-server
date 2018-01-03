@@ -55,3 +55,9 @@ for i in $(find ${CWD} -name "pom.xml"); do
   cat ${i} | sed -e "s/${OLD_VERSION}/${NEW_VERSION}/g" > ${i}.new;
   mv ${i}.new ${i};
 done
+
+# Replace version number in documentation config.toml file
+for i in $(find ${CWD}/docs -name "config.toml"); do
+  cat ${i} | sed -e "s/${OLD_VERSION}/${NEW_VERSION}/g" > ${i}.new;
+  mv ${i}.new ${i};
+done

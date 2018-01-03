@@ -1,0 +1,66 @@
+---
+title: OCS SNMP Devices
+chapter: false
+---
+
+To use this mapper, configure your requisition config to use +ocs.devices+ as mapper.
+This mapper requires a +checksum+ of +4099+.
+It validates the IP address of the +snmpDevice+ against the black- and whitelists.
+For the election of the default an IP filter can be used.
+If the IP address of the +snmpDevice+ is _blocked_ a log message is written and the node will not have any interfaces.
+The interface has assigned _ICMP_ and _SNMP_ as services.
+The `foreignId` is mapped from the _OCS id_ of the +snmpDevice+.
+The `nodeLabel` is provided by the _OCS name_ of the +snmpDevice+.
+The assets for CPU and operating system are mapped against _OCS_.
+Additionally a link to the OCS +snmpDevice+ page is added to the asset comment field.
+
+== Black- and Whitelists
+
+The OCS Integration supports black- and whitelists to control the selection of the management interface for the node.
+OCS itself does not define a management interface, it just selects one ip-address as default and maintains a networks-list for every device.
+For the election of the management interface, two IP filters are implemented in the IpInterfaceHelper class.
+Both read the black- and whitelist from the requisition configuration folder.
+Name them +blackList.properties+ and +whiteList.properties+.
+Every line in those files is interpreted as an IPLike statement to offer ranges.
+
+== Default ip-filter
+
+This filter accepts every IP address as valid that is not blacklisted.
+IP addresses that are whitelisted are preferred over unlisted IP addresses.
+
+== Computers
+
+The first IP address of the +ocs-networks-list+ that is whitelisted is used.
+If no IP address of the +ocs-networks-list+ is whitelisted, the first IP address that is not blacklisted is elected as the management interface.
+If no IP address of the +ocs-networks-list+ qualifies, the +ocs-default-ip+ is checked against the blacklist.
+If it is not blacklisted, it is elected as the management interface (no interface description will be available).
+If it is blacklisted, no interface is added to the node. (+selectManagementNetwork+)
+
+== SnmpDevices
+
+The IP address of an +snmpDevice+ is elected as management interface as long as it is not blacklisted.
+If it is blacklisted, no interface is added to the node. (+selectIpAddress+)
+
+== Strict ip-filter "WhiteAndBlackOnly"
+
+This filter implements a strict black- and whitelist approach.
+Computers and +snmpDevices+ are handled independently.
+
+== Computers
+
+This mode is just accepts IP addresses that are whitelisted and not blacklisted.
+If there are multiple IP addresses listed on +ocs-networks-list+ that are whitelisted but not blacklisted, the first such one is selected as management IP.
+If no IP address from the +ocs-networks-list+ passes the black- and whitelist, the +ocs-default-ip+ is tested against the black- and whitelist.
+If the +ocs-default-ip+ is whitelisted and not blacklisted, it is elected as management-ip.
+If no IP address matches the black- and whitelist, no interface is added to the node.
+If the +ocs-default-ip+ is selected, the interface of the node will not contain any additional parameters like description. (+selectManagementNetworkWhiteAndBlackOnly+)
+
+== SnmpDevices
+
+If the IP address of the +snmpDevice+ is whitelisted and not blacklisted, it is elected as management interface.
+If the IP address does not pass the lists, no interface is added to the node. (+selectIpAddressWhiteAndBlackOnly+)
+
+== IPLike expressions in lists
+
+In both lists the +IPLike+ syntax can be used to express IP ranges and wildcards.
+Follow the +IPLike+ description at http://www.opennms.org/wiki/IPLIKE[IPLIKE documentation].

@@ -1,0 +1,57 @@
+---
+title: Docker
+weight: 5
+chapter: false
+---
+
+Running _PRIS_ with Docker requires a current Docker installation on your system.
+You find installation instructions on the link:https://docs.docker.com/engine/installation/[Install Docker] website.
+It is recommended to use link:https://docs.docker.com/compose/install[Docker Compose].
+
+== Use Docker Compose
+
+To get your own configurations you can mount two directories:
+
+* `/opt/opennms-pris/requisitions`: Directory which contains your configuration for requisitions
+* `/opt/opennms-pris/scriptsteps`: Directory which contains your custom scripts to manipulate data which is optional
+
+[source, yaml]
+----
+include::static/configs/docker/docker-compose.yml[]
+----
+
+Create the file `docker-compose.yml` in a directory of your choice and start the service in background with `docker-compose up -d`.
+
+
+== Use docker run
+
+If you run without anything you get the example requisitions from the _Quick Start_ guide.
+Requisitions from the example can be accessed http://localhost:8000/requisitions/myServer and http://localhost:8000/requisitions/myServer.
+
+[source, bash]
+----
+docker run --rm --name mypris --detach --publish 8000:8000 opennms/pris:latest
+----
+
+The following example mounts to local directory from your Docker host which contains your custom requisition configuration and scripts:
+
+[source, bash]
+----
+docker run --rm --name mypris --detach --publish 8000:8000 \
+  -v $(pwd)/requisitions:/opt/opennms-pris/requisitions \
+  -v $(pwd)/scriptsteps:/opt/opt/opennms-pris/scriptsteps \
+  opennms/pris:latest
+----
+
+== Download Docker Container Images
+
+If you don't have internet access on your Docker host, you can save the Docker Image as an archive.
+Download the latest version of _PRIS_ with `docker pull opennms/pris:latest`.
+
+Create an archive with `docker save opennms/pris:latest -o opennms-pris-latest`.
+It will create a Docker archive file `opennms-pris-latest` which you can now transfer to your Docker Host.
+
+Load the Docker image on your host with `docker load -i opennms-pris-latest`.
+The image is loaded and can now be used as described above.
+
+

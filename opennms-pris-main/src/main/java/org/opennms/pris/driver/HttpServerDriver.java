@@ -47,10 +47,6 @@ import org.slf4j.LoggerFactory;
  */
 public class HttpServerDriver implements Driver {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(HttpServerDriver.class);
-
-    private final String DOCU_PATH = "/documentation";
-    
     public static final class Factory implements Driver.Factory {
 
         @Override
@@ -86,22 +82,11 @@ public class HttpServerDriver implements Driver {
         docuResourceHandler.setDirectoriesListed(true);
         docuResourceHandler.setWelcomeFiles(new String[]{"index.html"});
         docuResourceHandler.setResourceBase("./documentation/");
-        ContextHandler contextHandlerDocu = new ContextHandler(DOCU_PATH);
-        contextHandlerDocu.setHandler(docuResourceHandler);
-        contextHandlerCollection.addHandler(contextHandlerDocu);
 
         // redirecting http://ip:port/ to the docu
-        RewriteHandler redirector = new RewriteHandler();
-        redirector.setRewriteRequestURI(true);
-        redirector.setRewritePathInfo(false);
-
-        RedirectPatternRule rootToDocuRedirectRule = new RedirectPatternRule();
-        rootToDocuRedirectRule.setPattern("/*");
-        rootToDocuRedirectRule.setLocation(DOCU_PATH);
-        redirector.addRule(rootToDocuRedirectRule);
 
         ContextHandler rootContext = new ContextHandler("/");
-        rootContext.setHandler(redirector);
+        rootContext.setHandler(docuResourceHandler);
         contextHandlerCollection.addHandler(rootContext);
         
         server.setHandler(contextHandlerCollection);

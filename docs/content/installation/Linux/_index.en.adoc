@@ -1,0 +1,70 @@
+---
+title: Linux
+weight: 10
+chapter: false
+---
+
+To install _PRIS_ on your Linux system you have to install a current Java Runtime Environment link:http://openjdk.java.net[OpenJDK 8] or link:https://developer.oracle.com/java[Oracle 8 JRE]
+
+Download and extract the latest stable release from link:https://github.com/OpenNMS/opennms-provisioning-integration-server/releases/latest[GitHub].
+
+
+{{% notice info %}}
+The provided system start scripts assume you install _PRIS_ in `/opt/opennms-pris`.
+If you want to install in a different directory, ensure you modify the start scripts to fit your location.
+{{% /notice %}}
+
+{{% notice info %}}
+Make sure your `java` binary is in your search path.
+{{% /notice %}}
+
+
+[source, bash]
+----
+# Create directory for PRIS
+mkdir /opt/opennms-pris
+cd /opt/opennms-pris
+
+# Download latest release from GitHub
+curl -L {{% ghlatesturl "https://api.github.com/repos/OpenNMS/opennms-provisioning-integration-server/releases/latest" ".tar.gz" %}} -o pris-latest.tar.gz
+
+# Extract in current directory
+tar xzf pris-latest.tar.gz --strip-components=1
+----
+
+== Systemd Start Script
+
+To start _PRIS_ as a system service on a Linux system using Systemd you can use the init script
+
+[source, bash]
+----
+# Current working directory as root: /opt/opennms-pris
+
+cp opennms-pris.init /etc/init.d/opennms-pris
+update-rc.d opennms-pris defaults
+service opennms-pris start
+----
+
+== SysV Init Script
+
+To start _PRIS_ as a system service on a Linux system using SysV you can use the init script
+
+[source, bash]
+----
+# Current working directory as root: /opt/opennms-pris
+
+cp opennms-pris.service /etc/systemd/system
+systemctl enable opennms-pris.service
+systemctl start opennms-pris.service
+----
+
+== Run in Foreground
+
+Use this command to start _PRIS_ in foreground:
+
+[source, bash]
+----
+# Current working directory: /opt/opennms-pris
+java -cp ./lib/*:./opennms-pris.jar org.opennms.pris.Starter
+----
+

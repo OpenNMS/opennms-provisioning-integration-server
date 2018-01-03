@@ -1,0 +1,1 @@
+{{ $url := .Get 0 }}{{$type := .Get 1 }}{{ $latestrelease := getJSON $url }}{{ $releasename := $latestrelease.name }}{{ $assets := $latestrelease.assets }}{{ range $assets }}{{ if in .browser_download_url $type }}{{ .browser_download_url }}{{ end }}{{ end }}

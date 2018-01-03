@@ -1,0 +1,44 @@
+baseURL = "/"
+languageCode = "en-US"
+defaultContentLanguage = "en"
+
+title = "PRIS Documentation"
+theme = "hugo-theme-learn"
+themesdir = "themes"
+metaDataFormat = "yaml"
+defaultContentLanguageInSubdir= true
+publishDir = "../public"
+
+[params]
+  editURL = "https://github.com/OpenNMS/opennms-provisioning-integration-server/docs/content/"
+  description = "Documentation for PRIS"
+  author = "The OpenNMS Project"
+  showVisitedLinks = true
+  themeVariant = "green"
+  version = "BLEEDING"
+
+[outputs]
+home = [ "HTML", "RSS", "JSON"]
+
+[Languages]
+[Languages.en]
+title = "PRIS Documentation"
+weight = 1
+languageName = "English"
+
+[[Languages.en.menu.shortcuts]] 
+name = "<i class='fa fa-github'></i> Github repo"
+identifier = "ds"
+url = "https://github.com/OpenNMS/opennms-provisioning-integration-server"
+weight = 10
+
+[[Languages.en.menu.shortcuts]]
+name = "<i class='fa fa-bookmark'></i> PRIS Documentation"
+identifier = "prisdoc"
+url = "https://pris.opennms.eu"
+weight = 20
+
+[[Languages.en.menu.shortcuts]]
+name = "<i class='fa fa-bullhorn'></i> Credits"
+url = "/credits"
+weight = 30

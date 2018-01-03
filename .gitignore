@@ -10,3 +10,4 @@ Docker/deploy/*
 **/*nbactions.xml
 *.iws
 *.ipr
+public/*
