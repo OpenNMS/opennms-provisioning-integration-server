@@ -16,7 +16,7 @@ VOLUME [ "${OPENNMS_PRIS_HOME}/requisitions", "${OPENNMS_PRIS_HOME}/scriptsteps"
 WORKDIR ${OPENNMS_PRIS_HOME}
 
 LABEL license="AGPLv3" \
-      org.opennms.horizon.version="${OPENNMS_PRIS_VERSION}" \
+      org.opennms.pris.version="${OPENNMS_PRIS_VERSION}" \
       vendor="OpenNMS Community" \
       name="PRIS"
 
