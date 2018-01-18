@@ -246,14 +246,14 @@ jobs:
               case "${CIRCLE_BRANCH}" in
                 master)
                   mkdir github-bleeding
-                  cp pris-release-archive.tar.gz github-bleeding/pris-bleeding-$(cat version.txt).tar.gz
-                  cp pris-release-archive.zip github-bleeding/pris-bleeding-$(cat version.txt).zip
+                  cp opennms-pris-dist/target/pris-release-archive.tar.gz github-bleeding/pris-bleeding-$(cat version.txt).tar.gz
+                  cp opennms-pris-dist/target/pris-release-archive.zip github-bleeding/pris-bleeding-$(cat version.txt).zip
                   ghr -prerelease -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} bleeding-$(cat version.txt) github-bleeding
                   ;;
                 release*)
                   mkdir github-latest
-                  cp pris-release-archive.tar.gz github-latest/pris-release-$(cat version.txt).tar.gz
-                  cp pris-release-archive.zip github-latest/pris-release-$(cat version.txt).zip
+                  cp opennms-pris-dist/target/pris-release-archive.tar.gz github-latest/pris-release-$(cat version.txt).tar.gz
+                  cp opennms-pris-dist/target/pris-release-archive.zip github-latest/pris-release-$(cat version.txt).zip
                   ghr -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} $(cat version.txt) github-latest
                   ;;
                 *)
