@@ -40,7 +40,7 @@
         <mavenCompilerPluginVersion>3.7.0</mavenCompilerPluginVersion>
         <metainfServicesVersion>1.7</metainfServicesVersion>
         <mysqlConnectorVersion>8.0.8-dmr</mysqlConnectorVersion>
-        <opennmsVersion>21.0.2</opennmsVersion>
+        <opennmsVersion>21.0.3</opennmsVersion>
         <postgresqlDriverVersion>42.1.4</postgresqlDriverVersion>
         <slf4jVersion>1.7.25</slf4jVersion>
         <updatePolicy>interval:60</updatePolicy>
