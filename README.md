@@ -134,7 +134,7 @@ mvn clean package
 Build the image with the command:
 
 ```
-cp opennms-pris-dist/target/pris-release-archive.tar.gz Docker/deploy
+cp opennms-pris-dist/target/opennms-pris-release-archive.tar.gz Docker/deploy
 docker build -t mypris .
 ```
 
