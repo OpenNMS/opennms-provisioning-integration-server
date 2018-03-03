@@ -3,7 +3,7 @@ FROM openjdk:8-jre-alpine
 LABEL maintainer "Ronny Trommer <ronny@opennms.org>"
 
 ARG OPENNMS_PRIS_VERSION=SNAPSHOT
-ARG OPENNMS_PRIS_HOME=/opt/pris
+ARG OPENNMS_PRIS_HOME=/opt/opennms-pris
 ENV JAVA_OPTS ""
 
 ADD deploy/pris-release-archive.tar.gz /opt
