@@ -117,7 +117,7 @@ jobs:
       - run:
           name: Build Docker Container Image
           command: |
-            cp opennms-pris-dist/target/pris-release-archive.tar.gz docker/deploy/pris-release-archive.tar.gz
+            cp opennms-pris-dist/target/opennms-pris-release-archive.tar.gz docker/deploy/opennms-pris-release-archive.tar.gz
             cd docker
             echo "docker build --build-arg OPENNMS_PRIS_VERSION=$(cat ../version.txt) -t pris:$(cat ../version.txt) ."
             docker build --build-arg OPENNMS_PRIS_VERSION=$(cat ../version.txt) -t pris:$(cat ../version.txt) .
@@ -246,13 +246,13 @@ jobs:
               case "${CIRCLE_BRANCH}" in
                 master)
                   mkdir github-bleeding
-                  cp opennms-pris-dist/target/pris-release-archive.tar.gz github-bleeding/pris-bleeding-$(cat version.txt).tar.gz
+                  cp opennms-pris-dist/target/opennms-pris-release-archive.tar.gz github-bleeding/opennms-pris-bleeding-$(cat version.txt).tar.gz
                   cp opennms-pris-dist/target/pris-release-archive.zip github-bleeding/pris-bleeding-$(cat version.txt).zip
                   ghr -prerelease -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} bleeding-$(cat version.txt) github-bleeding
                   ;;
                 release*)
                   mkdir github-latest
-                  cp opennms-pris-dist/target/pris-release-archive.tar.gz github-latest/pris-release-$(cat version.txt).tar.gz
+                  cp opennms-pris-dist/target/opennms-pris-release-archive.tar.gz github-latest/opennms-pris-release-$(cat version.txt).tar.gz
                   cp opennms-pris-dist/target/pris-release-archive.zip github-latest/pris-release-$(cat version.txt).zip
                   ghr -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} $(cat version.txt) github-latest
                   ;;

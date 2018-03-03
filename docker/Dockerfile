@@ -6,7 +6,7 @@ ARG OPENNMS_PRIS_VERSION=SNAPSHOT
 ARG OPENNMS_PRIS_HOME=/opt/opennms-pris
 ENV JAVA_OPTS ""
 
-ADD deploy/pris-release-archive.tar.gz /opt
+ADD deploy/opennms-pris-release-archive.tar.gz /opt
 
 RUN apk add --no-cache curl
 
