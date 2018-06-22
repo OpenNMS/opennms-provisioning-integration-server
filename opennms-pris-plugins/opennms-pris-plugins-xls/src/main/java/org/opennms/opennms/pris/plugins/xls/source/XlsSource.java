@@ -168,6 +168,9 @@ public class XlsSource implements Source {
 		while (rowiterator.hasNext()) {
 			Row row = rowiterator.next();
 			Cell cell = getRelevantColumnID(row, REQUIRED_UNIQUE_PREFIXES.PREFIX_NODE);
+			if (cell == null) {
+				continue;
+			}
 			String nodeLabel = XlsSource.getStringValueFromCell(cell);
 			RequisitionNode node = new RequisitionNode();
 			node.setNodeLabel(nodeLabel);
@@ -321,9 +324,15 @@ public class XlsSource implements Source {
 		List<Integer> relevantColumnIDs = getRelevantColumnIDs(OPTIONAL_MULTIPLE_SPLITCONTENT_PREFIXES.PREFIX_CATEGORY);
 		if (relevantColumnIDs != null) {
 			for (Integer column : relevantColumnIDs) {
-				String rawCategories = XlsSource.getStringValueFromCell(row.getCell(column))
-						.trim();
-				for (String category : rawCategories.split(WITHIN_SPLITTER)) {
+				Cell cell = row.getCell(column);
+				if (cell == null) {
+					continue;
+				}
+				String rawCategories = XlsSource.getStringValueFromCell(cell);
+				if (rawCategories == null) {
+					continue;
+				}
+				for (String category : rawCategories.trim().split(WITHIN_SPLITTER)) {
 					category = category.trim();
 					if (!category.isEmpty()) {
 						categories.add(new RequisitionCategory(category));
