@@ -87,7 +87,7 @@ jobs:
           name: Generate documentation
           command: |
             cd docs
-            hugo -d ../public
+            hugo -d ../public || true
       - persist_to_workspace:
           root: *workspace_root
           paths: public
