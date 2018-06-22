@@ -21,8 +21,6 @@ package org.opennms.opennms.pris.plugins.xls.source;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,7 +33,6 @@ import java.util.Set;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -73,9 +70,36 @@ public class XlsSource implements Source {
 	private Map<String, Integer> optionalUniquHeaders;
 	private Map<String, Integer> assetColumns;
 
+	private File xls;
 	private final String encoding;
 
-	private File xls = null;
+	public static String getStringValueFromCell(Cell cell) {
+		String value = null;
+		switch (cell.getCellTypeEnum()) {
+		case NUMERIC: value = Integer.toString((int)cell.getNumericCellValue());
+					break;
+		case STRING: value = cell.getStringCellValue();
+					break;
+		case BOOLEAN: value = ((Boolean) cell.getBooleanCellValue()).toString();
+					break;
+			default: break;
+		}
+		
+		return value;	
+	}
+
+	public static Integer getIntValueFromCell(Cell cell) {
+		Integer value = null;
+		switch (cell.getCellTypeEnum()) {
+		case NUMERIC: value = (int)cell.getNumericCellValue();
+					break;
+		case STRING: value = Integer.getInteger(cell.getStringCellValue());
+					break;
+			default: break;
+		}
+		
+		return value;	
+	}
 
 	public XlsSource(final InstanceConfiguration config) {
 		this.config = config;
@@ -83,34 +107,31 @@ public class XlsSource implements Source {
 		this.encoding = config.getString("encoding", "ISO-8859-1");
 	}
 
-	private Workbook getWorkbook() throws FileNotFoundException {
-		if (getXlsFile() != null) {
-			xls = new File(getXlsFile());
-		}
-		if (!xls.canRead()) {
-			return null;
-		}
-
-		// FIXME this seems shit!
+	public static Workbook getWorkbook(File file) {
+		
 		try {
-			return new XSSFWorkbook(new FileInputStream(xls));
+			return new XSSFWorkbook(new FileInputStream(file));
 		} catch (Exception e) {
 			try {
-				return new HSSFWorkbook(new FileInputStream(xls));
+				return new HSSFWorkbook(new FileInputStream(file));
 			} catch (Exception e1) {
+				LOGGER.error("can not create workbook from file {}",
+						 file.getAbsolutePath(), e);
+				LOGGER.error("can not create workbook from file {}",
+				 file.getAbsolutePath(), e1);
 			} 
 		}
-
 		return null;
 
 	}
-
+	
 	@Override
 	public Object dump() throws MissingRequiredColumnHeaderException, Exception {
 		final String instance = this.config.getInstanceIdentifier();
 
 		Requisition requisition = new Requisition().withForeignSource(instance);
-		Workbook workbook = getWorkbook();
+		xls = new File(getXlsFile());
+		Workbook workbook = getWorkbook(xls);
 		List<String> sheetNames = new ArrayList<String>();
 		for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
 			sheetNames.add(workbook.getSheetName(i));
@@ -122,6 +143,7 @@ public class XlsSource implements Source {
 			throw new RuntimeException("can not find sheet " + instance
 					+ " in workbook from file " + xls.getAbsolutePath());
 		}
+		
 		Sheet sheet = workbook.getSheet(instance);
 		if (sheet == null) {
 			LOGGER.error(
@@ -152,7 +174,7 @@ public class XlsSource implements Source {
 				continue;
 			}
 
-			String nodeLabel = cell.getStringCellValue();
+			String nodeLabel = XlsSource.getStringValueFromCell(cell);
 			RequisitionNode node = new RequisitionNode();
 			node.setNodeLabel(nodeLabel);
 			node.setForeignId(nodeLabel);
@@ -160,32 +182,32 @@ public class XlsSource implements Source {
 			cell = row
 					.getCell(getRelevantColumnID(OPTIONAL_UNIQUE_HEADERS.PREFIX_FOREIGN_ID));
 			if (cell != null) {
-				node.setForeignId(cell.getStringCellValue());
+				node.setForeignId(XlsSource.getStringValueFromCell(cell));
 			}
 
 			cell = row
 					.getCell(getRelevantColumnID(OPTIONAL_UNIQUE_HEADERS.PREFIX_LOCATION));
 			if (cell != null) {
-				node.setLocation(cell.getStringCellValue());
+				node.setLocation(XlsSource.getStringValueFromCell(cell));
 			}
 
 			// adding parent data
 			cell = row
 					.getCell(getRelevantColumnID(OPTIONAL_UNIQUE_HEADERS.PREFIX_PARENT_FOREIGN_SOURCE));
 			if (cell != null) {
-				node.setParentForeignSource(cell.getStringCellValue());
+				node.setParentForeignSource(XlsSource.getStringValueFromCell(cell));
 			}
 
 			cell = row
 					.getCell(getRelevantColumnID(OPTIONAL_UNIQUE_HEADERS.PREFIX_PARENT_FOREIGN_ID));
 			if (cell != null) {
-				node.setParentForeignId(cell.getStringCellValue());
+				node.setParentForeignId(XlsSource.getStringValueFromCell(cell));
 			}
 
 			cell = row
 					.getCell(getRelevantColumnID(OPTIONAL_UNIQUE_HEADERS.PREFIX_PARENT_NODE_LABEL));
 			if (cell != null) {
-				node.setParentNodeLabel(cell.getStringCellValue());
+				node.setParentNodeLabel(XlsSource.getStringValueFromCell(cell));
 			}
 
 			node.getCategories().addAll(getCategoriesByRow(row));
@@ -306,7 +328,7 @@ public class XlsSource implements Source {
 		List<Integer> relevantColumnIDs = getRelevantColumnIDs(OPTIONAL_MULTIPLE_SPLITCONTENT_PREFIXES.PREFIX_CATEGORY);
 		if (relevantColumnIDs != null) {
 			for (Integer column : relevantColumnIDs) {
-				String rawCategories = row.getCell(column).getStringCellValue()
+				String rawCategories = XlsSource.getStringValueFromCell(row.getCell(column))
 						.trim();
 				for (String category : rawCategories.split(WITHIN_SPLITTER)) {
 					category = category.trim();
@@ -324,7 +346,15 @@ public class XlsSource implements Source {
 		List<Integer> relevantColumnIDs = getRelevantColumnIDs(OPTIONAL_MULTIPLE_SPLITCONTENT_PREFIXES.PREFIX_SERVICE);
 		if (relevantColumnIDs != null) {
 			for (Integer column : relevantColumnIDs) {
-				String rawServices = row.getCell(column).getStringCellValue()
+				Cell cell = row.getCell(column);
+				if (cell == null) {
+					continue;
+				}
+				String value = XlsSource.getStringValueFromCell(cell);
+				if (value == null) {
+					continue;
+				}
+				String rawServices = value
 						.trim();
 				for (String service : rawServices.split(WITHIN_SPLITTER)) {
 					service = service.trim();
@@ -346,14 +376,8 @@ public class XlsSource implements Source {
 			if (cell == null) {
 				continue;
 			}
-			if (cell.getCellTypeEnum() == CellType.NUMERIC) {
-				Double d = cell.getNumericCellValue();
-				int di = (int) d.doubleValue();
-				value = Integer.toString(di);
-			} else {
-				value = cell.getStringCellValue().trim();
-			}
-			if (!value.isEmpty()) {
+			value = XlsSource.getStringValueFromCell(cell);
+			if (value != null && !value.isEmpty()) {
 				assets.add(new RequisitionAsset(entry.getKey(), value));
 			}
 		}
@@ -363,12 +387,22 @@ public class XlsSource implements Source {
 	private RequisitionInterface getInterfaceByRow(Row row)
 			throws InvalidInterfaceException {
 		RequisitionInterface reqInterface = new RequisitionInterface();
+		String  ip = XlsSource.getStringValueFromCell(row
+				.getCell(
+						getRelevantColumnID(REQUIRED_UNIQUE_PREFIXES.PREFIX_IP_ADDRESS)));
+		if (ip == null) {
+			throw new InvalidInterfaceException(
+					"Null IP-Address for node '"
+							+ row.getCell(
+									getRelevantColumnID(REQUIRED_UNIQUE_PREFIXES.PREFIX_NODE))
+									.getStringCellValue().trim()
+							+ "' at row '"
+							+ row.getRowNum(), null
+						);
+		}
 		try {
 			reqInterface
-					.setIpAddr(row
-							.getCell(
-									getRelevantColumnID(REQUIRED_UNIQUE_PREFIXES.PREFIX_IP_ADDRESS))
-							.getStringCellValue().trim());
+					.setIpAddr(ip.trim());
 		} catch (IllegalArgumentException ex) {
 			throw new InvalidInterfaceException(
 					"Invalid IP-Address for node '"
@@ -378,14 +412,12 @@ public class XlsSource implements Source {
 							+ "' at row '"
 							+ row.getRowNum()
 							+ "' and IP '"
-							+ row.getCell(
-									getRelevantColumnID(REQUIRED_UNIQUE_PREFIXES.PREFIX_IP_ADDRESS))
-									.getStringCellValue().trim() + "'", ex);
+							+ ip.trim() + "'", ex);
 		}
-		String interfaceType = row
+		
+		String interfaceType = XlsSource.getStringValueFromCell(row
 				.getCell(
-						getRelevantColumnID(REQUIRED_UNIQUE_PREFIXES.PREFIX_INTERFACE_MANGEMENT_TYPE))
-				.getStringCellValue().trim();
+						getRelevantColumnID(REQUIRED_UNIQUE_PREFIXES.PREFIX_INTERFACE_MANGEMENT_TYPE))).trim();
 		if (interfaceType.equalsIgnoreCase(INTERFACE_TYPE_PRIMARY)) {
 			reqInterface.setSnmpPrimary(PrimaryType.PRIMARY);
 		} else if (interfaceType.equalsIgnoreCase(INTERFACE_TYPE_SECONDARY)) {
@@ -393,16 +425,13 @@ public class XlsSource implements Source {
 		} else {
 			reqInterface.setSnmpPrimary(PrimaryType.NOT_ELIGIBLE);
 		}
-		if (getRelevantColumnID(OPTIONAL_UNIQUE_HEADERS.PREFIX_INTERFACE_STATUS) != null) {
-			Cell cell = row
+		
+		Cell cell = row
 					.getCell(getRelevantColumnID(OPTIONAL_UNIQUE_HEADERS.PREFIX_INTERFACE_STATUS));
-			if (cell != null && cell.getCellTypeEnum() == CellType.NUMERIC) {
-				Double d = row
-						.getCell(
-								getRelevantColumnID(OPTIONAL_UNIQUE_HEADERS.PREFIX_INTERFACE_STATUS))
-						.getNumericCellValue();
-				int di = (int) d.doubleValue();
-				reqInterface.setStatus(di);
+		if (cell != null) {
+			Integer value = XlsSource.getIntValueFromCell(cell);
+			if (value != null) {
+				reqInterface.setStatus(value);
 			}
 		}
 		return reqInterface;
