@@ -1,8 +1,6 @@
 package org.opennms.opennms.pris.plugins.xls.source;
 
-import com.sun.org.apache.xerces.internal.jaxp.datatype.XMLGregorianCalendarImpl;
 import java.nio.file.Paths;
-import java.util.GregorianCalendar;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,8 +17,6 @@ import org.opennms.pris.util.RequisitionUtils;
 public class XlsSourceTest {
 
     private XlsSource xlsSource;
-
-    private final XMLGregorianCalendarImpl xMLGregorianCalendarImpl = new XMLGregorianCalendarImpl((GregorianCalendar) GregorianCalendar.getInstance());
 
     @Before
     public void setUp() {
