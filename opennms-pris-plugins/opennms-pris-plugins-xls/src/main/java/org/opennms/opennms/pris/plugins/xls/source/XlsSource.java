@@ -167,45 +167,34 @@ public class XlsSource implements Source {
 		}
 		while (rowiterator.hasNext()) {
 			Row row = rowiterator.next();
-			Cell cell = row
-					.getCell(getRelevantColumnID(REQUIRED_UNIQUE_PREFIXES.PREFIX_NODE));
-
-			if (cell == null) {
-				continue;
-			}
-
+			Cell cell = getRelevantColumnID(row, REQUIRED_UNIQUE_PREFIXES.PREFIX_NODE);
 			String nodeLabel = XlsSource.getStringValueFromCell(cell);
 			RequisitionNode node = new RequisitionNode();
 			node.setNodeLabel(nodeLabel);
 			node.setForeignId(nodeLabel);
 
-			cell = row
-					.getCell(getRelevantColumnID(OPTIONAL_UNIQUE_HEADERS.PREFIX_FOREIGN_ID));
+			cell = getRelevantColumnID(row, OPTIONAL_UNIQUE_HEADERS.PREFIX_FOREIGN_ID);
 			if (cell != null) {
 				node.setForeignId(XlsSource.getStringValueFromCell(cell));
 			}
 
-			cell = row
-					.getCell(getRelevantColumnID(OPTIONAL_UNIQUE_HEADERS.PREFIX_LOCATION));
+			cell = getRelevantColumnID(row, OPTIONAL_UNIQUE_HEADERS.PREFIX_LOCATION);
 			if (cell != null) {
 				node.setLocation(XlsSource.getStringValueFromCell(cell));
 			}
 
 			// adding parent data
-			cell = row
-					.getCell(getRelevantColumnID(OPTIONAL_UNIQUE_HEADERS.PREFIX_PARENT_FOREIGN_SOURCE));
+			cell = getRelevantColumnID(row, OPTIONAL_UNIQUE_HEADERS.PREFIX_PARENT_FOREIGN_SOURCE);
 			if (cell != null) {
 				node.setParentForeignSource(XlsSource.getStringValueFromCell(cell));
 			}
 
-			cell = row
-					.getCell(getRelevantColumnID(OPTIONAL_UNIQUE_HEADERS.PREFIX_PARENT_FOREIGN_ID));
+			cell = getRelevantColumnID(row, OPTIONAL_UNIQUE_HEADERS.PREFIX_PARENT_FOREIGN_ID);
 			if (cell != null) {
 				node.setParentForeignId(XlsSource.getStringValueFromCell(cell));
 			}
 
-			cell = row
-					.getCell(getRelevantColumnID(OPTIONAL_UNIQUE_HEADERS.PREFIX_PARENT_NODE_LABEL));
+			cell = getRelevantColumnID(row, OPTIONAL_UNIQUE_HEADERS.PREFIX_PARENT_NODE_LABEL);
 			if (cell != null) {
 				node.setParentNodeLabel(XlsSource.getStringValueFromCell(cell));
 			}
@@ -229,12 +218,16 @@ public class XlsSource implements Source {
 		return requisition;
 	}
 
-	private Integer getRelevantColumnID(REQUIRED_UNIQUE_PREFIXES prefix) {
-		return requiredColumns.get(prefix.PREFIX);
+	private Cell getRelevantColumnID(Row row, REQUIRED_UNIQUE_PREFIXES prefix) {
+		return row.getCell(requiredColumns.get(prefix.PREFIX));
 	}
 
-	private Integer getRelevantColumnID(OPTIONAL_UNIQUE_HEADERS header) {
-		return optionalUniquHeaders.get(header.HEADER);
+	private Cell getRelevantColumnID(Row row, OPTIONAL_UNIQUE_HEADERS header) {
+		Integer columnId = optionalUniquHeaders.get(header.HEADER);
+		if ( columnId == null ) {
+			return null;
+		}
+		return row.getCell(columnId);
 	}
 
 	private List<Integer> getRelevantColumnIDs(
@@ -387,14 +380,11 @@ public class XlsSource implements Source {
 	private RequisitionInterface getInterfaceByRow(Row row)
 			throws InvalidInterfaceException {
 		RequisitionInterface reqInterface = new RequisitionInterface();
-		String  ip = XlsSource.getStringValueFromCell(row
-				.getCell(
-						getRelevantColumnID(REQUIRED_UNIQUE_PREFIXES.PREFIX_IP_ADDRESS)));
+		String  ip = XlsSource.getStringValueFromCell(getRelevantColumnID(row, REQUIRED_UNIQUE_PREFIXES.PREFIX_IP_ADDRESS));
 		if (ip == null) {
 			throw new InvalidInterfaceException(
 					"Null IP-Address for node '"
-							+ row.getCell(
-									getRelevantColumnID(REQUIRED_UNIQUE_PREFIXES.PREFIX_NODE))
+							+ getRelevantColumnID(row,REQUIRED_UNIQUE_PREFIXES.PREFIX_NODE)
 									.getStringCellValue().trim()
 							+ "' at row '"
 							+ row.getRowNum(), null
@@ -406,18 +396,15 @@ public class XlsSource implements Source {
 		} catch (IllegalArgumentException ex) {
 			throw new InvalidInterfaceException(
 					"Invalid IP-Address for node '"
-							+ row.getCell(
-									getRelevantColumnID(REQUIRED_UNIQUE_PREFIXES.PREFIX_NODE))
-									.getStringCellValue().trim()
+							+ getRelevantColumnID(row,REQUIRED_UNIQUE_PREFIXES.PREFIX_NODE)
+							.getStringCellValue().trim()
 							+ "' at row '"
 							+ row.getRowNum()
 							+ "' and IP '"
 							+ ip.trim() + "'", ex);
 		}
 		
-		String interfaceType = XlsSource.getStringValueFromCell(row
-				.getCell(
-						getRelevantColumnID(REQUIRED_UNIQUE_PREFIXES.PREFIX_INTERFACE_MANGEMENT_TYPE))).trim();
+		String interfaceType = XlsSource.getStringValueFromCell(getRelevantColumnID(row,REQUIRED_UNIQUE_PREFIXES.PREFIX_INTERFACE_MANGEMENT_TYPE)).trim();
 		if (interfaceType.equalsIgnoreCase(INTERFACE_TYPE_PRIMARY)) {
 			reqInterface.setSnmpPrimary(PrimaryType.PRIMARY);
 		} else if (interfaceType.equalsIgnoreCase(INTERFACE_TYPE_SECONDARY)) {
@@ -426,8 +413,7 @@ public class XlsSource implements Source {
 			reqInterface.setSnmpPrimary(PrimaryType.NOT_ELIGIBLE);
 		}
 		
-		Cell cell = row
-					.getCell(getRelevantColumnID(OPTIONAL_UNIQUE_HEADERS.PREFIX_INTERFACE_STATUS));
+		Cell cell = getRelevantColumnID(row, OPTIONAL_UNIQUE_HEADERS.PREFIX_INTERFACE_STATUS);
 		if (cell != null) {
 			Integer value = XlsSource.getIntValueFromCell(cell);
 			if (value != null) {
