@@ -1,6 +1,10 @@
 .idea/
 *.class
+.project
+.settings
+.DS_Store
 target/
+.classpath
 # Package Files #
 Docker/deploy/*
 *.jar
