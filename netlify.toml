@@ -1,4 +1,4 @@
 [build]
   base    = "docs"
   publish = "public"
-  command = "gem install asciidoctor && hugo"
+  command = "gem install asciidoctor && hugo || true"
