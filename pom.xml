@@ -34,7 +34,7 @@
         <groovyVersion>2.4.13</groovyVersion>
         <guavaVersion>23.6-jre</guavaVersion>
         <httpComponentsVersion>4.5.4</httpComponentsVersion>
-        <jettyServerVersion>9.4.8.v20171121</jettyServerVersion>
+        <jettyServerVersion>9.4.12.v20180830</jettyServerVersion>
         <junitVersion>4.12</junitVersion>
         <mavenResourcesPluginVersion>3.0.2</mavenResourcesPluginVersion>
         <mavenCompilerPluginVersion>3.7.0</mavenCompilerPluginVersion>
