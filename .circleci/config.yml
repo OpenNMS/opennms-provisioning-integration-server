@@ -296,7 +296,7 @@ workflows:
       - publish_github:
           filters:
             tags:
-              only: /^v.*/
+              only: /^[0-9].*/
             branches:
               ignore: /.*/
           requires:
@@ -304,7 +304,7 @@ workflows:
       - publish_dockerhub:
           filters:
             tags:
-              only: /^v.*/
+              only: /^[0-9].*/
             branches:
               ignore: /.*/
           requires:
