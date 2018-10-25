@@ -283,7 +283,8 @@ workflows:
             branches:
               only:
                 - master
-                - /release-.*/
+            tags:
+              only: /^v.*/
           requires:
             - smoke_test
       - publish_dockerhub:
@@ -291,7 +292,8 @@ workflows:
             branches:
               only:
                 - master
-                - /release-.*/
+            tags:
+              only: /^v.*/
           requires:
             - smoke_test
             - build_docker_image
