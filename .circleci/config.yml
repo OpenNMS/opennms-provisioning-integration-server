@@ -265,19 +265,34 @@ workflows:
   version: 2
   build_and_deploy:
     jobs:
-      - compile_n_junit
+      - compile_n_junit:
+          filters:
+            tags:
+              only: /.*/
       - build_docs:
           requires:
             - compile_n_junit
+          filters:
+            tags:
+              only: /.*/
       - package:
           requires:
             - build_docs
+          filters:
+            tags:
+              only: /.*/
       - build_docker_image:
           requires:
             - package
+          filters:
+            tags:
+              only: /.*/
       - smoke_test:
           requires:
             - build_docker_image
+          filters:
+            tags:
+              only: /.*/
       - publish_github:
           filters:
             branches:
