@@ -64,7 +64,7 @@ services:
       - pris.data:/opt/opennms-pris/requisitions
       - pris.data:/opt/opennms-pris/scriptsteps
     healthcheck:
-      test: ["CMD", "curl", "-f", "-I", "http://localhost:8000/documentation/index.html"]
+      test: ["CMD", "curl", "-f", "-I", "http://localhost:8000/index.html"]
       interval: 30s
       timeout: 5s
       retries: 1
