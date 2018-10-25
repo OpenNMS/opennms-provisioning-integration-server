@@ -31,7 +31,6 @@ The project is divided in the following Maven modules:
 
 Docker Tags
 
-* `bleeding` floating tag for a build from develop bleeding edge branch
 * `latest` floating tag for a build from latest stable release
 * to run a specific stable version see the [DockerHub Tag] section
 
@@ -148,10 +147,9 @@ docker run --name mypris --detach --publish 8000:8000 mypris
 
 # Development and Releases
 
-There are several other branches with the following naming convention:
-
-* `master` branch for next release, tagged as `bleeding` on [DockerHub]
-* `release-*` a specific stable release, tagged as `latest` and with specific version number from `git describe` as history on [DockerHub]
+Releases are made from version tags without any prefixes.
+Every new release will be tagged also as `latest` on DockerHub.
+The specific version number is generated from `git describe`.
 
 The branches above will be automatically published to [DockerHub].
 All other branches are just built and tested.
@@ -170,5 +168,3 @@ The CI/CD workflows can be found in the `.circleci` directory.
 [git-scm]: http://git-scm.com/
 [yED]: http://www.yworks.com/en/products_yed_about.html
 [Web Chat]: https://chats.opennms.org/opennms-discuss
-[IRC]: irc://freenode.org/#opennms
-

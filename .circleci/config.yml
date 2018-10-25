@@ -214,21 +214,11 @@ jobs:
           name: Tag Docker Container Images and upload to DockerHub
           command: |
             source ${BASH_ENV}
-            case "${CIRCLE_BRANCH}" in
-              master)
-                docker tag pris:$(cat version.txt) ${DOCKERHUB_PROJECT_USER}/${DOCKERHUB_PROJECT_NAME}:bleeding
-                docker push ${DOCKERHUB_PROJECT_USER}/${DOCKERHUB_PROJECT_NAME}:bleeding
-                ;;
-              release*)
-                docker tag pris:$(cat version.txt) ${DOCKERHUB_PROJECT_USER}/${DOCKERHUB_PROJECT_NAME}:latest
-                docker tag pris:$(cat version.txt) ${DOCKERHUB_PROJECT_USER}/${DOCKERHUB_PROJECT_NAME}:$(cat version.txt)
-                docker push ${DOCKERHUB_PROJECT_USER}/${DOCKERHUB_PROJECT_NAME}:latest
-                docker push ${DOCKERHUB_PROJECT_USER}/${DOCKERHUB_PROJECT_NAME}:$(cat version.txt)
-                ;;
-              *)
-                echo "This is not a branch build which needs to be published"
-                ;;
-            esac
+            docker tag pris:$(cat version.txt) ${DOCKERHUB_PROJECT_USER}/${DOCKERHUB_PROJECT_NAME}:latest
+            docker tag pris:$(cat version.txt) ${DOCKERHUB_PROJECT_USER}/${DOCKERHUB_PROJECT_NAME}:$(cat version.txt)
+            docker push ${DOCKERHUB_PROJECT_USER}/${DOCKERHUB_PROJECT_NAME}:latest
+            docker push ${DOCKERHUB_PROJECT_USER}/${DOCKERHUB_PROJECT_NAME}:$(cat version.txt)
+
 
   publish_github:
       <<: *defaults
@@ -243,23 +233,10 @@ jobs:
         - run:
             name: Collect artifacts and publish archives to GitHub
             command: |
-              case "${CIRCLE_BRANCH}" in
-                master)
-                  mkdir github-bleeding
-                  cp opennms-pris-dist/target/opennms-pris-release-archive.tar.gz github-bleeding/opennms-pris-bleeding-$(cat version.txt).tar.gz
-                  cp opennms-pris-dist/target/opennms-pris-release-archive.zip github-bleeding/opennms-pris-bleeding-$(cat version.txt).zip
-                  ghr -prerelease -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} bleeding-$(cat version.txt) github-bleeding
-                  ;;
-                release*)
-                  mkdir github-latest
-                  cp opennms-pris-dist/target/opennms-pris-release-archive.tar.gz github-latest/opennms-pris-release-$(cat version.txt).tar.gz
-                  cp opennms-pris-dist/target/opennms-pris-release-archive.zip github-latest/opennms-pris-release-$(cat version.txt).zip
-                  ghr -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} $(cat version.txt) github-latest
-                  ;;
-                *)
-                  echo "This is not a branch build which needs to be published"
-                  ;;
-              esac
+              mkdir github-latest
+              cp opennms-pris-dist/target/opennms-pris-release-archive.tar.gz github-latest/opennms-pris-release-$(cat version.txt).tar.gz
+              cp opennms-pris-dist/target/opennms-pris-release-archive.zip github-latest/opennms-pris-release-$(cat version.txt).zip
+              ghr -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} $(cat version.txt) github-latest
 
 workflows:
   version: 2
