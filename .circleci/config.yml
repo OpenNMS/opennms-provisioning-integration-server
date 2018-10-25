@@ -295,20 +295,18 @@ workflows:
               only: /.*/
       - publish_github:
           filters:
-            branches:
-              only:
-                - master
             tags:
               only: /^v.*/
+            branches:
+              ignore: /.*/
           requires:
             - smoke_test
       - publish_dockerhub:
           filters:
-            branches:
-              only:
-                - master
             tags:
               only: /^v.*/
+            branches:
+              ignore: /.*/
           requires:
             - smoke_test
             - build_docker_image
