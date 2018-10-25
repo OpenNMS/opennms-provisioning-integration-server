@@ -26,27 +26,27 @@
         <github.global.server>github</github.global.server>
 
         <!-- Version settings -->
-        <apacheDerbyVersion>10.14.1.0</apacheDerbyVersion>
+        <apacheDerbyVersion>10.14.2.0</apacheDerbyVersion>
         <beanshellVersion>2.0b5</beanshellVersion>
         <chQosLogbackVersion>1.2.3</chQosLogbackVersion>
         <commonsConfigurationVersion>1.10</commonsConfigurationVersion>
         <commonsIoVersion>2.6</commonsIoVersion>
-        <groovyVersion>2.4.13</groovyVersion>
-        <guavaVersion>23.6-jre</guavaVersion>
-        <httpComponentsVersion>4.5.4</httpComponentsVersion>
+        <groovyVersion>2.4.15</groovyVersion>
+        <guavaVersion>27.0-jre</guavaVersion>
+        <httpComponentsVersion>4.5.6</httpComponentsVersion>
         <jettyServerVersion>9.4.12.v20180830</jettyServerVersion>
         <junitVersion>4.12</junitVersion>
-        <mavenResourcesPluginVersion>3.0.2</mavenResourcesPluginVersion>
-        <mavenCompilerPluginVersion>3.7.0</mavenCompilerPluginVersion>
-        <metainfServicesVersion>1.7</metainfServicesVersion>
-        <mysqlConnectorVersion>8.0.8-dmr</mysqlConnectorVersion>
-        <opennmsVersion>21.0.4</opennmsVersion>
-        <postgresqlDriverVersion>42.1.4</postgresqlDriverVersion>
+        <mavenResourcesPluginVersion>3.1.0</mavenResourcesPluginVersion>
+        <mavenCompilerPluginVersion>3.8.0</mavenCompilerPluginVersion>
+        <metainfServicesVersion>1.8</metainfServicesVersion>
+        <mysqlConnectorVersion>8.0.13</mysqlConnectorVersion>
+        <opennmsVersion>22.0.4</opennmsVersion>
+        <postgresqlDriverVersion>42.2.5</postgresqlDriverVersion>
         <slf4jVersion>1.7.25</slf4jVersion>
         <updatePolicy>interval:60</updatePolicy>
-        <wagonPluginVersion>3.0.0</wagonPluginVersion>
-        <wagonSshVersion>3.0.0</wagonSshVersion>
-        <mavenShadePluginVersion>3.1.0</mavenShadePluginVersion>
+        <wagonPluginVersion>3.2.0</wagonPluginVersion>
+        <wagonSshVersion>3.2.0</wagonSshVersion>
+        <mavenShadePluginVersion>3.2.0</mavenShadePluginVersion>
     </properties>
 
     <dependencies>
