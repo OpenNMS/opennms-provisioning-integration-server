@@ -165,6 +165,7 @@ public class XlsSource implements Source {
 		if (rowiterator.hasNext()) {
 			rowiterator.next();
 		}
+		Map<String,RequisitionNode> nodeLabelRequisitionNodeMap = new HashMap<>();
 		while (rowiterator.hasNext()) {
 			Row row = rowiterator.next();
 			Cell cell = getRelevantColumnID(row, REQUIRED_UNIQUE_PREFIXES.PREFIX_NODE);
@@ -172,9 +173,15 @@ public class XlsSource implements Source {
 				continue;
 			}
 			String nodeLabel = XlsSource.getStringValueFromCell(cell);
-			RequisitionNode node = new RequisitionNode();
-			node.setNodeLabel(nodeLabel);
-			node.setForeignId(nodeLabel);
+                        RequisitionNode node = new RequisitionNode();
+			if (nodeLabelRequisitionNodeMap.containsKey(nodeLabel)) {
+			    node = nodeLabelRequisitionNodeMap.get(nodeLabel);
+			} else {
+	                        node.setNodeLabel(nodeLabel);
+	                        node.setForeignId(nodeLabel);
+	                        nodeLabelRequisitionNodeMap.put(nodeLabel, node);
+	                        requisition.getNodes().add(node);
+			}
 
 			cell = getRelevantColumnID(row, OPTIONAL_UNIQUE_HEADERS.PREFIX_FOREIGN_ID);
 			if (cell != null) {
@@ -213,7 +220,6 @@ public class XlsSource implements Source {
 			// Add services to the interface
 			reqInterface.getMonitoredServices().addAll(getServicesByRow(row));
 			node.getInterfaces().add(reqInterface);
-			requisition.getNodes().add(node);
 		}
 		workbook.close();
 		LOGGER.info("xls source delivered for requisition '{}' '{}' nodes",
