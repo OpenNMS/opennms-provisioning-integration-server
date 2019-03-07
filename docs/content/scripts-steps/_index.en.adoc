@@ -104,3 +104,8 @@ The persistens of the previous requistion size is provided by the second script 
 include::static/configs/scriptsteps/default/persistRequisitionSize.groovy[]
 ----
 
+.Example script step 9
+[source,java]
+----
+include::static/configs/scriptsteps/default/selectNodeByCategory.groovy[]
+----
