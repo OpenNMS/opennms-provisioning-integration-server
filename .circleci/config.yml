@@ -44,7 +44,6 @@ workflows:
           filters:
             branches:
               only:
-                - master
                 - /^release-.*/
           requires:
             - smoke-tests
@@ -67,7 +66,7 @@ jobs:
       - run:
           name: Generate version number for this release
           command: |
-            echo "export VERSION=$(git describe)-b${CIRCLE_BUILD_NUM}" >> ${BASH_ENV}
+            echo "export VERSION=${CIRCLE_BRANCH/release-/}-b${CIRCLE_BUILD_NUM}" >> ${BASH_ENV}
       - run:
           name: Set version number and ensure lower case
           command: |
