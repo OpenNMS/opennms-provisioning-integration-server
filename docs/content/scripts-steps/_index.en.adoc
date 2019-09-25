@@ -96,7 +96,7 @@ The setup contains of two scripts that have to be included as script steps in or
 include::static/configs/scriptsteps/default/failOnSizeChange.groovy[]
 ----
 
-The persistens of the previous requistion size is provided by the second script step of the setup.
+The persistence of the previous requistion size is provided by the second script step of the setup.
 
 .Example script step 8
 [source,java]
@@ -104,3 +104,8 @@ The persistens of the previous requistion size is provided by the second script 
 include::static/configs/scriptsteps/default/persistRequisitionSize.groovy[]
 ----
 
+.Example script step 9
+[source,java]
+----
+include::static/configs/scriptsteps/default/selectNodeByCategory.groovy[]
+----

@@ -32,7 +32,7 @@ public class XlsSourceTest {
         Requisition resultRequisition = (Requisition) xlsSource.dump();
         
         assertEquals(resultRequisition.getForeignSource(), "test");
-        assertEquals(1, resultRequisition.getNodes().size());
+        assertEquals(2, resultRequisition.getNodes().size());
         
         RequisitionNode resultNode = resultRequisition.getNodes().get(0);
         assertEquals("TestNode", resultNode.getNodeLabel());
@@ -58,5 +58,18 @@ public class XlsSourceTest {
         
         RequisitionCategory findCategory = RequisitionUtils.findCategory(resultNode, "Test");
         assertEquals("Test", findCategory.getName());
+    }
+
+    @Test
+    public void getNodeWithMultipleIpInterfaces() throws Exception {
+        Requisition resultRequisition = (Requisition) xlsSource.dump();
+        assertEquals(resultRequisition.getForeignSource(), "test");
+        RequisitionNode resultNode = resultRequisition.getNodes().get(1);
+        assertEquals(resultNode.getInterfaces().size(), 2);
+        assertEquals(resultNode.getNodeLabel(), "Node2Ips");
+        assertEquals(resultNode.getInterfaces().get(0).getIpAddr(),"23.23.23.23");
+        assertEquals(resultNode.getInterfaces().get(0).getSnmpPrimary(),"P");
+        assertEquals(resultNode.getInterfaces().get(1).getIpAddr(),"42.42.42.42");
+        assertEquals(resultNode.getInterfaces().get(1).getSnmpPrimary(),"S");
     }
 }

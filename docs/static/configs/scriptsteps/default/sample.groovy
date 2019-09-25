@@ -1,6 +1,6 @@
 /**
 * This sample script step demonstrates all objects provided by the pris runtime.
-* The objects are casted to there exact type and logged.
+* The objects are casted to their exact type and are logged.
 **/
 
 import java.nio.file.Path

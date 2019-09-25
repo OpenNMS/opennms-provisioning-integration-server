@@ -1,44 +1,65 @@
-version: 2.0
+version: 2.1
 
-defaults: &defaults
-
-  working_directory: /home/circleci/pris
-
-  workspace_root: &workspace_root
-    .
-
-  attach_workspace: &attach_workspace
-    attach_workspace:
-      at: *workspace_root
-
-references:
-  docker_container_config: &docker_container_config
+executors:
+  docker-executor:
     docker:
-      - image: docker:17.11.0-ce-git
-
-  java_container_config: &java_container_config
+      - image: docker:stable-git
+  build-executor:
     docker:
-      - image: circleci/openjdk:8-jdk
-
-  hugo_container_config: &hugo_container_config
+      - image: opennms/build-env:8-11_1.3
+  hugo-executor:
     docker:
       - image: opennms/hugo:latest
-
-  go_container_config: &go_container_config
+  go-executor:
     docker:
       - image: circleci/golang
 
-  dockerhub_login: &dockerhub_login
-    run:
-      name: DockerHub Login
-      command: |
-        docker login -u ${DOCKERHUB_LOGIN} -p ${DOCKERHUB_PASS}
+commands:
+  dockerhub-login:
+    description: "Connect to DockerHub"
+    steps:
+      - run:
+          name: Login to DockerHub
+          command: |
+            docker login -u ${DOCKERHUB_LOGIN} -p ${DOCKERHUB_PASS}
+
+workflows:
+  build:
+    jobs:
+      - build
+      - generate-docs:
+          requires:
+            - build
+      - package:
+          requires:
+            - generate-docs
+            - build
+      - oci-image:
+          requires:
+            - package
+      - smoke-tests:
+          requires:
+            - oci-image
+      - publish-github:
+          filters:
+            branches:
+              only:
+                - master
+                - /^release-.*/
+          requires:
+            - smoke-tests
+      - publish-dockerhub:
+          filters:
+            branches:
+              only:
+                - /^release-.*/
+          requires:
+            - smoke-tests
+            - oci-image
 
 jobs:
-  compile_n_junit:
-    <<: *defaults
-    <<: *java_container_config
-
+  build:
+    executor: build-executor
     steps:
       - checkout
       - restore_cache:
@@ -73,47 +94,45 @@ jobs:
           command: |
             echo ${VERSION} > version.txt
       - persist_to_workspace:
-          root: *workspace_root
-          paths: .
+          root: ~/
+          paths:
+            - project
 
-  build_docs:
-    <<: *defaults
-    <<: *hugo_container_config
-
+  generate-docs:
+    executor: hugo-executor
     steps:
-      - setup_remote_docker
-      - *attach_workspace
+      - attach_workspace:
+          at: ~/
       - run:
           name: Generate documentation
           command: |
             cd docs
-            hugo -d ../public || true
+            hugo -d ../public || exit 0
       - persist_to_workspace:
-          root: *workspace_root
-          paths: public
+          root: ~/
+          paths:
+            - project/public
 
   package:
-    <<: *defaults
-    <<: *java_container_config
-
+    executor: build-executor
     steps:
-      - setup_remote_docker
-      - *attach_workspace
+      - attach_workspace:
+          at: ~/
       - run:
           name: Package into tar.gz and zip format
           command: |
             mvn package -DskipTests
       - persist_to_workspace:
-          root: *workspace_root
-          paths: opennms-pris-dist/target
+          root: ~/
+          paths: project/opennms-pris-dist/target
 
-  build_docker_image:
-    <<: *defaults
-    <<: *docker_container_config
-
+  oci-image:
+    executor: docker-executor
     steps:
-      - setup_remote_docker
-      - *attach_workspace
+      - attach_workspace:
+          at: ~/
+      - setup_remote_docker:
+          docker_layer_caching: true
       - run:
           name: Build Docker Container Image
           command: |
@@ -128,17 +147,17 @@ jobs:
       - store_artifacts:
           path: pris-docker-image
       - persist_to_workspace:
-          root: *workspace_root
+          root: ~/
           paths:
-            - pris-docker-image
+            - project/pris-docker-image
 
-  smoke_test:
-    <<: *defaults
-    <<: *docker_container_config
-
+  smoke-tests:
+    executor: docker-executor
     steps:
-      - setup_remote_docker
-      - *attach_workspace
+      - attach_workspace:
+          at: ~/
+      - setup_remote_docker:
+          docker_layer_caching: true
       - run:
           name: Load PRIS Docker Container Image
           command: |
@@ -174,14 +193,14 @@ jobs:
             docker stop ${PRIS_CONTAINER_ID}
             docker rmi pris:$(cat version.txt)
 
-  publish_dockerhub:
-    <<: *defaults
-    <<: *docker_container_config
-
+  publish-dockerhub:
+    executor: docker-executor
     steps:
-      - setup_remote_docker
-      - *attach_workspace
-      - *dockerhub_login
+      - attach_workspace:
+          at: ~/
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - dockerhub-login
       - run:
           name: Set DockerHub project user and ensure lower case
           command: |
@@ -214,28 +233,17 @@ jobs:
           name: Tag Docker Container Images and upload to DockerHub
           command: |
             source ${BASH_ENV}
-            case "${CIRCLE_BRANCH}" in
-              master)
-                docker tag pris:$(cat version.txt) ${DOCKERHUB_PROJECT_USER}/${DOCKERHUB_PROJECT_NAME}:bleeding
-                docker push ${DOCKERHUB_PROJECT_USER}/${DOCKERHUB_PROJECT_NAME}:bleeding
-                ;;
-              release*)
-                docker tag pris:$(cat version.txt) ${DOCKERHUB_PROJECT_USER}/${DOCKERHUB_PROJECT_NAME}:latest
-                docker tag pris:$(cat version.txt) ${DOCKERHUB_PROJECT_USER}/${DOCKERHUB_PROJECT_NAME}:$(cat version.txt)
-                docker push ${DOCKERHUB_PROJECT_USER}/${DOCKERHUB_PROJECT_NAME}:latest
-                docker push ${DOCKERHUB_PROJECT_USER}/${DOCKERHUB_PROJECT_NAME}:$(cat version.txt)
-                ;;
-              *)
-                echo "This is not a branch build which needs to be published"
-                ;;
-            esac
+            docker tag pris:$(cat version.txt) ${DOCKERHUB_PROJECT_USER}/${DOCKERHUB_PROJECT_NAME}:latest
+            docker tag pris:$(cat version.txt) ${DOCKERHUB_PROJECT_USER}/${DOCKERHUB_PROJECT_NAME}:$(cat version.txt)
+            docker push ${DOCKERHUB_PROJECT_USER}/${DOCKERHUB_PROJECT_NAME}:latest
+            docker push ${DOCKERHUB_PROJECT_USER}/${DOCKERHUB_PROJECT_NAME}:$(cat version.txt)
 
-  publish_github:
-      <<: *defaults
-      <<: *go_container_config
 
+  publish-github:
+      executor: go-executor
       steps:
-        - *attach_workspace
+        - attach_workspace:
+            at: ~/
         - run:
             name: Install ghr tool to create GitHub releases and upload artifacts
             command: |
@@ -243,55 +251,7 @@ jobs:
         - run:
             name: Collect artifacts and publish archives to GitHub
             command: |
-              case "${CIRCLE_BRANCH}" in
-                master)
-                  mkdir github-bleeding
-                  cp opennms-pris-dist/target/opennms-pris-release-archive.tar.gz github-bleeding/opennms-pris-bleeding-$(cat version.txt).tar.gz
-                  cp opennms-pris-dist/target/opennms-pris-release-archive.zip github-bleeding/opennms-pris-bleeding-$(cat version.txt).zip
-                  ghr -prerelease -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} bleeding-$(cat version.txt) github-bleeding
-                  ;;
-                release*)
-                  mkdir github-latest
-                  cp opennms-pris-dist/target/opennms-pris-release-archive.tar.gz github-latest/opennms-pris-release-$(cat version.txt).tar.gz
-                  cp opennms-pris-dist/target/opennms-pris-release-archive.zip github-latest/opennms-pris-release-$(cat version.txt).zip
-                  ghr -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} $(cat version.txt) github-latest
-                  ;;
-                *)
-                  echo "This is not a branch build which needs to be published"
-                  ;;
-              esac
-
-workflows:
-  version: 2
-  build_and_deploy:
-    jobs:
-      - compile_n_junit
-      - build_docs:
-          requires:
-            - compile_n_junit
-      - package:
-          requires:
-            - build_docs
-      - build_docker_image:
-          requires:
-            - package
-      - smoke_test:
-          requires:
-            - build_docker_image
-      - publish_github:
-          filters:
-            branches:
-              only:
-                - master
-                - /release-.*/
-          requires:
-            - smoke_test
-      - publish_dockerhub:
-          filters:
-            branches:
-              only:
-                - master
-                - /release-.*/
-          requires:
-            - smoke_test
-            - build_docker_image
+              mkdir github-latest
+              cp opennms-pris-dist/target/opennms-pris-release-archive.tar.gz github-latest/opennms-pris-release-$(cat version.txt).tar.gz
+              cp opennms-pris-dist/target/opennms-pris-release-archive.zip github-latest/opennms-pris-release-$(cat version.txt).zip
+              ghr -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} $(cat version.txt) github-latest
