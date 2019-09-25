@@ -64,9 +64,10 @@ jobs:
       - restore_cache:
           key: pris-repository-{{ checksum "pom.xml" }}
       - run:
-          name: Generate version number for this release
+          name: Generate version number for this build
           command: |
-            echo "export VERSION=${CIRCLE_BRANCH/release-/}-b${CIRCLE_BUILD_NUM}" >> ${BASH_ENV}
+            BRANCH_TAG=$(echo ${CIRCLE_BRANCH/release-/} | tr '[:upper:]' '[:lower:]')
+            echo "export VERSION=${BRANCH_TAG/\//-}-b${CIRCLE_BUILD_NUM}" >> ${BASH_ENV}
       - run:
           name: Set version number when in release branch
           command: |
