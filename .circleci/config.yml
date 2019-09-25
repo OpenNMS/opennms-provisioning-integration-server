@@ -26,49 +26,33 @@ commands:
 workflows:
   build:
     jobs:
-      - build:
-          filters:
-            tags:
-              only: /.*/
+      - build
       - generate-docs:
           requires:
             - build
-          filters:
-            tags:
-              only: /.*/
       - package:
           requires:
             - generate-docs
             - build
-          filters:
-            tags:
-              only: /.*/
       - oci-image:
           requires:
             - package
-          filters:
-            tags:
-              only: /.*/
       - smoke-tests:
           requires:
             - oci-image
-          filters:
-            tags:
-              only: /.*/
       - publish-github:
           filters:
-            tags:
-              only: /^[0-9].*/
             branches:
-              ignore: /.*/
+              only:
+                - master
+                - /^release-.*/
           requires:
             - smoke-tests
       - publish-dockerhub:
           filters:
-            tags:
-              only: /^[0-9].*/
             branches:
-              ignore: /.*/
+              only:
+                - /^release-.*/
           requires:
             - smoke-tests
             - oci-image
