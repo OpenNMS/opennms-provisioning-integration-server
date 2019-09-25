@@ -6,13 +6,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.opennms.pris.api.MockInstanceConfiguration;
+import org.opennms.pris.model.MetaData;
 import org.opennms.pris.model.Requisition;
+import org.opennms.pris.model.RequisitionNode;
 
 public class JdbcSourceTest {
 
@@ -38,6 +41,8 @@ public class JdbcSourceTest {
             + "state VARCHAR(255),"
             + "serviceName VARCHAR(255),"
             + "categoryName VARCHAR(255),"
+            + "metaDataColumn1 VARCHAR(255),"
+            + "metaDataColumn2 VARCHAR(255),"
             + "PRIMARY KEY (foreignId))";
 
     private final String SQL_SELECT_STATEMENT_TEST_1 = "SELECT foreignId AS Foreign_Id, "
@@ -55,6 +60,8 @@ public class JdbcSourceTest {
             + "city AS Asset_City,"
             + "state AS Asset_State,"
             + "serviceName AS Svc,"
+            + "metaDataColumn1 AS \"MetaData_keyWithoutContext\","
+            + "metaDataColumn2 AS \"MetaData_Context:keyWithContext\","
             + "categoryName AS Cat FROM node";
 
     @BeforeClass
@@ -69,13 +76,13 @@ public class JdbcSourceTest {
         Statement stmnt = connection.createStatement();
         stmnt.executeUpdate(SQL_CREATE_ALL);
 
-        insertRow("1", "node1", null, null, null, null, "192.168.0.1", "P", "1", "description1", "city1", "state1", "service1", "category1");
-        insertRow("2", "node2", "Test-Location", "ParentNodeLabel", "", "", "192.168.0.2", "P", "3", "description2", "city2", "state2", "service2", "category2");
-        insertRow("3", "node3", null, null, "ParentId", "ParentSouce", "192.168.0.3", "P", "1", "description3", "city3", "state3", "service3", "category3");
+        insertRow("1", "node1", null, null, null, null, "192.168.0.1", "P", "1", "description1", "city1", "state1", "service1", "category1", "Foo1", "Bar1");
+        insertRow("2", "node2", "Test-Location", "ParentNodeLabel", "", "", "192.168.0.2", "P", "3", "description2", "city2", "state2", "service2", "category2", "Foo2", "Bar2");
+        insertRow("3", "node3", null, null, "ParentId", "ParentSouce", "192.168.0.3", "P", "1", "description3", "city3", "state3", "service3", "category3", "Foo3", "Bar3");
     }
 
-    private void insertRow(String foreignId, String nodeLabel, String location, String parentNodeLabel, String parentForeignId, String parentForeignSource, String ipAddress, String ifType, String ifStatus, String description, String city, String state, String serviceName, String categoryName) throws SQLException {
-        String DML = "INSERT INTO node (foreignId, nodeLabel, location, parentNodeLabel, parentForeignId, parentForeignSource, ipAddress, ifType, ifStatus, description, city, state, serviceName, categoryName) VALUES (" + foreignId + ", '" + nodeLabel + "', '" + location + "', '" + parentNodeLabel + "', '" + parentForeignId + "', '" + parentForeignSource + "', '" + ipAddress + "', '" + ifType + "', '" + ifStatus + "', '" + description + "', '" + city + "', '" + state + "', '" + serviceName + "', '" + categoryName + "')";
+    private void insertRow(String foreignId, String nodeLabel, String location, String parentNodeLabel, String parentForeignId, String parentForeignSource, String ipAddress, String ifType, String ifStatus, String description, String city, String state, String serviceName, String categoryName, String metaDataColumn1, String metaDataColumn2) throws SQLException {
+        String DML = "INSERT INTO node (foreignId, nodeLabel, location, parentNodeLabel, parentForeignId, parentForeignSource, ipAddress, ifType, ifStatus, description, city, state, serviceName, categoryName, metaDataColumn1, metaDataColumn2) VALUES (" + foreignId + ", '" + nodeLabel + "', '" + location + "', '" + parentNodeLabel + "', '" + parentForeignId + "', '" + parentForeignSource + "', '" + ipAddress + "', '" + ifType + "', '" + ifStatus + "', '" + description + "', '" + city + "', '" + state + "', '" + serviceName + "', '" + categoryName + "', '" + metaDataColumn1 +"', '" + metaDataColumn2 +"')";
         Statement stmnt = connection.createStatement();
         stmnt.executeUpdate(DML);
     }
@@ -115,5 +122,13 @@ public class JdbcSourceTest {
         Assert.assertEquals(3, requisition.getNodes().size());
         Assert.assertEquals("Test-Location", requisition.getNodes().get(1).getLocation());
         Assert.assertEquals("ParentNodeLabel", requisition.getNodes().get(1).getParentNodeLabel());
+
+        final RequisitionNode node1 = requisition.getNodes().stream().filter(n -> n.getForeignId().equals("1")).findFirst().get();
+        final RequisitionNode node2 = requisition.getNodes().stream().filter(n -> n.getForeignId().equals("2")).findFirst().get();
+        final RequisitionNode node3 = requisition.getNodes().stream().filter(n -> n.getForeignId().equals("3")).findFirst().get();
+
+        Assert.assertThat(node1.getMetaDatas(), Matchers.containsInAnyOrder(new MetaData("requisition", "keyWithoutContext", "Foo1"), new MetaData("Context", "keyWithContext", "Bar1")));
+        Assert.assertThat(node2.getMetaDatas(), Matchers.containsInAnyOrder(new MetaData("requisition", "keyWithoutContext", "Foo2"), new MetaData("Context", "keyWithContext", "Bar2")));
+        Assert.assertThat(node3.getMetaDatas(), Matchers.containsInAnyOrder(new MetaData("requisition", "keyWithoutContext", "Foo3"), new MetaData("Context", "keyWithContext", "Bar3")));
     }
 }

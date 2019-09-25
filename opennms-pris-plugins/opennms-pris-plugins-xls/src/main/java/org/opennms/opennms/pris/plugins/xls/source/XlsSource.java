@@ -42,6 +42,7 @@ import org.opennms.opennms.pris.plugins.xls.source.exceptions.MissingRequiredCol
 import org.opennms.pris.api.InstanceConfiguration;
 import org.opennms.pris.api.Source;
 import org.opennms.pris.model.AssetField;
+import org.opennms.pris.model.MetaData;
 import org.opennms.pris.model.PrimaryType;
 import org.opennms.pris.model.Requisition;
 import org.opennms.pris.model.RequisitionAsset;
@@ -51,6 +52,8 @@ import org.opennms.pris.model.RequisitionMonitoredService;
 import org.opennms.pris.model.RequisitionNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.common.base.Strings;
 
 public class XlsSource implements Source {
 
@@ -62,6 +65,8 @@ public class XlsSource implements Source {
 	private final String WITHIN_SPLITTER = ",";
 
 	private final String PREFIX_FOR_ASSETS = "Asset_";
+	private final String PREFIX_FOR_METADATA = "MetaData_";
+
 	private final String INTERFACE_TYPE_PRIMARY = "P";
 	private final String INTERFACE_TYPE_SECONDARY = "S";
 
@@ -69,6 +74,8 @@ public class XlsSource implements Source {
 	private Map<String, List<Integer>> optionalMultiColumns;
 	private Map<String, Integer> optionalUniquHeaders;
 	private Map<String, Integer> assetColumns;
+	private Map<String, List<Integer>> metaDataColumns;
+
 
 	private File xls;
 	private final String encoding;
@@ -159,6 +166,7 @@ public class XlsSource implements Source {
 		optionalMultiColumns = initializeOptionalMultiColumns(sheet);
 		optionalUniquHeaders = initializeOptionalUniquHeaders(sheet);
 		assetColumns = initializeAssetColumns(sheet);
+		metaDataColumns = initializeMetaDataColumns(sheet);
 
 		RequisitionInterface reqInterface;
 		Iterator<Row> rowiterator = sheet.rowIterator();
@@ -213,6 +221,9 @@ public class XlsSource implements Source {
 
 			// adding assets
 			node.getAssets().addAll(getAssetsByRow(row));
+
+			// adding meta-data
+			node.getMetaDatas().addAll(getMetaDataByRow(row));
 
 			// Add interface
 			reqInterface = getInterfaceByRow(row);
@@ -305,6 +316,24 @@ public class XlsSource implements Source {
 		return result;
 	}
 
+	private Map<String, List<Integer>> initializeMetaDataColumns(final Sheet sheet) {
+		final Map<String, List<Integer>> result = new HashMap<>();
+		final Row row = sheet.getRow(0);
+		final Iterator<Cell> celliterator = row.cellIterator();
+		while (celliterator.hasNext()) {
+			Cell cell = celliterator.next();
+			final String cellName = cell.getStringCellValue();
+			if (cellName.toLowerCase().startsWith(PREFIX_FOR_METADATA.toLowerCase())) {
+				final String metaDataKey = cellName.substring(PREFIX_FOR_METADATA.length());
+				if (!result.containsKey(metaDataKey)) {
+					result.put(metaDataKey, new ArrayList<>());
+				}
+				result.get(metaDataKey).add(cell.getColumnIndex());
+			}
+		}
+		return result;
+	}
+
 	private Map<String, Integer> initializeAssetColumns(Sheet sheet) {
 		Map<String, Integer> result = new HashMap<>();
 		for (AssetField prefix : AssetField.values()) {
@@ -390,6 +419,30 @@ public class XlsSource implements Source {
 			}
 		}
 		return assets;
+	}
+
+	private Set<MetaData> getMetaDataByRow(Row row) {
+		Set<MetaData> metaData = new HashSet<>();
+		for (final Map.Entry<String, List<Integer>> entry : metaDataColumns.entrySet()) {
+			for (final int columnIndex : entry.getValue()) {
+				final Cell cell = row.getCell(columnIndex);
+				if (cell == null) {
+					continue;
+				}
+				final String value = XlsSource.getStringValueFromCell(cell);
+				if (!Strings.isNullOrEmpty(value)) {
+					String context = "requisition";
+					String key = entry.getKey();
+					final int index = entry.getKey().indexOf(":");
+					if (index != -1) {
+						context = entry.getKey().substring(0, index);
+						key = entry.getKey().substring(index + 1);
+					}
+					metaData.add(new MetaData(context, key, value));
+				}
+			}
+		}
+		return metaData;
 	}
 
 	private RequisitionInterface getInterfaceByRow(Row row)

@@ -22,6 +22,7 @@ package org.opennms.opennms.pris.plugins.jdbc.source;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -29,6 +30,7 @@ import org.kohsuke.MetaInfServices;
 import org.opennms.pris.api.InstanceConfiguration;
 import org.opennms.pris.api.Source;
 import org.opennms.pris.model.AssetField;
+import org.opennms.pris.model.MetaData;
 import org.opennms.pris.model.PrimaryType;
 import org.opennms.pris.model.Requisition;
 import org.opennms.pris.model.RequisitionAsset;
@@ -39,6 +41,8 @@ import org.opennms.pris.model.RequisitionNode;
 import org.opennms.pris.util.RequisitionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.common.base.Strings;
 
 /**
  * A JDBC data source allows to connect to an SQL database and extract data in a given format. The result set is mapped to an OpenNMS requisition.
@@ -65,6 +69,7 @@ public class JdbcSource implements Source {
     private static final String COLUMN_PARENT_NODE_LABEL = "Parent_Node_Label";
     private static final String COLUMN_PARENT_FOREIGN_ID = "Parent_Foreign_Id";
     private static final String COLUMN_PARENT_FOREIGN_SOURCE = "Parent_Foreign_Source";
+    private static final String COLUMN_METADATA_PREFIX = "MetaData_";
 
     public JdbcSource(final InstanceConfiguration config) {
         this.config = config;
@@ -205,6 +210,29 @@ public class JdbcSource implements Source {
                             }
                             
                             asset.setValue(assetValue);
+                        }
+                    }
+
+                    final ResultSetMetaData resultSetMetaData = resultSet.getMetaData();
+
+                    for (int i = 0; i < resultSetMetaData.getColumnCount(); i++) {
+                        final String columnName = resultSetMetaData.getColumnLabel(i + 1);
+
+                        if (columnName.toLowerCase().startsWith(COLUMN_METADATA_PREFIX.toLowerCase())) {
+                            final String value = getString(resultSet, columnName);
+
+                            if (!Strings.isNullOrEmpty(value)) {
+                                String context = "requisition";
+                                String key = columnName.substring(COLUMN_METADATA_PREFIX.length());
+                                final int index = key.indexOf(":");
+
+                                if (index != -1) {
+                                    context = key.substring(0, index);
+                                    key = key.substring(index + 1);
+                                }
+
+                                node.getMetaDatas().add(new MetaData(context, key, value));
+                            }
                         }
                     }
                 }
