@@ -32,7 +32,10 @@ These `column names` have to start with certain prefixes to be recognized.
 | `InterfaceStatus`         |          | will be interpreted as interface status. Use `1` for monitored and `3` for not monitored.
 | `cat_`                    |          | will be interpreted as a surveillance category. Multiple comma-separated categories can be provided. It can be used multiple times per sheet.
 | `svc_`                    |          | will be interpreted as a service on the interface of the node. Multiple comma-separated services can be provided. It can be used multiple times per sheet.
+| `MetaData_`               |          | will be interpreted as node-level meta-data with the given key and the default context `requisition`. You can use `MetaData_Context:Key` to specify a custom context.
 |========================
+
+CAUTION: Please note, that this datasource only allows to specify node-level meta-data.
 
 This source also supports all asset-fields by using `Asset_` as a prefix followed by the `asset-field-name`.
 The city field of the assets can be addressed like this: `Asset_City`.

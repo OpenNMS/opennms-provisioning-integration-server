@@ -34,7 +34,10 @@ The following column-headers will be mapped from the result set to the OpenNMS r
 | `Location`                |          | The monitoring location for the node. When not set, the node is monitored from the _OpenNMS_ server, otherwise from the _Minion_ associated with the `Location`.
 | `Cat`                     |          | will be interpreted as a surveillance category for the node identified by the `Foreign_Id`
 | `Svc`                     |          | will be interpreted as a service on the interface of the node identified by the `Foreign_Id` and `IP_Address` field
+| `MetaData_`               |          | will be interpreted as node-level meta-data with the given key and the default context `requisition`. You can use `MetaData_Context:Key` to specify a custom context.
 |========================
+
+CAUTION: Please note, that this datasource only allows to specify node-level meta-data.
 
 This source also supports all asset fields by using `Asset_` as a prefix followed by the `asset-field-name`.
 The city field of the assets can be addressed like this: `yourvalue AS Asset_City` and is not case-sensitive.

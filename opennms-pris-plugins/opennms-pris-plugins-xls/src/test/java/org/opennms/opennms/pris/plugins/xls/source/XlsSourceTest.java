@@ -1,11 +1,17 @@
 package org.opennms.opennms.pris.plugins.xls.source;
 
 import java.nio.file.Paths;
+
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.opennms.pris.api.MockInstanceConfiguration;
 import org.opennms.pris.model.AssetField;
+import org.opennms.pris.model.MetaData;
 import org.opennms.pris.model.PrimaryType;
 import org.opennms.pris.model.Requisition;
 import org.opennms.pris.model.RequisitionCategory;
@@ -58,6 +64,10 @@ public class XlsSourceTest {
         
         RequisitionCategory findCategory = RequisitionUtils.findCategory(resultNode, "Test");
         assertEquals("Test", findCategory.getName());
+
+        assertThat(resultNode.getMetaDatas(), containsInAnyOrder(
+                new MetaData("requisition", "KeyWithoutContext", "Foo"),
+                new MetaData("Context", "KeyWithContext", "Bar")));
     }
 
     @Test

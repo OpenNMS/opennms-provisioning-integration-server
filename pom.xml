@@ -33,6 +33,7 @@
         <commonsIoVersion>2.6</commonsIoVersion>
         <groovyVersion>2.4.15</groovyVersion>
         <guavaVersion>27.0-jre</guavaVersion>
+        <hamcrestVersion>2.1</hamcrestVersion>
         <httpComponentsVersion>4.5.6</httpComponentsVersion>
         <jettyServerVersion>9.4.20.v20190813</jettyServerVersion>
         <junitVersion>4.12</junitVersion>
@@ -40,7 +41,7 @@
         <mavenCompilerPluginVersion>3.8.0</mavenCompilerPluginVersion>
         <metainfServicesVersion>1.8</metainfServicesVersion>
         <mysqlConnectorVersion>8.0.13</mysqlConnectorVersion>
-        <opennmsVersion>22.0.4</opennmsVersion>
+        <opennmsVersion>24.1.3</opennmsVersion>
         <postgresqlDriverVersion>42.2.5</postgresqlDriverVersion>
         <slf4jVersion>1.7.25</slf4jVersion>
         <updatePolicy>interval:60</updatePolicy>
@@ -75,6 +76,13 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>${junitVersion}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest</artifactId>
+            <version>${hamcrestVersion}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
