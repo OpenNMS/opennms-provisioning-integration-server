@@ -31,6 +31,7 @@
         <chQosLogbackVersion>1.2.3</chQosLogbackVersion>
         <commonsConfigurationVersion>1.10</commonsConfigurationVersion>
         <commonsIoVersion>2.6</commonsIoVersion>
+        <gparsVersion>1.2.1</gparsVersion>
         <groovyVersion>2.4.15</groovyVersion>
         <guavaVersion>27.0-jre</guavaVersion>
         <httpComponentsVersion>4.5.6</httpComponentsVersion>
@@ -167,6 +168,11 @@
                 <groupId>org.apache.ivy</groupId>
                 <artifactId>ivy</artifactId>
                 <version>${ivyVersion}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.gpars</groupId>
+                <artifactId>gpars</artifactId>
+                <version>${gparsVersion}</version>
             </dependency>
 
             <dependency>
