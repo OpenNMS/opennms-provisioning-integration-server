@@ -31,10 +31,12 @@
         <chQosLogbackVersion>1.2.3</chQosLogbackVersion>
         <commonsConfigurationVersion>1.10</commonsConfigurationVersion>
         <commonsIoVersion>2.6</commonsIoVersion>
+        <gparsVersion>1.2.1</gparsVersion>
         <groovyVersion>2.4.15</groovyVersion>
         <guavaVersion>27.0-jre</guavaVersion>
         <hamcrestVersion>2.1</hamcrestVersion>
         <httpComponentsVersion>4.5.6</httpComponentsVersion>
+        <ivyVersion>2.4.0</ivyVersion>
         <jettyServerVersion>9.4.20.v20190813</jettyServerVersion>
         <junitVersion>4.12</junitVersion>
         <mavenResourcesPluginVersion>3.1.0</mavenResourcesPluginVersion>
@@ -169,6 +171,16 @@
                 <groupId>org.codehaus.groovy</groupId>
                 <artifactId>groovy-all</artifactId>
                 <version>${groovyVersion}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.ivy</groupId>
+                <artifactId>ivy</artifactId>
+                <version>${ivyVersion}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.gpars</groupId>
+                <artifactId>gpars</artifactId>
+                <version>${gparsVersion}</version>
             </dependency>
 
             <dependency>
