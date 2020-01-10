@@ -147,12 +147,15 @@ docker run --name mypris --detach --publish 8000:8000 mypris
 
 # Development and Releases
 
-Releases are made from version tags without any prefixes.
-Every new release will be tagged also as `latest` on DockerHub.
-The specific version number is generated from `git describe`.
+Releases are made from branches filtered in CircleCI with the following pattern: `^release-.*`.
+To make a release create a branch with a version number like `release-<major>.<minor>.<patch>` (release-1.1.7).
+The version portion of the branch name, e.g. 1.1.7 will be used as the version number to be released.
+Releases are published to the following places:
 
-The branches above will be automatically published to [DockerHub].
-All other branches are just built and tested.
+* OCI container images to [DockerHub]
+* .tar.gz files to the GitHub releases of this repository
+
+For any other branches, they are just built and tested.
 You can download build artifacts like Docker images from your branch from [CircleCI].
 
 The CI/CD workflows can be found in the `.circleci` directory.
