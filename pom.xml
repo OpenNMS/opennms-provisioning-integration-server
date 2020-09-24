@@ -33,23 +33,23 @@
         <commonsIoVersion>2.6</commonsIoVersion>
         <gparsVersion>1.2.1</gparsVersion>
         <groovyVersion>2.4.15</groovyVersion>
-        <guavaVersion>27.0-jre</guavaVersion>
-        <hamcrestVersion>2.1</hamcrestVersion>
-        <httpComponentsVersion>4.5.6</httpComponentsVersion>
-        <ivyVersion>2.4.0</ivyVersion>
-        <jettyServerVersion>9.4.20.v20190813</jettyServerVersion>
-        <junitVersion>4.12</junitVersion>
-        <mavenResourcesPluginVersion>3.1.0</mavenResourcesPluginVersion>
-        <mavenCompilerPluginVersion>3.8.0</mavenCompilerPluginVersion>
+        <guavaVersion>29.0-jre</guavaVersion>
+        <hamcrestVersion>2.2</hamcrestVersion>
+        <httpComponentsVersion>4.5.12</httpComponentsVersion>
+        <ivyVersion>2.5.0</ivyVersion>
+        <jettyServerVersion>9.4.31.v20200723</jettyServerVersion>
+        <junitVersion>4.13</junitVersion>
+        <mavenResourcesPluginVersion>3.2.0</mavenResourcesPluginVersion>
+        <mavenCompilerPluginVersion>3.8.1</mavenCompilerPluginVersion>
         <metainfServicesVersion>1.8</metainfServicesVersion>
-        <mysqlConnectorVersion>8.0.13</mysqlConnectorVersion>
+        <mysqlConnectorVersion>8.0.21</mysqlConnectorVersion>
         <opennmsVersion>24.1.3</opennmsVersion>
-        <postgresqlDriverVersion>42.2.5</postgresqlDriverVersion>
-        <slf4jVersion>1.7.25</slf4jVersion>
+        <postgresqlDriverVersion>42.2.16</postgresqlDriverVersion>
+        <slf4jVersion>1.7.30</slf4jVersion>
         <updatePolicy>interval:60</updatePolicy>
-        <wagonPluginVersion>3.2.0</wagonPluginVersion>
-        <wagonSshVersion>3.2.0</wagonSshVersion>
-        <mavenShadePluginVersion>3.2.0</mavenShadePluginVersion>
+        <wagonPluginVersion>3.4.1</wagonPluginVersion>
+        <wagonSshVersion>3.4.1</wagonSshVersion>
+        <mavenShadePluginVersion>3.2.4</mavenShadePluginVersion>
     </properties>
 
     <dependencies>
