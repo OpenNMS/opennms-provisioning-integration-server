@@ -69,14 +69,6 @@ jobs:
             BRANCH_TAG=$(echo ${CIRCLE_BRANCH/release-/} | tr '[:upper:]' '[:lower:]')
             echo "export VERSION=${BRANCH_TAG/\//-}-b${CIRCLE_BUILD_NUM}" >> ${BASH_ENV}
       - run:
-          name: Set version number when in release branch
-          command: |
-            if [[ "${VERSION}" == [0-9]*.[0-9]*.[0-9]* ]]; then
-              bin/changeversion.sh -o BLEEDING -n ${VERSION}
-            else
-              echo "Don't set a release version and keep bleeding";
-            fi
-      - run:
           name: Validate Maven project
           command: |
             mvn validate
