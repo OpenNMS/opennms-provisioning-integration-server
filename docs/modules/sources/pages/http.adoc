@@ -1,0 +1,24 @@
+= HTTP Source
+
+This source is similar to the _file_ source. Instead of reading from a local file, it can read a requisition via _HTTP_ from another _OpenNMS_ instance.
+The location for the requisition is given by an OpenNMS provisioning ReST URL.
+It is possible to provide authentication credentials to be able to consume the ReST service.
+
+[options="header",autowidth"]
+|===
+| Parameter         | Required | Description
+| `source`          | *        | Set `http` to use this source for the requisition configuration
+| `source.url`      | *        | OpenNMS requisition ReST service base URL, e.g. http://demo.opennms.org/opennms/rest/requisitions
+| `source.username` |          | OpenNMS user name for accessing the requisition ReST URL
+| `source.password` |          | OpenNMS user password for accessing the requisition ReST URL
+| `mapper`          | *        | Mapper script for changing the requisition. For no operation use `echo`; to apply a JSR-223 script set to `script`
+| `mapper.file`     |          | If set `mapper` is set to `script`, relative path to your JSR-223 script for modifying the requisition
+|===
+
+The given example configuration reads the requisition from the publicly available OpenNMS demo system.
+
+.Example configuration for an HTTP-based requisition
+[source,bash]
+----
+include::example$http/requisitions/opennmsdemo/requisition.properties[]
+----

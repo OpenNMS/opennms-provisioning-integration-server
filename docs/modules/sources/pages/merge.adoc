@@ -1,0 +1,29 @@
+= Merge Source
+
+The merge source allows to merge two provided requisitions accessed by URLs.
+You can also use provided resources by {page-component-title} recursively.
+The example below shows how to configure the merge requisition for two requisitions A and B.
+
+[options="header",autowidth"]
+|===
+| Parameter           | Required | Description
+| `source`            | *        | set to `merge` to configure this requisition as a merge requisition
+| `source.A.url`      | *        | URL to the requisition A
+| `source.A.username` |          | username for access
+| `source.A.password` |          | password for access
+| `source.B.url`      | *        | URL to the requisition B
+| `source.B.username` |          | username for access
+| `source.B.password` |          | password for access
+| `source.A.keepAll`  |          | if this parameter is present in the config all nodes from requisition A will be present in the resulting requisition.
+| `source.B.keepAll`  |          | if this parameter is present in the config all nodes from requisition B will be present in the resulting requisition.
+|===
+
+This source is reading two already defined requisitions via _HTTP_ and merges them into one new requisition.
+By default the resulting requisition will contain all nodes that are present in both requisitions, identified by the `foreignId`.
+The A-Node (from requisition A) is enriched with the data from B-Node.
+
+.Example configuration for a merge requisition
+[source,bash]
+----
+include::example$merge/requisitions/merge/requisition.properties[]
+----

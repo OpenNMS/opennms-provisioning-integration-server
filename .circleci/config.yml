@@ -6,10 +6,10 @@ executors:
       - image: docker:stable-git
   build-executor:
     docker:
-      - image: opennms/build-env:8-11_1.3
-  hugo-executor:
+      - image: opennms/maven:1.8.0.252.b09-3.6.3-b4136
+  antora-executor:
     docker:
-      - image: opennms/hugo:latest
+      - image: antora/antora:2.3.4
   go-executor:
     docker:
       - image: circleci/golang
@@ -102,19 +102,25 @@ jobs:
             - project
 
   generate-docs:
-    executor: hugo-executor
+    executor: antora-executor
     steps:
       - attach_workspace:
           at: ~/
       - run:
+          name: Install make and bash
+          command: |
+            apk add --no-cache make bash
+      - run:
           name: Generate documentation
           command: |
-            cd docs
-            hugo -d ../public || exit 0
+            make docs
+
       - persist_to_workspace:
           root: ~/
           paths:
-            - project/public
+            - project
+      - store_artifacts:
+          path: project/build/site.zip
 
   package:
     executor: build-executor
@@ -174,7 +180,7 @@ jobs:
           name: Smoke test against documentation
           command: |
             source ${BASH_ENV}
-            docker exec ${PRIS_CONTAINER_ID} curl -f http://localhost:8000 | grep "PRIS for OpenNMS"
+            docker exec ${PRIS_CONTAINER_ID} curl -L -f http://localhost:8000/ | grep "location=\"pris/.*/index.html\""
       - run:
           name: Smoke test against example requisition named MyRouter
           command: |
@@ -240,7 +246,6 @@ jobs:
             docker tag pris:$(cat version.txt) ${DOCKERHUB_PROJECT_USER}/${DOCKERHUB_PROJECT_NAME}:$(cat version.txt)
             docker push ${DOCKERHUB_PROJECT_USER}/${DOCKERHUB_PROJECT_NAME}:latest
             docker push ${DOCKERHUB_PROJECT_USER}/${DOCKERHUB_PROJECT_NAME}:$(cat version.txt)
-
 
   publish-github:
       executor: go-executor

@@ -1,0 +1,93 @@
+= Quickstart
+
+To give an example we want to provide two requisitions from an poor man's inventory as _XLS file_ (myInventory.xls).
+The first requisition has a worksheet containing all routers and the second worksheet has all servers of our network.
+This example can be found in `examples/source/xlsExample`.
+
+.Worksheet with Router
+image::myRouter.png[myRouter.png,700]
+
+In line 5, 6 and 7 there is a router defined with more than one IP interface.
+All three interfaces will be manually provisioned.
+The private IP interface with _192.168.30.1_ is not used for SNMP agent communication.
+The services ICMP, SNMP and StrafePing are forced on some IP interfaces.
+For all other IP interfaces you can use the OpenNMS Provisiond mechanism scanning IP interface table from SNMP and the detectors for additional services.
+The server will also be categorized in _Backbone_ and _Office_.
+
+.Worksheet with Server
+image::myServer.png[myServer.png,700]
+
+The _OpenNMS_ requisition should be provided via _HTTP_ and we use _OpenNMS Provisiond_ to synchronize it on a regular basis.
+We build the following file structure:
+
+.File structure with two requisitions using a single spreadsheet
+
+----
+[root@localhost opennms-pris]# pwd && tree
+/opt/opennms-pris
+.
+├── documentation
+├── examples
+├── global.properties
+├── lib
+├── opennms-pris.jar
+├── opennms-pris.service
+├── opennms-pris.sh
+├── requisitions/
+|   ├── myInventory.xls
+|   ├── myRouter
+|   |   └── requisition.properties
+|   └── myServer
+|       └── requisition.properties
+└── scriptsteps
+    ├── custom
+    └── default
+----
+
+Providing the _OpenNMS requisition_ over _HTTP_ we create the following `global.properties`
+
+.Use the HTTP web server
+[source,bash]
+----
+include::example$xls/global.properties[]
+----
+
+The HTTP server listens on localhost port 8000/TCP.
+We have to create two directories, `myServer` and `myRouter`, each containing a `requisition.properties` file.
+Both `requisition.properties` files reference the main `myInventory.xls` file which contains two worksheets named _myServer_ and _myRouter_.
+The `requisition.properties` is the same for both requisitions.
+It is possible to create different script or mapping steps for each requisition.
+
+.Configuration of the myRouter requisition
+[source,bash]
+----
+include::example$xls/requisitions/myRouter/requisition.properties[]
+----
+
+.Configuration of the myServer requisition
+[source,bash]
+----
+include::example$xls/requisitions/myRouter/requisition.properties[]
+----
+
+It is not necessary to restart the {page-component-title} server if you change properties files or the _XLS_ file.
+All changes will be applied from the next request against the server.
+With the given configuration you see the result of the OpenNMS requisitions with the URL http://localhost:8000/requisitions/myRouter and http://localhost:8000/requisitions/myServer which can be used in _OpenNMS Provisiond_.
+
+.Output of {page-component-title} server for both configured requisitions
+image::requisitions-http.png[requisitions-http.png]
+
+To get the requisition provided from {page-component-title} automatically into OpenNMS you can configure Provisiond with a schedule.
+Create following to entries in `provisiond-configuration.xml` and they will automatically be synchronized every night at 0h:0m:0s and 1h:0m:0s.
+
+.Configuration from OpenNMS Provisiond with provisiond-configuration.xml
+[source,xml]
+----
+<requisition-def import-name="myRouter" import-url-resource="http://localhost:8000/requisitions/myRouter">
+  <cron-schedule>0 0 0 * * ? *</cron-schedule>
+</requisition-def>
+
+<requisition-def import-name="myServer" import-url-resource="http://localhost:8000/requisitions/myServer">
+  <cron-schedule>0 0 1 * * ? *</cron-schedule>
+</requisition-def>
+----

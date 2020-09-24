@@ -1,0 +1,18 @@
+= File Driver
+
+This driver offers the ability to generate an OpenNMS requisition directly into the filesystem.
+To use the _file driver_ you have to set the parameters in the `global.properties`:
+
+[options="header",autowidth"]
+|===
+| Parameter      | Required | Description
+| `driver`       | *        | set to `file` to generate OpenNMS requisitions as XML file
+| `target`       | *        | `path/to/output/folder` for XML files to generate
+| `requisitions` |          | parameter as Java regular expression filter for the requisition name
+|===
+
+.Example configuration for a file based requisition
+[source,bash]
+----
+include::example$file.global.properties[]
+----
