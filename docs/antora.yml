@@ -1,7 +1,7 @@
 name: pris
-version: '1.2.0'
+version: 'BLEEDING'
 title: PRIS
-prerelease: false
+prerelease: true
 asciidoc:
   attributes:
     source-language: asciidoc@
