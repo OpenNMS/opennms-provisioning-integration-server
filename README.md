@@ -158,6 +158,26 @@ Releases are published to the following places:
 For any other branches, they are just built and tested.
 You can download build artifacts like Docker images from your branch from [CircleCI].
 
+Steps to make a release:
+
+1. Create a branch with your new version number
+```
+git checkout -b release-1.2.1
+```
+
+2. Set the new version number in docs and code artifacts
+
+```
+bin/changeversion.sh -o BLEEDING -n 1.2.1
+```
+
+3. Commit the changes and push the new release branch
+
+```
+git commit -m "I made a new asesome release"
+git push --set-upstream origin release-1.2.0
+```
+
 The CI/CD workflows can be found in the `.circleci` directory.
 
 [GitHub]: https://github.com/OpenNMS/opennms-provisioning-integration-server.git
