@@ -58,6 +58,6 @@ done
 
 # Replace version number in documentation config.toml file
 for i in $(find ${CWD}/docs -name "antora.yml"); do
-  cat ${i} | sed -e "s/${OLD_VERSION}/${NEW_VERSION}/g" > ${i}.new;
+  cat ${i} | sed -e "s/${OLD_VERSION}/${NEW_VERSION}/g" | sed -e "s/prerelease: true/prerelease: false/g" > ${i}.new;
   mv ${i}.new ${i};
 done
