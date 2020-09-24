@@ -26,6 +26,7 @@ The project is divided in the following Maven modules:
 * Chat: [IRC] or [Web Chat]
 * Maintainer: ronny@opennms.org
 * Illustrations created in documentation with [yED]
+* [Documentation]
 
 ## Run PRIS as a Docker Container
 
@@ -171,3 +172,4 @@ The CI/CD workflows can be found in the `.circleci` directory.
 [git-scm]: http://git-scm.com/
 [yED]: http://www.yworks.com/en/products_yed_about.html
 [Web Chat]: https://chats.opennms.org/opennms-discuss
+[Documentation]: https://docs.opennms.org/pris/branches/master/pris/pris.html
