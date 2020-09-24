@@ -32,30 +32,8 @@
             <includes>
                 <include>**</include>
             </includes>
-            <directory>${project.basedir}/../docs/static/configs/examples/</directory>
-            <outputDirectory>examples</outputDirectory>
-        </fileSet>
-        <fileSet>
-            <includes>
-                <include>**</include>
-            </includes>
-            <directory>${project.basedir}/../docs/static/configs/examples/xlsExample/requisitions/</directory>
-            <outputDirectory>requisitions</outputDirectory>
-        </fileSet>
-        <fileSet>
-            <includes>
-                <include>global.properties</include>
-            </includes>
-            <directory>${project.basedir}/../docs/static/configs/examples/xlsExample</directory>
+            <directory>${project.basedir}/../docs/modules/ROOT/examples/xls/</directory>
             <outputDirectory>./</outputDirectory>
-            <fileMode>0644</fileMode>
-        </fileSet>
-        <fileSet>
-            <includes>
-                <include>**</include>
-            </includes>
-            <directory>${project.basedir}/../docs/static/configs/scriptsteps/</directory>
-            <outputDirectory>scriptsteps</outputDirectory>
         </fileSet>
         <fileSet>
             <includes>

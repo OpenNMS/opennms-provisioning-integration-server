@@ -1,4 +1,0 @@
-[build]
-  base    = "docs"
-  publish = "public"
-  command = "gem install asciidoctor && hugo || true"

@@ -1,0 +1,88 @@
+
+= Welcome to the Documentation for {page-component-title}
+
+[options="autowidth"]
+|===
+|Version: |{page-component-display-version}
+|Source:  |{page-origin-url}
+|===
+
+If you have a large network and discovery doesn't help and you have one or multiple inventory, {page-component-title} can help you to use this sources as inventory for your _OpenNMS_.
+The result of {page-component-title} is the OpenNMS requisition model which can be read from _OpenNMS Provisiond_.
+It gives you several steps to integrate, enrich, transform, clean up and merge your extracted data before you start monitoring with _OpenNMS_.
+
+The output from {page-component-title} is provided as _XML_ over _HTTP_ or just as a file ready to read from the _OpenNMS Provisioning_ system.
+
+{page-component-title} can be downloaded from the link:https://github.com/OpenNMS/opennms-provisioning-integration-server/releases/latest[GitHub page] of the project. +
+
+== Overview
+
+[[pris_overview]]
+.OpenNMS {page-component-title} overview
+image::pris-overview.png[OpenNMS {page-component-title} overview]
+
+The components from left to right are described as followed:
+
+- **OpenNMS Provisiond**: This is the internal daemon responsible to get nodes (networked devices) into OpenNMS. Provisiond scans for SNMP information, network services and has to model the network monitoring behavior for OpenNMS.
+- **Driver**: The driver is the method how to present the data from {page-component-title} to _OpenNMS_. It is only possible to configure _one_ driver per {page-component-title} instance
+- **OpenNMS Requisition**: The data model which has to be built inside of {page-component-title}. This is the shared model between _OpenNMS_ and {page-component-title}.
+- **Requisition configuration**: The description of the integration of your external datasource. A requisition configuration defines which source should be used or which scripts should be applied to modify or transform the data before they are provided into _OpenNMS Provisiond_.
+- **Mapper Script**: The mapper script is the last script executed before the generated requisition goes to _OpenNMS Provisiond_ through the driver. You can use a mapper script to enrich the requisition, remove nodes or replace OpenNMS requistion node attributes.
+- **Custom Scripts**: In some cases an external inventory has its own data model, e.g. OCS Inventory. The script source can be used to map the external inventory-specific model into the OpenNMS requisition model.
+- **Source**: This is the specific implementation retrieving the data for from your external inventory.
+- **External Inventory**: The inventory from which you want to import data for OpenNMS. It could be a free application like phpIPAM, idoIT, ITIL ticket system like OTRS, a simple spreadsheet or just another OpenNMS instance.
+
+== Files and Folder structure
+
+It is recommended to extract the tar.gz content to `/opt/opennms-pris`.
+The examples and the documentation are built based on this file structure.
+It is possible to install {page-component-title} in a different directory, but you have to take care about adapting the paths in this documentation.
+
+After extracting the archive the file structure should look like this:
+
+----
+.
+├── documentation <1>
+├── examples <2>
+|   ├── fileExample
+|   ├── httpExample
+|   ├── jdbcExample
+|   ├── mergeExample
+|   ├── ocsExample
+|   ├── scriptExample
+|   └── xlsExample
+├── global.properties <3>
+├── lib <4>
+├── opennms-pris.bat<5>
+├── opennms-pris.init<6>
+├── opennms-pris.jar<7>
+├── opennms-pris.service<8>
+├── opennms-pris.sh<9>
+├── requisitions <10>
+└── scriptsteps <11>
+    ├── custom <12>
+    └── default <13>
+----
+<1> This documentation in HTML format; if you run {page-component-title} in HTTP mode you can access the documentation at http://<your-ip>:<port>/documentation
+<2> Configuration examples for requisitions for every available source
+<3> Default configuration for {page-component-title} to run in HTTP mode on port `8000`
+<4> Libraries for the different sources which can be used with {page-component-title}
+<5> Start script to run {page-component-title} on a Windows
+<6> Init script for old _System V_ systems running {page-component-title} in HTTP mode
+<7> Main application file
+<8> Systemd script to start {page-component-title} as background daemon, copy to `/etc/systemd/system/opennms-pris.service`
+<9> Start script to run {page-component-title} on a Linux console in foreground
+<10> Configuration directory for all requisitions to integrate inventories
+<11> Default folder for scripts which are used in requisition configurations to manipulate the inventory import
+<12> Drop-in for your custom created scripts
+<13> Drop-in for default ready to use scripts
+
+{page-component-title} needs at minimum two configuration files.
+The first is called `global.properties`, and controls the general behavior of the provisioning integration server.
+A requisition is just a directory in the application server directory `requisitions` and has to contain a file called `requisition.properties`.
+The directory name is used to access the requisition.
+
+You can create multiple requisitions using different sources, by creating a directory for each requisition with a `requisition.properties` inside.
+The `global.properties`, the `requisitions` directory and the start script has to be in the same folder.
+By default we suggest to install your {page-component-title} archive to `/opt/opennms-pris`.
+If you want to provide the _OpenNMS_ requisitions via _HTTP_ from the built-in _Jetty_ web server as a background daemon, you can use the init scripts in the root directory of {page-component-title}.
