@@ -38,7 +38,7 @@
         <httpComponentsVersion>4.5.12</httpComponentsVersion>
         <ivyVersion>2.5.0</ivyVersion>
         <jettyServerVersion>9.4.31.v20200723</jettyServerVersion>
-        <junitVersion>4.13</junitVersion>
+        <junitVersion>4.13.1</junitVersion>
         <mavenResourcesPluginVersion>3.2.0</mavenResourcesPluginVersion>
         <mavenCompilerPluginVersion>3.8.1</mavenCompilerPluginVersion>
         <metainfServicesVersion>1.8</metainfServicesVersion>
