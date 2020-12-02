@@ -37,7 +37,7 @@
         <hamcrestVersion>2.2</hamcrestVersion>
         <httpComponentsVersion>4.5.12</httpComponentsVersion>
         <ivyVersion>2.5.0</ivyVersion>
-        <jettyServerVersion>9.4.31.v20200723</jettyServerVersion>
+        <jettyServerVersion>9.4.35.v20201120</jettyServerVersion>
         <junitVersion>4.13</junitVersion>
         <mavenResourcesPluginVersion>3.2.0</mavenResourcesPluginVersion>
         <mavenCompilerPluginVersion>3.8.1</mavenCompilerPluginVersion>
