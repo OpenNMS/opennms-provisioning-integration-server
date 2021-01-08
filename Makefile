@@ -3,12 +3,21 @@
 ##
 .PHONY: help docs docs-docker deps-docs deps-docs-docker clean-docs clean-docs-cache clean-all
 
-.DEFAULT_GOAL := docs
+.DEFAULT_GOAL := all
 
 SHELL                := /bin/bash -o nounset -o pipefail -o errexit
 WORKING_DIRECTORY    := $(shell pwd)
 DOCKER_ANTORA_IMAGE  := antora/antora:2.3.3
 SITE_FILE            := antora-playbook-local.yml
+
+deps-build:
+	@command -v javac
+	@command -v mvn
+
+
+compile:
+	@echo "Compile with tests"
+	mvn clean install
 
 deps-docs:
 	@command -v antora
@@ -33,3 +42,5 @@ clean-docs-cache:
 	@rm -rf .cache
 
 clean-all: clean-docs clean-docs-cache
+
+all: compile docs
