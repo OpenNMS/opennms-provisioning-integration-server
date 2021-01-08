@@ -9,7 +9,8 @@ ADD deploy/opennms-pris-release-archive.tar.gz /opt
 RUN apt-get update && \
     apt-get -y --no-install-recommends install curl && \
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/* && \
+    ln -s /usr/local/openjdk-11/bin/java /usr/bin/java
 
 ## Volumes for storing data outside of the container
 VOLUME [ "${OPENNMS_PRIS_HOME}/requisitions", "${OPENNMS_PRIS_HOME}/scriptsteps" ]

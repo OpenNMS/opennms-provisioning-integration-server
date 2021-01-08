@@ -7,7 +7,7 @@
 
 SHELL                := /bin/bash -o nounset -o pipefail -o errexit
 WORKING_DIRECTORY    := $(shell pwd)
-DOCKER_ANTORA_IMAGE  := antora/antora:2.3.3
+DOCKER_ANTORA_IMAGE  := antora/antora:2.3.4
 SITE_FILE            := antora-playbook-local.yml
 
 deps-build:
