@@ -14,10 +14,17 @@ deps-build:
 	@command -v javac
 	@command -v mvn
 
-
 compile:
-	@echo "Compile with tests"
-	mvn clean install
+	@echo "Maven validate ..."
+	mvn validate
+	@echo "Maven compile ... "
+	mvn compile
+	@echo "Maven tests ..."
+	mvn verify
+
+package:
+	@echo "Maven package ..."
+	mvn package -DskipTests
 
 deps-docs:
 	@command -v antora
@@ -43,4 +50,4 @@ clean-docs-cache:
 
 clean-all: clean-docs clean-docs-cache
 
-all: compile docs
+all: compile package docs
