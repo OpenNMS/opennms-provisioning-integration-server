@@ -33,7 +33,6 @@ workflows:
       - package:
           requires:
             - generate-docs
-            - build
       - oci-image:
           requires:
             - package
@@ -54,7 +53,6 @@ workflows:
                 - /^release-.*/
           requires:
             - smoke-tests
-            - oci-image
 
 jobs:
   build:
@@ -115,6 +113,8 @@ jobs:
           name: Package into tar.gz and zip format
           command: |
             make package
+      - store_artifacts:
+          path: opennms-pris-dist/target/opennms-pris-release-archive.tar.gz
       - persist_to_workspace:
           root: ~/
           paths: project/opennms-pris-dist/target
