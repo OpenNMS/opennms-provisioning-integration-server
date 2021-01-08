@@ -6,7 +6,7 @@ executors:
       - image: docker:stable-git
   build-executor:
     docker:
-      - image: opennms/maven:1.8.0.252.b09-3.6.3-b4136
+      - image: opennms/maven:11.0.9.11-3.6.3-b5740
   antora-executor:
     docker:
       - image: antora/antora:2.3.4
