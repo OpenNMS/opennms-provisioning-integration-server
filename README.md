@@ -88,15 +88,16 @@ As `-Djava.rmi.server.hostname` you have to take the IP address of your Docker H
 This guide describes how you can checkout the source code from GitHub and how you can compile from source.
 The following parts are required: 
 
-* [OpenJDK] or [Oracle Java Development Kit] with javac Version 8
+* [OpenJDK] or [Oracle Java Development Kit] with javac Version 11
 * Apache [Maven]
 * [git-scm]
-* `java`, `javac`, `git` and `mvn` should be in your search path
+* `java`, `javac`, `git`, `make` and `mvn` should be in your search path
 * Internet connection to download maven dependencies
+* Documentation is build with [Antora] and requires to have `antora` in your search path
 
 In your source directory run the command
 
-    mvn clean package
+    make all
 
 It make sure everything from previous builds is cleaned away.
 Then is compiles the code and build everything as a runnable jar as well as .tar.gz and .zip file in the `opennms-pris-dist/target` directory.
@@ -126,7 +127,7 @@ cd pris
 Compile and assemble the source code to get the distributable tar.gz file
 
 ```
-mvn clean package
+make all
 ```
 
 ### Step 2:
@@ -193,3 +194,4 @@ The CI/CD workflows can be found in the `.circleci` directory.
 [yED]: http://www.yworks.com/en/products_yed_about.html
 [Web Chat]: https://chats.opennms.org/opennms-discuss
 [Documentation]: https://docs.opennms.com
+[Antora]: https://docs.antora.org/antora/2.3/install/install-antora/
