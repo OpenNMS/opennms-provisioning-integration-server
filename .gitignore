@@ -5,6 +5,7 @@
 .DS_Store
 target/
 .classpath
+.java-version
 # Package Files #
 Docker/deploy/*
 *.jar

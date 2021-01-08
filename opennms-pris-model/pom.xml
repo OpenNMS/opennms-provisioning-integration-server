@@ -19,10 +19,24 @@
         <dependency>
             <groupId>org.jvnet.jaxb2_commons</groupId>
             <artifactId>jaxb2-basics-runtime</artifactId>
-            <version>0.6.5.1</version>
+            <version>${jaxb2BasicsRuntimeVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>${jaxbApiVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-core</artifactId>
+            <version>${jaxbCoreVersion}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-impl</artifactId>
+            <version>${jaxbImplVersion}</version>
         </dependency>
     </dependencies>
-
     <build>
         <plugins>
             <!-- Copy the XSDs to the project -->
@@ -55,7 +69,7 @@
             <plugin>
                 <groupId>org.jvnet.jaxb2.maven2</groupId>
                 <artifactId>maven-jaxb2-plugin</artifactId>
-                <version>0.9.0</version>
+                <version>${mavenJaxbPluginVersion}</version>
                 <executions>
                     <execution>
                         <id>xjc</id>
@@ -92,17 +106,17 @@
                         <dependency>
                             <groupId>org.jvnet.jaxb2_commons</groupId>
                             <artifactId>jaxb2-basics</artifactId>
-                            <version>0.6.5</version>
+                            <version>${jaxb2BasicsVersion}</version>
                         </dependency>
                         <plugin>
                             <groupId>org.jvnet.jaxb2_commons</groupId>
                             <artifactId>jaxb2-fluent-api</artifactId>
-                            <version>3.0</version>
+                            <version>${jaxb2FluentApiVersion}</version>
                         </plugin>
                         <plugin>
                             <groupId>org.jvnet.jaxb2_commons</groupId>
                             <artifactId>jaxb2-value-constructor</artifactId>
-                            <version>3.0</version>
+                            <version>${jaxb2ValueConstructorVersion}</version>
                         </plugin>
                     </plugins>
                 </configuration>
