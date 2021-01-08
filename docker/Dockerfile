@@ -6,7 +6,10 @@ ENV JAVA_OPTS ""
 
 ADD deploy/opennms-pris-release-archive.tar.gz /opt
 
-RUN apk add --no-cache curl
+RUN apt-get update && \
+    apt-get -y --no-install-recommends install curl && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 ## Volumes for storing data outside of the container
 VOLUME [ "${OPENNMS_PRIS_HOME}/requisitions", "${OPENNMS_PRIS_HOME}/scriptsteps" ]
