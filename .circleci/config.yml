@@ -91,12 +91,16 @@ jobs:
       - run:
           name: Install make and bash
           command: |
-            apk add --no-cache make bash
+            apk add --no-cache make bash git openssh-client
+            npm i -g gitlab:antora/xref-validator
+      - run:
+          name: Validate Xrefs in docs
+          command: |
+            NODE_PATH="$(npm -g root)" antora --generator @antora/xref-validator antora-playbook-local.yml
       - run:
           name: Generate documentation
           command: |
             make docs
-
       - persist_to_workspace:
           root: ~/
           paths:
