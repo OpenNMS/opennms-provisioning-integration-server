@@ -9,7 +9,7 @@ executors:
       - image: opennms/maven:11.0.9.11-3.6.3-b5929
   antora-executor:
     docker:
-      - image: antora/antora:2.3.4
+      - image: opennms/antora:2.3.4-b6293
   go-executor:
     docker:
       - image: circleci/golang
@@ -88,11 +88,6 @@ jobs:
     steps:
       - attach_workspace:
           at: ~/
-      - run:
-          name: Install make and bash
-          command: |
-            apk add --no-cache make bash git openssh-client
-            npm i -g gitlab:antora/xref-validator
       - run:
           name: Validate Xrefs in docs
           command: |
