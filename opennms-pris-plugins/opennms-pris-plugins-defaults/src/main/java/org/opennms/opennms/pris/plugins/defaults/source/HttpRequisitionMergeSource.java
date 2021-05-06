@@ -25,6 +25,16 @@
  */
 package org.opennms.opennms.pris.plugins.defaults.source;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -36,19 +46,17 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.kohsuke.MetaInfServices;
 import org.opennms.pris.api.InstanceConfiguration;
 import org.opennms.pris.api.Source;
-import org.opennms.pris.model.*;
+import org.opennms.pris.model.MetaData;
+import org.opennms.pris.model.PrimaryType;
+import org.opennms.pris.model.Requisition;
+import org.opennms.pris.model.RequisitionAsset;
+import org.opennms.pris.model.RequisitionCategory;
+import org.opennms.pris.model.RequisitionInterface;
+import org.opennms.pris.model.RequisitionMonitoredService;
+import org.opennms.pris.model.RequisitionNode;
 import org.opennms.pris.util.RequisitionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Source to merge two requisitions (A and B) provided via HTTP. The merge
@@ -63,7 +71,7 @@ public class HttpRequisitionMergeSource implements Source {
 
     private final InstanceConfiguration config;
 
-    private HttpRequisitionMergeSource(final InstanceConfiguration config) {
+    HttpRequisitionMergeSource(final InstanceConfiguration config) {
         this.config = config;
     }
 
@@ -185,6 +193,13 @@ public class HttpRequisitionMergeSource implements Source {
         for (RequisitionAsset asset : nodeB.getAssets()) {
             if (RequisitionUtils.findAsset(nodeA, asset.getName()) == null) {
                 nodeA.getAssets().add(asset);
+            }
+        }
+
+        //Add all nodeB metadata to nodeA, do not duplicate
+        for (MetaData metaData : nodeB.getMetaDatas()) {
+            if (RequisitionUtils.findMetaData(nodeA, metaData.getContext(), metaData.getKey()) == null) {
+                nodeA.getMetaDatas().add(metaData);
             }
         }
 
