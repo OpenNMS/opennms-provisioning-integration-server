@@ -1,6 +1,8 @@
 package org.opennms.pris.util;
 
 import java.util.Objects;
+
+import org.opennms.pris.model.MetaData;
 import org.opennms.pris.model.Requisition;
 import org.opennms.pris.model.RequisitionAsset;
 import org.opennms.pris.model.RequisitionCategory;
@@ -66,6 +68,17 @@ public class RequisitionUtils {
         for (final RequisitionAsset asset : node.getAssets()) {
             if (Objects.equals(asset.getName(), assetName)) {
                 return asset;
+            }
+        }
+
+        return null;
+    }
+
+    public static MetaData findMetaData(final RequisitionNode node,
+                                        final String context, final String key) {
+        for (final MetaData metaData : node.getMetaDatas()) {
+            if (Objects.equals(metaData.getContext(), context) && Objects.equals(metaData.getKey(), key)) {
+                return metaData;
             }
         }
 
