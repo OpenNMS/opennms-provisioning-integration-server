@@ -30,7 +30,7 @@
         <beanshellVersion>2.0b5</beanshellVersion>
         <chQosLogbackVersion>1.2.3</chQosLogbackVersion>
         <commonsConfigurationVersion>1.10</commonsConfigurationVersion>
-        <commonsIoVersion>2.6</commonsIoVersion>
+        <commonsIoVersion>2.7</commonsIoVersion>
         <gparsVersion>1.2.1</gparsVersion>
         <groovyVersion>2.4.15</groovyVersion>
         <guavaVersion>[30.0-jre,)</guavaVersion>
