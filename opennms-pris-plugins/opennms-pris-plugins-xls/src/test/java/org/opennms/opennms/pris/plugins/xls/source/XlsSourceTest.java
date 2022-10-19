@@ -55,6 +55,9 @@ public class XlsSourceTest {
         assertEquals(RequisitionUtils.findAsset(resultNode, AssetField.description.name).getValue(), "POB: Johann Carl Friedrich Gauß");
         assertEquals(RequisitionUtils.findAsset(resultNode, AssetField.comment.name).getValue(), "Died in Göttingen");
         
+        assertEquals(RequisitionUtils.findAsset(resultNode, AssetField.latitude.name).getValue(), "54.9633229");
+        assertEquals(RequisitionUtils.findAsset(resultNode, AssetField.longitude.name).getValue(), "1");
+        
         RequisitionInterface resultInterface = RequisitionUtils.findInterface(resultNode, "1.2.3.4");
         assertEquals(PrimaryType.PRIMARY, resultInterface.getSnmpPrimary());
         assertEquals(1, resultInterface.getStatus());

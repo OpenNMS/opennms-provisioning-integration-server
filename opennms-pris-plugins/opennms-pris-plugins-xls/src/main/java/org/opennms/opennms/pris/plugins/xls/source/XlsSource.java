@@ -83,7 +83,14 @@ public class XlsSource implements Source {
 	public static String getStringValueFromCell(Cell cell) {
 		String value = null;
 		switch (cell.getCellTypeEnum()) {
-		case NUMERIC: value = Integer.toString((int)cell.getNumericCellValue());
+		case NUMERIC: 
+					double d = cell.getNumericCellValue();
+					if (d % 1  ==0) {
+						value = Integer.toString((int) d);
+					} else {
+						// prints double with 7 decimal places - suitable for lat/long
+						value =  String.format("%.7f",d);
+					}
 					break;
 		case STRING: value = cell.getStringCellValue();
 					break;
