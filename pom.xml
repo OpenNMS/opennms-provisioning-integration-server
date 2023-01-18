@@ -53,7 +53,7 @@
         <mavenShadePluginVersion>3.2.4</mavenShadePluginVersion>
         <metainfServicesVersion>1.8</metainfServicesVersion>
         <mysqlConnectorVersion>8.0.21</mysqlConnectorVersion>
-        <opennmsVersion>27.1.1</opennmsVersion>
+        <opennmsVersion>31.0.3</opennmsVersion>
         <postgresqlDriverVersion>42.2.18</postgresqlDriverVersion>
         <slf4jVersion>1.7.30</slf4jVersion>
         <updatePolicy>interval:60</updatePolicy>
@@ -129,8 +129,16 @@
                 <version>${opennmsVersion}</version>
                 <exclusions>
                     <exclusion>
-                        <groupId>org.opennms.dependencies</groupId>
-                        <artifactId>spring-dependencies</artifactId>
+                        <groupId>commons-io</groupId>
+                        <artifactId>commons-io</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.apache.commons</groupId>
+                        <artifactId>commons-jexl</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.opennms.core</groupId>
+                        <artifactId>org.opennms.core.api</artifactId>
                     </exclusion>
                     <exclusion>
                         <groupId>org.opennms.core</groupId>
@@ -138,15 +146,19 @@
                     </exclusion>
                     <exclusion>
                         <groupId>org.opennms.dependencies</groupId>
+                        <artifactId>dnsjava-dependencies</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.opennms.dependencies</groupId>
                         <artifactId>jaxb-dependencies</artifactId>
                     </exclusion>
                     <exclusion>
                         <groupId>org.opennms.dependencies</groupId>
-                        <artifactId>dnsjava-dependencies</artifactId>
+                        <artifactId>spring-dependencies</artifactId>
                     </exclusion>
                     <exclusion>
-                        <groupId>commons-io</groupId>
-                        <artifactId>commons-io</artifactId>
+                        <groupId>org.slf4j</groupId>
+                        <artifactId>jcl-over-slf4j</artifactId>
                     </exclusion>
                     <exclusion>
                         <groupId>xalan</groupId>
@@ -219,6 +231,14 @@
     </build>
 
     <repositories>
+        <repository>
+            <id>central</id>
+            <name>Maven Central</name>
+            <url>https://repo1.maven.org/maven2/</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
         <repository>
             <snapshots>
                 <enabled>false</enabled>
