@@ -40,6 +40,8 @@ workflows:
           requires:
             - oci-image
       - publish-github:
+          context:
+            - "github-api"
           filters:
             branches:
               only:
@@ -47,6 +49,8 @@ workflows:
           requires:
             - smoke-tests
       - publish-dockerhub:
+          context:
+            - "docker-publish-account"
           filters:
             branches:
               only:
@@ -243,6 +247,7 @@ jobs:
             name: Collect artifacts and publish archives to GitHub
             command: |
               mkdir github-latest
+              export GITHUB_TOKEN="${GH_TOKEN}"
               cp opennms-pris-dist/target/opennms-pris-release-archive.tar.gz github-latest/opennms-pris-release-$(cat version.txt).tar.gz
               cp opennms-pris-dist/target/opennms-pris-release-archive.zip github-latest/opennms-pris-release-$(cat version.txt).zip
-              ghr -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} $(cat version.txt) github-latest
+              ghr -r ${CIRCLE_PROJECT_REPONAME} $(cat version.txt) github-latest
