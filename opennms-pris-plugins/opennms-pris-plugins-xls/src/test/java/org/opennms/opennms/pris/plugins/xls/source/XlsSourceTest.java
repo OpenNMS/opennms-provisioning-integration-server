@@ -33,7 +33,6 @@ public class XlsSourceTest {
 
 	@Test
 	public void testxlsSource() throws Exception {
-		System.out.println("**********testxlssource");
 		MockInstanceConfiguration config = new MockInstanceConfiguration("test");
 		config.set("encoding", "ISO-8859-1");
 		config.set("file", Paths.get("src/test/resources/test.xls"));
@@ -44,12 +43,11 @@ public class XlsSourceTest {
 
 		basicTest("test");
 
-		System.out.println("********** end testxlssource");
 	}
 
 	@Test
 	public void testCsvSource() throws Exception {
-		System.out.println("**********testcsvsource");
+
 		MockInstanceConfiguration config = new MockInstanceConfiguration("testcsv");
 		config.set("encoding", "ISO-8859-1");
 		config.set("file", Paths.get("src/test/resources/testcsv.csv"));
@@ -60,13 +58,10 @@ public class XlsSourceTest {
 
 		basicTest("testcsv");
 
-		System.out.println("**********end testcsvsource");
-
 	}
 
 	@Test
 	public void testCsvSourceNoHeader() throws Exception {
-		System.out.println("**********testcsvsource-noheader");
 		MockInstanceConfiguration config = new MockInstanceConfiguration("testcsv-noheaders");
 		config.set("encoding", "ISO-8859-1");
 		config.set("file", Paths.get("src/test/resources/testcsv-noheaders.csv"));
@@ -79,8 +74,6 @@ public class XlsSourceTest {
 		publishTestRequisitionAndSheet("testcsv-noheaders");
 
 		basicTest("testcsv-noheaders");
-
-		System.out.println("**********end testcsvsource-noheader");
 
 	}
 

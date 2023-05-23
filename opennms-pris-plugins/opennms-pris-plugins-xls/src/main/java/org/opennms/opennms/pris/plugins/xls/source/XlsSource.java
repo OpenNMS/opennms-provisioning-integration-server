@@ -22,7 +22,8 @@ package org.opennms.opennms.pris.plugins.xls.source;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -42,7 +43,6 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -75,9 +75,10 @@ public class XlsSource implements Source {
 
 	private final String WITHIN_SPLITTER = ",";
 	
-	// note that the csv file is delimited by ',' but multiple services must be delimited by ';' in cells
+	// note that the csv file cells are delimited by ',' but multiple values (services) within a cell must be delimited by ';' within cells
 	private final String CSV_FILE_DELIMITER = ",";
 	private final String CSV_FILE_WITHIN_SPLITTER = ";";
+	private final String SPREADSHEET_HEADER_FIELDS="org.opennms.pris.spreadsheet.fields";
 
 	private final String PREFIX_FOR_ASSETS = "Asset_";
 	private final String PREFIX_FOR_METADATA = "MetaData_";
@@ -137,15 +138,15 @@ public class XlsSource implements Source {
 
 	public XlsSource(final InstanceConfiguration config) {
 		this.config = config;
-
+		
 		this.encoding = config.getString("encoding", "ISO-8859-1");
 
-		this.csvHeaders = config.getString("org.opennms.pris.spreadsheet.fields");
+		this.csvHeaders = config.getString(SPREADSHEET_HEADER_FIELDS,"");
 	}
 
 	public Workbook getWorkbook(File file) {
 
-		// if file is csv file then create spreadsheet in workbook from lines  in csv file.
+		// if file is csv file then create spreadsheet in workbook from lines in csv file.
 		String fileName = file.getName();
 		String extension = null;
 		int i = fileName.lastIndexOf('.');
@@ -155,14 +156,16 @@ public class XlsSource implements Source {
 		}
 
 		if ("csv".equals(extension)) {
+			FileInputStream fis=null;
 			try {
 				HSSFWorkbook workbook = new HSSFWorkbook();
 				HSSFSheet sheet = workbook.createSheet(fileName);
 
-				// if headers provided as a property then create first row of spreadsheet with
+				// if headers provided as a configuration property then create first row of spreadsheet with
 				// headers
 				int rowNum = 0;
-				if (csvHeaders != null) {
+				if (csvHeaders != null && ! csvHeaders.isEmpty() ) {
+					LOGGER.info("csv headers property set "+SPREADSHEET_HEADER_FIELDS+ " = "+csvHeaders);
 					String[] headers = csvHeaders.split(CSV_FILE_DELIMITER);
 
 					HSSFRow firstRow = sheet.createRow(rowNum);
@@ -175,7 +178,10 @@ public class XlsSource implements Source {
 				
 				// create rest of spreadsheet with csv data in file see
 				// https://javacodepoint.com/java-code-convert-csv-to-excel-file-using-apache-poi/
-				BufferedReader br = new BufferedReader(new FileReader(file));
+				fis = new FileInputStream(file);
+			    InputStreamReader isr = new InputStreamReader(fis, StandardCharsets.UTF_8);
+			    BufferedReader br = new BufferedReader(isr);
+
 				String nextLine;
 				while ((nextLine = br.readLine()) != null) {
 					Row currentRow = sheet.createRow(rowNum);
@@ -190,8 +196,6 @@ public class XlsSource implements Source {
 						} else {
 							// String values we always substitute SPLITTERS
 							String stringCellData = rowData[column].trim().replace(CSV_FILE_WITHIN_SPLITTER, WITHIN_SPLITTER);
-							//TODO REMOVE
-							System.out.println("rowNum "+rowNum	+ " column "+column+ " "+stringCellData);
 							Cell cell = currentRow.createCell(column);
 							cell.setCellValue(stringCellData);
 						}
@@ -199,11 +203,19 @@ public class XlsSource implements Source {
 					
 					rowNum++;
 				}
+				
+				br.close();
+				
 				return workbook;
 
 			} catch (Exception ex) {
 				LOGGER.error("can not create workbook from csv file {}", file.getAbsolutePath(), ex);
 				return null;
+			} finally {
+				if(fis!=null)
+					try {
+						fis.close();
+					} catch (IOException e) {}
 			}
 		}
 
@@ -290,8 +302,6 @@ public class XlsSource implements Source {
 
 			// adding parent data
 			cell = getRelevantColumnID(row, OPTIONAL_UNIQUE_HEADERS.PREFIX_PARENT_FOREIGN_SOURCE);
-			//TODO REMOVE
-			System.out.println("xxx foreign source: "+OPTIONAL_UNIQUE_HEADERS.PREFIX_PARENT_FOREIGN_SOURCE+" "+ cell);
 			if (cell != null) {
 				node.setParentForeignSource(XlsSource.getStringValueFromCell(cell));
 			}
@@ -331,17 +341,6 @@ public class XlsSource implements Source {
 	}
 
 	private Cell getRelevantColumnID(Row row, OPTIONAL_UNIQUE_HEADERS header) {
-		//TODO REMOVE
-		System.out.println("header.HEADER:"+header.HEADER);
-		System.out.print("header.HEADER bytes:");
-		byte[] a = header.HEADER.getBytes();
-	      for(int i=0; i< a.length ; i++) {
-	         System.out.print(a[i] +" ");
-	      }
-	    System.out.println();
-		for(Entry<String, Integer> entry: optionalUniquHeaders.entrySet()) {
-			System.out.println("           optionalUniquHeaders:"+entry);
-		}
 		Integer columnId = optionalUniquHeaders.get(header.HEADER);
 		if (columnId == null) {
 			return null;
@@ -373,31 +372,12 @@ public class XlsSource implements Source {
 
 	private Map<String, Integer> initializeOptionalUniquHeaders(Sheet sheet) {
 		Map<String, Integer> result = new HashMap<>();
-		System.out.println("******************  Start initialise Unique headers");
 		for (OPTIONAL_UNIQUE_HEADERS header : OPTIONAL_UNIQUE_HEADERS.values()) {
 			Row row = sheet.getRow(0);
 			Iterator<Cell> celliterator = row.cellIterator();
 			while (celliterator.hasNext()) {
 				Cell cell = celliterator.next();
-				//TODO remove
-				System.out.println("initialise Optional: "+cell.getStringCellValue()+" "+cell.getStringCellValue().toLowerCase()+" "+header.HEADER.toLowerCase());
-				System.out.print("header.HEADER bytes: ");
-				byte[] a = header.HEADER.toLowerCase().getBytes();
-			      for(int i=0; i< a.length ; i++) {
-			         System.out.print(a[i] +" ");
-			      }
-			    System.out.println(" header: "+ new  String(a, StandardCharsets.UTF_8));
-			    System.out.print("cell value bytes:    ");
-				byte[] b = cell.getStringCellValue().toLowerCase().getBytes();
-			      for(int i=0; i< b.length ; i++) {
-			         System.out.print(b[i] +" ");
-			      }
-			      System.out.println(" cell: "+ new  String(b, StandardCharsets.UTF_8));
-				
-				
-				
 				if (cell.getStringCellValue().toLowerCase().startsWith(header.HEADER.toLowerCase())) {
-					System.out.println("put header : "+header.HEADER+" cell index: "+cell.getColumnIndex() );
 					result.put(header.HEADER, cell.getColumnIndex());
 				}
 			}
