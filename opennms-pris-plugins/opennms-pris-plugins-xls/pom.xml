@@ -31,6 +31,11 @@
         <artifactId>poi-ooxml</artifactId>
         <version>${apachePoiVersion}</version>
 	</dependency>
+    <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-lang3</artifactId>
+        <version>${commonsLang3Version}</version>
+    </dependency>
         <!-- Tests -->
         <dependency>
             <groupId>${project.groupId}</groupId>
