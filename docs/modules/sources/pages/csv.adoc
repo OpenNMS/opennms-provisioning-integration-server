@@ -25,7 +25,7 @@ Node_Label,IP_Management,MgmtType_,svc_Forced,cat_Environment
 bbone-gw2,10.0.23.2,P,ICMP;SNMP,Backbone
 ```
 
-Example configuration for the requisition myinventory from a csv file myinventory.csv
+Example configuration for the requisition `myinventory` from a CSV file `myinventory.csv`:
 [source,bash]
 ----
 include::example$csv/requisitions/myinventory/requisition.properties[]
