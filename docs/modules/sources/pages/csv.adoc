@@ -13,7 +13,7 @@ This lets {page-component-title} read CSV files that do not have a header.
 | `source.file`     | *        | Path of the CSV file to read relative to the `requisition.properties`.
 Note that the file name must end with `.csv`.
 | `source.org.opennms.pris.spreadsheet.fields` |          | If this property is not present, the first line of the CSV file is used as the column headers in the same way as in the XLS data source. 
-If this property is set, value of this field should be a comma separated set of headers to be used instead of using the first line of the csv file.
+If this property is set, the value of this field should be a comma-separated set of headers to use instead of using the first line of the CSV file.
 |===
 
 The structure of the CSV file should follow the same rules and use the same headers as in the XLS data source.
