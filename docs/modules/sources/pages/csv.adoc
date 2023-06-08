@@ -15,7 +15,7 @@ This lets {page-component-title} read CSV files that do not have a header.
 If this property is set, value of this field should be a comma separated set of headers to be used instead of using the first line of the csv file.
 |===
 
-The structure of the csv file should follow the same rules and use the same headers as in the xls data source.
+The structure of the CSV file should follow the same rules and use the same headers as in the XLS data source.
 
 However, any columns which would contain comma separated values in a spreadsheet must have the contents delineated using a semicolon ';' character rather than commas.
 In the following example, the svc_Forced services ICMP;SNMP are separated using a semicolon.
