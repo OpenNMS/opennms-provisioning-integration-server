@@ -32,7 +32,7 @@ include::example$csv/requisitions/myinventory/requisition.properties[]
 ----
 
 Example configuration for the requisition `myinventory-noheaders` from a CSV file `myinventory-noheaders.csv`:
-This has a source.org.opennms.pris.spreadsheet.fields property set.
+This example has a `source.org.opennms.pris.spreadsheet.fields` property set:
 
 [source,bash]
 ----
