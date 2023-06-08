@@ -3,7 +3,7 @@
 The `xls` source can also create a requisition from a UTF-8 encoded, comma-separated variable (CSV) file if the given file name has the `.csv` suffix.
 
 In this case the first line of the CSV file should contain a comma-separated list of headers in the same way the spreadsheet should be configured in a normal XLS source. 
-Alternatively, a property can be set containing comma separated set of headers to be is used as the first line of the csv file.
+Alternatively, you can set a property containing a comma-separated set of headers to use as the first line of the CSV file.
 This allows csv file to be raad which don't have a header line.
 
 [options="header",autowidth"]
