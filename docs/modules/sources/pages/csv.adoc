@@ -4,7 +4,7 @@ The `xls` source can also create a requisition from a UTF-8 encoded, comma-separ
 
 In this case the first line of the CSV file should contain a comma-separated list of headers in the same way the spreadsheet should be configured in a normal XLS source. 
 Alternatively, you can set a property containing a comma-separated set of headers to use as the first line of the CSV file.
-This allows csv file to be raad which don't have a header line.
+This lets {page-component-title} read CSV files that do not have a header.
 
 [options="header",autowidth"]
 |===
