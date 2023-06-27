@@ -1,0 +1,3 @@
+Test-Parent-Foreign-Source,Test-Parent-Foreign-Id,Test-Parent-Node-Label,TestNode,TestNode,Test-Location,POB: Johann Carl Friedrich Gauß,1.2.3.4,P,1,Test,Test,Braunschweig,Wilhelmstraße 30,,Died in Göttingen,Vater,123,Foo,Bar,54.9633229,1
+,,,,Node2Ips,Node2Ips-Location,,23.23.23.23,P,,,,,,,,,,,,,
+,,,,Node2Ips,,,42.42.42.42,S,,,,,,,,,,,,,

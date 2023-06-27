@@ -1,0 +1,6 @@
+bbone-gw1,10.0.23.1,P,ICMP;SNMP,Backbone
+bbone-gw2,10.0.23.2,P,ICMP;SNMP,Backbone
+rt-01,172.16.23.1,P,ICMP;SNMP,Office
+rt-02,172.16.23.2,P,ICMP;SNMP,Office
+rt-02,172.16.23.3,S,ICMP;StrafePing,
+rt-02,192.168.30.1,N,,

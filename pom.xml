@@ -31,6 +31,7 @@
         <chQosLogbackVersion>1.2.3</chQosLogbackVersion>
         <commonsConfigurationVersion>1.10</commonsConfigurationVersion>
         <commonsIoVersion>2.7</commonsIoVersion>
+        <commonsLang3Version>3.12.0</commonsLang3Version>
         <gparsVersion>1.2.1</gparsVersion>
         <groovyVersion>2.4.15</groovyVersion>
         <guavaVersion>[30.0-jre,)</guavaVersion>
