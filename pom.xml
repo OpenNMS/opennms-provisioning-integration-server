@@ -52,7 +52,7 @@
         <mavenJaxbPluginVersion>0.14.0</mavenJaxbPluginVersion>
         <mavenResourcesPluginVersion>3.2.0</mavenResourcesPluginVersion>
         <mavenShadePluginVersion>3.2.4</mavenShadePluginVersion>
-        <metainfServicesVersion>1.8</metainfServicesVersion>
+        <metainfServicesVersion>1.11</metainfServicesVersion>
         <mysqlConnectorVersion>8.0.21</mysqlConnectorVersion>
         <opennmsVersion>31.0.3</opennmsVersion>
         <postgresqlDriverVersion>42.2.18</postgresqlDriverVersion>
