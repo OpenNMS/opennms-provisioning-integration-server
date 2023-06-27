@@ -68,8 +68,9 @@ jobs:
       - run:
           name: Generate version number for this build
           command: |
-            BRANCH_TAG=$(echo ${CIRCLE_BRANCH/release-/} | tr '[:upper:]' '[:lower:]')
-            echo "export VERSION=${BRANCH_TAG/\//-}-b${CIRCLE_BUILD_NUM}" >> ${BASH_ENV}
+            BRANCH_TAG="$(echo "${CIRCLE_BRANCH/release-/}" | tr '[:upper:]' '[:lower:]')"
+            VERSION="$(echo "${BRANCH_TAG}" | sed -e 's,/,-,g')-b${CIRCLE_BUILD_NUM}"
+            echo "export VERSION=${VERSION}" >> ${BASH_ENV}
       - run:
           name: Compile and run tests
           command: |
