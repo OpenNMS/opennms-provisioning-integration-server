@@ -49,7 +49,7 @@
         <junitVersion>4.13.1</junitVersion>
         <mavenAssemblyPluginVersion>3.3.0</mavenAssemblyPluginVersion>
         <mavenCompilerPluginVersion>3.8.1</mavenCompilerPluginVersion>
-        <mavenJaxbPluginVersion>0.14.0</mavenJaxbPluginVersion>
+        <mavenJaxbPluginVersion>0.15.3</mavenJaxbPluginVersion>
         <mavenResourcesPluginVersion>3.2.0</mavenResourcesPluginVersion>
         <mavenShadePluginVersion>3.2.4</mavenShadePluginVersion>
         <metainfServicesVersion>1.8</metainfServicesVersion>
