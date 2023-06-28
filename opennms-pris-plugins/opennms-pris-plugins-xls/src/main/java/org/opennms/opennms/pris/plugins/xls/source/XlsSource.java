@@ -63,8 +63,6 @@ import org.opennms.pris.model.RequisitionNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Strings;
-
 public class XlsSource implements Source {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(XlsSource.class);
@@ -517,7 +515,7 @@ public class XlsSource implements Source {
 					continue;
 				}
 				final String value = XlsSource.getStringValueFromCell(cell);
-				if (!Strings.isNullOrEmpty(value)) {
+				if (value != null && !value.isBlank()) {
 					String context = "requisition";
 					String key = entry.getKey();
 					final int index = entry.getKey().indexOf(":");

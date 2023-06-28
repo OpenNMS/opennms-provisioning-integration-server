@@ -27,9 +27,10 @@
  *******************************************************************************/
 package org.opennms.opennms.pris.plugins.script.source;
 
-import com.google.common.collect.ImmutableMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Collections;
 
 import org.kohsuke.MetaInfServices;
 import org.opennms.opennms.pris.plugins.script.util.ScriptManager;
@@ -54,8 +55,7 @@ public class ScriptSource implements Source {
 
     @Override
     public Object dump() throws Exception {
-        return ScriptManager.execute(this.config,
-                                     ImmutableMap.<String, Object>builder().build());
+        return ScriptManager.execute(this.config, Collections.emptyMap());
     }
     
     @MetaInfServices

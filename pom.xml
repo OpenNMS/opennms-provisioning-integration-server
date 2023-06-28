@@ -34,7 +34,6 @@
         <commonsLang3Version>3.12.0</commonsLang3Version>
         <gparsVersion>1.2.1</gparsVersion>
         <groovyVersion>2.4.15</groovyVersion>
-        <guavaVersion>[30.0-jre,)</guavaVersion>
         <hamcrestVersion>2.2</hamcrestVersion>
         <httpComponentsVersion>4.5.14</httpComponentsVersion>
         <ivyVersion>2.5.1</ivyVersion>
@@ -56,33 +55,13 @@
         <mysqlConnectorVersion>8.0.21</mysqlConnectorVersion>
         <opennmsVersion>31.0.3</opennmsVersion>
         <postgresqlDriverVersion>42.2.18</postgresqlDriverVersion>
-        <slf4jVersion>1.7.30</slf4jVersion>
+        <slf4jVersion>1.7.36</slf4jVersion>
         <updatePolicy>interval:60</updatePolicy>
         <wagonPluginVersion>3.4.1</wagonPluginVersion>
         <wagonSshVersion>3.4.1</wagonSshVersion>
     </properties>
 
     <dependencies>
-        <!-- Logging -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4jVersion}</version>
-        </dependency>
-
-        <!-- Helper APIs -->
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>${guavaVersion}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>${commonsIoVersion}</version>
-        </dependency>
-
         <!-- Tests -->
         <dependency>
             <groupId>junit</groupId>
@@ -106,6 +85,18 @@
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
                 <version>${chQosLogbackVersion}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4jVersion}</version>
+            </dependency>
+
+            <!-- Helper APIs -->
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commonsIoVersion}</version>
             </dependency>
 
             <!-- Configuration -->

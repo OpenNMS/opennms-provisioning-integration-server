@@ -26,8 +26,11 @@
 package org.opennms.pris;
 
 import ch.qos.logback.classic.Level;
-import com.google.common.collect.ImmutableMap;
+
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
+
 import org.opennms.pris.api.Configuration;
 import org.opennms.pris.driver.Driver;
 import org.opennms.pris.driver.FileDriver;
@@ -47,10 +50,14 @@ public class Starter {
     private static final Logger LOGGER = LoggerFactory.getLogger(Starter.class);
 
     // All known working drivers
-    private static final Map<String, Driver.Factory> WORKING_DRIVERS = ImmutableMap.<String, Driver.Factory>builder()
-            .put("http", new HttpServerDriver.Factory())
-            .put("file", new FileDriver.Factory())
-            .build();
+    private static final Map<String, Driver.Factory> WORKING_DRIVERS;
+
+    static {
+        final Map<String, Driver.Factory> map = new HashMap<>();
+        map.put("http", new HttpServerDriver.Factory());
+        map.put("file", new FileDriver.Factory());
+        WORKING_DRIVERS = Collections.unmodifiableMap(map);
+    }
 
     // The global config manger instance
     private static ConfigManager configManager;

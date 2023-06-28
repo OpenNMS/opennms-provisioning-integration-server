@@ -42,8 +42,6 @@ import org.opennms.pris.util.RequisitionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Strings;
-
 /**
  * A JDBC data source allows to connect to an SQL database and extract data in a given format. The result set is mapped to an OpenNMS requisition.
  */
@@ -221,7 +219,7 @@ public class JdbcSource implements Source {
                         if (columnName.toLowerCase().startsWith(COLUMN_METADATA_PREFIX.toLowerCase())) {
                             final String value = getString(resultSet, columnName);
 
-                            if (!Strings.isNullOrEmpty(value)) {
+                            if (value != null && !value.isBlank()) {
                                 String context = "requisition";
                                 String key = columnName.substring(COLUMN_METADATA_PREFIX.length());
                                 final int index = key.indexOf(":");

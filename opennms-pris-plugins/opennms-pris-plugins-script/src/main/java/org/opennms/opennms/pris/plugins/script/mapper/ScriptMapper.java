@@ -20,15 +20,17 @@
  */
 package org.opennms.opennms.pris.plugins.script.mapper;
 
-import com.google.common.collect.ImmutableMap;
-import org.opennms.pris.model.Requisition;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.kohsuke.MetaInfServices;
 import org.opennms.opennms.pris.plugins.script.util.ScriptManager;
 import org.opennms.pris.api.InstanceConfiguration;
 import org.opennms.pris.api.Mapper;
+import org.opennms.pris.model.Requisition;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A mapper passing the data to a script.
@@ -50,11 +52,10 @@ public class ScriptMapper implements Mapper {
     @Override
     public Requisition map(final Object data,
                            final Requisition requisition) throws Exception {
-        return (Requisition) ScriptManager.execute(this.config,
-                                                   ImmutableMap.<String, Object>builder()
-                                                           .put("data", data)
-                                                           .put("requisition", requisition)
-                                                           .build());
+        final Map<String, Object> map = new HashMap<>();
+        map.put("data", data);
+        map.put("requisition", requisition);
+        return (Requisition) ScriptManager.execute(this.config, Collections.unmodifiableMap(map));
     }
 
     @MetaInfServices

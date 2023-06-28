@@ -33,6 +33,12 @@
             <groupId>org.codehaus.gpars</groupId>
             <artifactId>gpars</artifactId>
         </dependency>
+
+        <!-- Utilities -->
+        <dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+		</dependency>
     </dependencies>
 
     <build>

@@ -19,12 +19,12 @@
  */
 package org.opennms.pris.config;
 
-import com.google.common.base.Joiner;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import org.opennms.pris.api.Configuration;
 
 public abstract class AbstractApacheConfiguration implements Configuration {
@@ -59,7 +59,7 @@ public abstract class AbstractApacheConfiguration implements Configuration {
             return this.config.getString(key);
         }
 
-        return Joiner.on(",").join(this.config.getStringArray(key));
+        return String.join(",", this.config.getStringArray(key));
     }
 
     @Override
@@ -69,7 +69,7 @@ public abstract class AbstractApacheConfiguration implements Configuration {
             return defaultValue;
         }
 
-        return Joiner.on(",").join(this.config.getStringArray(key));
+        return String.join(",", this.config.getStringArray(key));
     }
 
     @Override

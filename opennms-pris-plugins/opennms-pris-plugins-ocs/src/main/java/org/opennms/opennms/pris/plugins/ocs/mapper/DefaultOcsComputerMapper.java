@@ -25,7 +25,6 @@
  */
 package org.opennms.opennms.pris.plugins.ocs.mapper;
 
-import com.google.common.collect.Sets;
 import org.kohsuke.MetaInfServices;
 import org.opennms.ocs.inventory.client.response.*;
 import org.opennms.opennms.pris.plugins.ocs.util.OcsInterfaceUtils;
@@ -36,6 +35,7 @@ import org.opennms.pris.util.AssetUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -75,7 +75,7 @@ public class DefaultOcsComputerMapper implements Mapper {
         requisitionNode.setNodeLabel(computer.getHardware().getName());
 
         if (config.containsKey(OCS_ACCOUNTINFO) && !config.getString(OCS_ACCOUNTINFO).isEmpty()) {
-            Set<String> requiredAccountInfos = Sets.newHashSet(config.getString(OCS_ACCOUNTINFO).split("\\s+"));
+            Set<String> requiredAccountInfos = new HashSet<>(Arrays.asList(config.getString(OCS_ACCOUNTINFO).split("\\s+")));
             Set<String> availableAccountInfos = new HashSet<>();
             for (Entry accountInfo : computer.getAccountInfo().getEntries()) {
                 availableAccountInfos.add(accountInfo.getName() + "." + accountInfo.getValue());
