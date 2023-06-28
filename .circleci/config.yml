@@ -6,10 +6,10 @@ executors:
       - image: docker:stable-git
   build-executor:
     docker:
-      - image: opennms/maven:11.0.9.11-3.6.3-b5929
+      - image: opennms/maven:11.0.14_9-3.8.7-b9872
   antora-executor:
     docker:
-      - image: opennms/antora:2.3.4-b6293
+      - image: opennms/antora:2.3.4-b7274
   go-executor:
     docker:
       - image: circleci/golang
