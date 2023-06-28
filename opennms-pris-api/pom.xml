@@ -27,8 +27,9 @@
             <artifactId>slf4j-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.opennms</groupId>
-            <artifactId>opennms-util</artifactId>
+            <groupId>org.opennms.integration.api</groupId>
+            <artifactId>org.opennms.integration.api.utils</artifactId>
+            <version>${opennmsApiVersion}</version>
         </dependency>
     </dependencies>
 
