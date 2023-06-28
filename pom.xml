@@ -28,7 +28,7 @@
         <!-- Version settings -->
         <apacheDerbyVersion>10.14.2.0</apacheDerbyVersion>
         <beanshellVersion>2.0b5</beanshellVersion>
-        <chQosLogbackVersion>1.2.3</chQosLogbackVersion>
+        <chQosLogbackVersion>1.4.8</chQosLogbackVersion>
         <commonsConfigurationVersion>1.10</commonsConfigurationVersion>
         <commonsIoVersion>2.7</commonsIoVersion>
         <commonsLang3Version>3.12.0</commonsLang3Version>
@@ -55,7 +55,7 @@
         <mysqlConnectorVersion>8.0.21</mysqlConnectorVersion>
         <opennmsVersion>31.0.3</opennmsVersion>
         <postgresqlDriverVersion>42.2.18</postgresqlDriverVersion>
-        <slf4jVersion>1.7.36</slf4jVersion>
+        <slf4jVersion>2.0.7</slf4jVersion>
         <updatePolicy>interval:60</updatePolicy>
         <wagonPluginVersion>3.4.1</wagonPluginVersion>
         <wagonSshVersion>3.4.1</wagonSshVersion>
