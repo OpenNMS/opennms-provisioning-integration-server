@@ -55,7 +55,7 @@
         <mysqlConnectorVersion>8.0.21</mysqlConnectorVersion>
         <opennmsVersion>31.0.3</opennmsVersion>
         <postgresqlDriverVersion>42.2.18</postgresqlDriverVersion>
-        <slf4jVersion>1.7.36</slf4jVersion>
+        <slf4jVersion>2.0.7</slf4jVersion>
         <updatePolicy>interval:60</updatePolicy>
         <wagonPluginVersion>3.4.1</wagonPluginVersion>
         <wagonSshVersion>3.4.1</wagonSshVersion>
