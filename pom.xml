@@ -42,7 +42,7 @@
         <jaxb2FluentApiVersion>3.0</jaxb2FluentApiVersion>
         <jaxb2ValueConstructorVersion>3.0</jaxb2ValueConstructorVersion>
         <jaxbApiVersion>2.3.1</jaxbApiVersion>
-        <jaxbCoreVersion>2.3.0.1</jaxbCoreVersion>
+        <jaxbCoreVersion>4.0.3</jaxbCoreVersion>
         <jaxbImplVersion>2.3.1</jaxbImplVersion>
         <jettyServerVersion>10.0.14</jettyServerVersion>
         <junitVersion>4.13.1</junitVersion>
