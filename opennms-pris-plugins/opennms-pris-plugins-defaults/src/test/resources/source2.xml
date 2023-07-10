@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model-import foreign-source="source2" xmlns="http://xmlns.opennms.org/xsd/config/model-import">
-    <node node-label="node1" foreign-id="node1">
-        <interface ip-addr="10.10.6.41" snmp-primary="P"/>
-        <asset name="modelNumber" value="Test"/>
-        <meta-data context="requisition" key="env" value="pro"/>
-        <meta-data context="requisition" key="app" value="application"/>
-    </node>
-</model-import>

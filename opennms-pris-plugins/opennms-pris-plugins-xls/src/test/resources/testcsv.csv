@@ -1,4 +1,0 @@
-Parent_Foreign_Source,Parent_Foreign_ID,Parent_Node_Label,ID_,Node_Label,Location,Asset_Description,IP_Address,MgmtType_For_SNMP,InterfaceStatus,Cat_Test,Svc_Test,Asset_City,Asset_Address1,Asset_Address2,Asset_Comment,Asset_Vendor,Asset_VendorPhone,MetaData_KeyWithoutContext,MetaData_Context:KeyWithContext,Asset_latitude,Asset_longitude
-Test-Parent-Foreign-Source,Test-Parent-Foreign-Id,Test-Parent-Node-Label,TestNode,TestNode,Test-Location,POB: Johann Carl Friedrich Gauß,1.2.3.4,P,1,Test,Test,Braunschweig,Wilhelmstraße 30,,Died in Göttingen,Vater,123,Foo,Bar,54.9633229,1
-,,,,Node2Ips,Node2Ips-Location,,23.23.23.23,P,,,,,,,,,,,,,
-,,,,Node2Ips,,,42.42.42.42,S,,,,,,,,,,,,,

@@ -1,6 +1,0 @@
-.Data Mapping
-* xref:introduction.adoc[]
-* xref:asset-fields.adoc[]
-* xref:ocs-computers.adoc[]
-* xref:ocs-snmp-devices.adoc[]
-* xref:script.adoc[]
