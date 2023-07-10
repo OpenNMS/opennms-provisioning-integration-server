@@ -28,7 +28,7 @@ package org.opennms.pris.api;
 /**
  * A source for information used to create a requisition.
  *
- * @author Dustin Frisch <fooker@lab.sh>
+ * @author Dustin Frisch &lt;fooker@lab.sh&gt;
  */
 public interface Source {
 

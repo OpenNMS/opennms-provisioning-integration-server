@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License along with
  * OpenNMS(R). If not, see: http://www.gnu.org/licenses/
  *
- * For more information contact: OpenNMS(R) Licensing <license@opennms.org>
+ * For more information contact: OpenNMS(R) Licensing &lt;license@opennms.org&gt;
  * http://www.opennms.org/ http://www.opennms.com/
  ******************************************************************************
  */
@@ -33,7 +33,7 @@ import org.opennms.pris.api.Configuration;
  *
  * The driver runs a working mode.
  *
- * @author Dustin Frisch <fooker@lab.sh>
+ * @author Dustin Frisch &lt;fooker@lab.sh&gt;
  */
 public interface Driver {
 

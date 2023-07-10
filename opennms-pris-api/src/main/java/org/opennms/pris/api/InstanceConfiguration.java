@@ -28,7 +28,7 @@ package org.opennms.pris.api;
 /**
  * Container for an instance configuration.
  * 
- * @author Dustin Frisch <fooker@lab.sh>
+ * @author Dustin Frisch &lt;fooker@lab.sh&gt;
  */
 public interface InstanceConfiguration extends Configuration {
    

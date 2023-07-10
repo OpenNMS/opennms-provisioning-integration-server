@@ -19,7 +19,7 @@
  * You should have received a copy of the GNU General Public License along with
  * OpenNMS(R). If not, see: http://www.gnu.org/licenses/
  *
- * For more information contact: OpenNMS(R) Licensing <license@opennms.org>
+ * For more information contact: OpenNMS(R) Licensing &lt;license@opennms.org&gt;
  * http://www.opennms.org/ http://www.opennms.com/
  * *****************************************************************************
  */
@@ -46,7 +46,7 @@ import org.opennms.pris.api.Configuration;
  * The instance name is passed as an parameter. The created requisition is
  * printed to standard output or to a given file name.
  *
- * @author Dustin Frisch <fooker@lab.sh>
+ * @author Dustin Frisch &lt;fooker@lab.sh&gt;
  */
 public class FileDriver implements Driver {
 

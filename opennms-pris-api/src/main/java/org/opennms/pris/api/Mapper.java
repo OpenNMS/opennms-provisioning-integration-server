@@ -26,12 +26,12 @@ import org.opennms.pris.model.Requisition;
  *
  * The data loaded by a source implementation are passed the the map function and a new requisition must be returned.
  *
- * @author Dustin Frisch <fooker@lab.sh>
+ * @author Dustin Frisch &lt;fooker@lab.sh&gt;
  */
 public interface Mapper {
 
     /**
-     * Factory interface for creating {@link Mapper}s.
+     * Factory interface for creating Mappers.
      */
     interface Factory {
 

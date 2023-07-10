@@ -32,7 +32,7 @@ import java.util.List;
 /**
  * Container for a configuration.
  *
- * @author Dustin Frisch <fooker@lab.sh>
+ * @author Dustin Frisch &lt;fooker@lab.sh&gt;
  */
 public interface Configuration {
 
@@ -190,7 +190,7 @@ public interface Configuration {
      * behavior of the iterator's {@code remove()} method is specific to a
      * concrete implementation. It <em>may</em> remove the corresponding
      * property from the configuration, but this is not guaranteed. In any case
-     * it is no replacement for calling {@link #clearProperty(String)} for this
+     * it is no replacement for calling {@code clearProperty(String)} for this
      * property. So it is highly recommended to avoid using the iterator's
      * {@code remove()} method.
      *
