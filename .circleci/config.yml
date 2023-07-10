@@ -13,6 +13,9 @@ executors:
   go-executor:
     docker:
       - image: circleci/golang
+  simple-executor:
+    docker:
+      - image: cimg/base:current
 
 commands:
   dockerhub-login:
@@ -26,7 +29,10 @@ commands:
 workflows:
   build:
     jobs:
-      - build
+      - build:
+          filters:
+            branches:
+              ignore: gh-pages
       - generate-docs:
           requires:
             - build
@@ -55,6 +61,15 @@ workflows:
             branches:
               only:
                 - /^release-.*/
+          requires:
+            - smoke-tests
+      - publish-javadoc:
+          context:
+            - "github-releases"
+          filters:
+            branches:
+              only:
+                - master
           requires:
             - smoke-tests
 
@@ -252,3 +267,34 @@ jobs:
               cp opennms-pris-dist/target/opennms-pris-release-archive.tar.gz github-latest/opennms-pris-release-$(cat version.txt).tar.gz
               cp opennms-pris-dist/target/opennms-pris-release-archive.zip github-latest/opennms-pris-release-$(cat version.txt).zip
               ghr -r ${CIRCLE_PROJECT_REPONAME} $(cat version.txt) github-latest
+
+  publish-javadoc:
+      executor: simple-executor
+      steps:
+        - attach_workspace:
+            at: ~/
+        - add_ssh_keys:
+            fingerprints:
+              - "80:24:47:19:df:7b:f3:bf:8a:4d:45:c1:89:88:29:4c"
+        - run:
+            name: clone gh-pages branch
+            command: |
+              cd ~/project
+              install -d -m 700 ~/.ssh
+              curl -L https://api.github.com/meta | jq -r '.ssh_keys | .[]' | sed -e 's/^/github.com /' >> ~/.ssh/known_hosts
+              git clone --filter=tree:0 --branch gh-pages git@github.com:OpenNMS/opennms-provisioning-integration-server gh-pages
+        - run:
+            name: publish updated javadocs
+            command: |
+              cd ~/project/gh-pages
+              rm -rf *
+              unzip ../target/*-javadoc.jar
+              git add -A .
+              git config user.email "cicd-system@opennms.com"
+              git config user.name "CI/CD System"
+              git commit -m 'publish latest API docs'
+        - run:
+            name: push to gh-pages
+            command: |
+              cd ~/project/gh-pages
+              git push --no-verify origin gh-pages:gh-pages
