@@ -14,7 +14,7 @@
  *
  * You should have received a copy of the GNU General Public License along with OpenNMS(R). If not, see: http://www.gnu.org/licenses/
  *
- * For more information contact: OpenNMS(R) Licensing <license@opennms.org>
+ * For more information contact: OpenNMS(R) Licensing &lt;license@opennms.org&gt;
  * http://www.opennms.org/ http://www.opennms.com/
  ******************************************************************************
  */
@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
  *
  * The mapper implementation creates a requisition by passing the data from the source to a script. The Script has to create the requisition.
  *
- * @author Dustin Frisch <fooker@lab.sh>
+ * @author Dustin Frisch &lt;fooker@lab.sh&gt;
  */
 public class ScriptMapper implements Mapper {
     private static final Logger LOGGER = LoggerFactory.getLogger(ScriptMapper.class);
