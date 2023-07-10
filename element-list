@@ -15,4 +15,3 @@ org.opennms.pris.config
 org.opennms.pris.driver
 org.opennms.pris.model
 org.opennms.pris.util
-org.opennms.xmlns.xsd.config.foreign_source
