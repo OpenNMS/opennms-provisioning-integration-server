@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.opennms.core.utils.IPLike;
+import org.opennms.integration.api.utils.IPLike;
 import org.opennms.pris.api.InstanceConfiguration;
 
 public class InterfaceUtils {
