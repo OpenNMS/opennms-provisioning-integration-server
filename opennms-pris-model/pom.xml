@@ -41,25 +41,23 @@
         <plugins>
             <!-- Copy the XSDs to the project -->
             <plugin>
-                <artifactId>maven-dependency-plugin</artifactId>
+                <groupId>com.googlecode.maven-download-plugin</groupId>
+                <artifactId>download-maven-plugin</artifactId>
+                <version>${downloadMavenPluginVersion}</version>
                 <executions>
                     <execution>
-                        <id>copy</id>
+                        <id>unpack</id>
                         <phase>initialize</phase>
                         <goals>
-                            <goal>unpack</goal>
+                            <goal>artifact</goal>
                         </goals>
                         <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>org.opennms</groupId>
-                                    <artifactId>opennms-provision-persistence</artifactId>
-                                    <classifier>xsds</classifier>
-                                    <overWrite>true</overWrite>
-                                    <outputDirectory>target</outputDirectory>
-                                    <includes>**/*.xsd</includes>
-                                </artifactItem>
-                            </artifactItems>
+                            <groupId>org.opennms</groupId>
+                            <artifactId>opennms-provision-persistence</artifactId>
+                            <version>${opennmsVersion}</version>
+                            <classifier>xsds</classifier>
+                            <unpack>true</unpack>
+                            <outputDirectory>target</outputDirectory>
                         </configuration>
                     </execution>
                 </executions>
@@ -90,6 +88,9 @@
 
                     <!-- Specify XSDs -->
                     <schemaDirectory>${basedir}/target/xsds</schemaDirectory>
+                    <schemaIncludes>
+                        <include>model-import.xsd</include>
+                    </schemaIncludes>
 
                     <!-- Specify bindings -->
                     <bindingDirectory>${basedir}/src/main/xjb</bindingDirectory>

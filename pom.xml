@@ -32,6 +32,7 @@
         <commonsConfigurationVersion>1.10</commonsConfigurationVersion>
         <commonsIoVersion>2.7</commonsIoVersion>
         <commonsLang3Version>3.12.0</commonsLang3Version>
+        <downloadMavenPluginVersion>1.7.0</downloadMavenPluginVersion>
         <gparsVersion>1.2.1</gparsVersion>
         <groovyVersion>2.4.15</groovyVersion>
         <hamcrestVersion>2.2</hamcrestVersion>
@@ -105,15 +106,6 @@
                 <groupId>commons-configuration</groupId>
                 <artifactId>commons-configuration</artifactId>
                 <version>${commonsConfigurationVersion}</version>
-            </dependency>
-
-            <!-- OpenNMS -->
-            <dependency>
-                <groupId>org.opennms</groupId>
-                <artifactId>opennms-provision-persistence</artifactId>
-                <version>${opennmsVersion}</version>
-                <classifier>xsds</classifier>
-                <scope>compile</scope>
             </dependency>
 
             <!-- Web-Server -->
@@ -215,7 +207,6 @@
             </snapshots>
             <releases>
                 <enabled>true</enabled>
-                <updatePolicy>${updatePolicy}</updatePolicy>
             </releases>
             <id>opennms-release</id>
             <name>OpenNMS Release Maven Repository</name>
