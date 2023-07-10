@@ -1,7 +1,7 @@
 /*******************************************************************************
  * This file is part of OpenNMS(R).
  *
- * Copyright (C) 2014 The OpenNMS Group, Inc.
+ * Copyright (C) 2014-2023 The OpenNMS Group, Inc.
  * OpenNMS(R) is Copyright (C) 1999-2023 The OpenNMS Group, Inc.
  *
  * OpenNMS(R) is a registered trademark of The OpenNMS Group, Inc.
@@ -29,6 +29,8 @@
 package org.opennms.pris.config;
 
 import java.nio.file.Path;
+import java.util.Arrays;
+
 import org.apache.commons.configuration.CompositeConfiguration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.opennms.pris.api.Configuration;
@@ -47,14 +49,11 @@ public class GlobalApacheConfiguration extends AbstractApacheConfiguration imple
         } catch (final ConfigurationException ex) {
             throw new RuntimeException(ex);
         }
-        
-        // Build composition of system properties and config file
-        return new CompositeConfiguration() {{
-            addConfiguration(systemConfig);
-            addConfiguration(propertiesConfig);
 
-            setThrowExceptionOnMissing(true);
-        }};
+        // Build composition of system properties and config file
+        final var ret = new CompositeConfiguration(Arrays.asList(systemConfig, propertiesConfig));
+        ret.setThrowExceptionOnMissing(true);
+        return ret;
     }
 
     private final Path basePath;

@@ -1,7 +1,7 @@
 /*******************************************************************************
  * This file is part of OpenNMS(R).
  *
- * Copyright (C) 2014 The OpenNMS Group, Inc.
+ * Copyright (C) 2014-2023 The OpenNMS Group, Inc.
  * OpenNMS(R) is Copyright (C) 1999-2023 The OpenNMS Group, Inc.
  *
  * OpenNMS(R) is a registered trademark of The OpenNMS Group, Inc.
@@ -77,8 +77,7 @@ public class InterfaceUtils {
 
     public void addIpWhite(String ip) {
         try {
-            //This check forces valid IPLike syntax
-            IPLike.matches("1.1.1.1", ip);
+            assertIplikeSyntaxValid(ip);
             ipWhiteList.add(ip);
         } catch (Exception ex) {
             LOGGER.error("WhiteList rejected illegal entry {}", ip, ex);
@@ -87,12 +86,17 @@ public class InterfaceUtils {
 
     public void addIpBlack(String ip) {
         try {
-            //This check forces valid IPLike syntax
-            IPLike.matches("1.1.1.1", ip);
+            assertIplikeSyntaxValid(ip);
             ipBlackList.add(ip);
         } catch (Exception ex) {
             LOGGER.error("BlackList rejected illegal entry {}", ip, ex);
         }
+    }
+
+    @SuppressWarnings("java:S1313")
+    private void assertIplikeSyntaxValid(final String ip) {
+        //This check forces valid IPLike syntax
+        IPLike.matches("1.1.1.1", ip);
     }
 
     public void initListsFromConfigs() {

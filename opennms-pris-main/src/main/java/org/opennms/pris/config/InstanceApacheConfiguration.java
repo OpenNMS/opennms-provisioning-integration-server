@@ -1,7 +1,7 @@
 /*******************************************************************************
  * This file is part of OpenNMS(R).
  *
- * Copyright (C) 2014 The OpenNMS Group, Inc.
+ * Copyright (C) 2014-2023 The OpenNMS Group, Inc.
  * OpenNMS(R) is Copyright (C) 1999-2023 The OpenNMS Group, Inc.
  *
  * OpenNMS(R) is a registered trademark of The OpenNMS Group, Inc.
@@ -46,13 +46,10 @@ public class InstanceApacheConfiguration extends AbstractApacheConfiguration imp
 
         // Load system and file properties
         try {
-            return new org.apache.commons.configuration.PropertiesConfiguration(path.toFile()) {
-                {
-                    setThrowExceptionOnMissing(true);
-                    setReloadingStrategy(new FileChangedReloadingStrategy());
-                }
-            };
-
+            final var ret = new org.apache.commons.configuration.PropertiesConfiguration(path.toFile());
+            ret.setThrowExceptionOnMissing(true);
+            ret.setReloadingStrategy(new FileChangedReloadingStrategy());
+            return ret;
         } catch (final ConfigurationException ex) {
             throw new RuntimeException(ex);
         }
