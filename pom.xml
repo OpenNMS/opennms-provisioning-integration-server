@@ -47,7 +47,7 @@
         <jaxbImplVersion>2.3.1</jaxbImplVersion>
         <jettyServerVersion>10.0.14</jettyServerVersion>
         <junitVersion>4.13.1</junitVersion>
-        <mavenAssemblyPluginVersion>3.3.0</mavenAssemblyPluginVersion>
+        <mavenAssemblyPluginVersion>3.6.0</mavenAssemblyPluginVersion>
         <mavenCompilerPluginVersion>3.8.1</mavenCompilerPluginVersion>
         <mavenJaxbPluginVersion>0.15.3</mavenJaxbPluginVersion>
         <mavenResourcesPluginVersion>3.2.0</mavenResourcesPluginVersion>
