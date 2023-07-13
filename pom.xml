@@ -55,7 +55,7 @@
         <metainfServicesVersion>1.11</metainfServicesVersion>
         <mysqlConnectorVersion>8.0.21</mysqlConnectorVersion>
         <opennmsVersion>32.0.0</opennmsVersion>
-        <opennmsApiVersion>1.6.0-SNAPSHOT</opennmsApiVersion>
+        <opennmsApiVersion>1.6.0</opennmsApiVersion>
         <postgresqlDriverVersion>42.6.0</postgresqlDriverVersion>
         <slf4jVersion>2.0.7</slf4jVersion>
         <updatePolicy>interval:60</updatePolicy>
