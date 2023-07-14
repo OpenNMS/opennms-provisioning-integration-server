@@ -1,7 +1,7 @@
 /*******************************************************************************
  * This file is part of OpenNMS(R).
  *
- * Copyright (C) 2014 The OpenNMS Group, Inc.
+ * Copyright (C) 2014-2023 The OpenNMS Group, Inc.
  * OpenNMS(R) is Copyright (C) 1999-2023 The OpenNMS Group, Inc.
  *
  * OpenNMS(R) is a registered trademark of The OpenNMS Group, Inc.
@@ -40,7 +40,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import org.apache.commons.lang3.math.NumberUtils;
@@ -103,7 +102,7 @@ public class XlsSource implements Source {
 
 	public static String getStringValueFromCell(Cell cell) {
 		String value = null;
-		switch (cell.getCellTypeEnum()) {
+		switch (cell.getCellType()) {
 		case NUMERIC:
 			double d = cell.getNumericCellValue();
 			if (d % 1 == 0) {
@@ -128,7 +127,7 @@ public class XlsSource implements Source {
 
 	public static Integer getIntValueFromCell(Cell cell) {
 		Integer value = null;
-		switch (cell.getCellTypeEnum()) {
+		switch (cell.getCellType()) {
 		case NUMERIC:
 			value = (int) cell.getNumericCellValue();
 			break;
