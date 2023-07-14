@@ -39,7 +39,7 @@
         <httpComponentsVersion>4.5.14</httpComponentsVersion>
         <ivyVersion>2.5.1</ivyVersion>
         <jaxb2BasicsVersion>1.11.1</jaxb2BasicsVersion>
-        <jaxb2BasicsRuntimeVersion>1.11.1</jaxb2BasicsRuntimeVersion>
+        <jaxb2BasicsRuntimeVersion>1.11.1-PUBLISHED-BY-MISTAKE</jaxb2BasicsRuntimeVersion>
         <jaxb2FluentApiVersion>3.0</jaxb2FluentApiVersion>
         <jaxb2ValueConstructorVersion>3.0</jaxb2ValueConstructorVersion>
         <jaxbApiVersion>2.3.1</jaxbApiVersion>
