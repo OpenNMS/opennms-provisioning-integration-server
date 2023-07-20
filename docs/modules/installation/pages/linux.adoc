@@ -24,7 +24,7 @@ tar xzf pris-latest.tar.gz --strip-components=1
 
 == SysV Init Script
 
-To start {page-component-title} as a system service on a Linux system using SysV you can use the init script
+To start {page-component-title} as a system service on a Linux system using SysV you can use the init script:
 
 [source, bash]
 ----
