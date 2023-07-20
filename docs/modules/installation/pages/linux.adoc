@@ -40,7 +40,7 @@ service opennms-pris start
 
 == Systemd Start Script
 
-To start {page-component-title} as a system service on a Linux system using Systemd you can use the init script
+To start {page-component-title} as a system service on a Linux system using Systemd you can use the init script:
 
 [source, bash]
 ----
