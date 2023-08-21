@@ -37,7 +37,7 @@
         <groovyVersion>2.4.21</groovyVersion>
         <hamcrestVersion>2.2</hamcrestVersion>
         <httpComponentsVersion>4.5.14</httpComponentsVersion>
-        <ivyVersion>2.5.1</ivyVersion>
+        <ivyVersion>2.5.2</ivyVersion>
         <jaxb2BasicsVersion>0.13.1</jaxb2BasicsVersion>
         <jaxb2BasicsRuntimeVersion>0.13.1</jaxb2BasicsRuntimeVersion>
         <jaxb2FluentApiVersion>3.0</jaxb2FluentApiVersion>
