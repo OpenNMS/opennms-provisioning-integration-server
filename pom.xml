@@ -51,7 +51,7 @@
         <mavenCompilerPluginVersion>3.11.0</mavenCompilerPluginVersion>
         <mavenJaxbPluginVersion>0.15.3</mavenJaxbPluginVersion>
         <mavenResourcesPluginVersion>3.2.0</mavenResourcesPluginVersion>
-        <mavenShadePluginVersion>3.5.0</mavenShadePluginVersion>
+        <mavenShadePluginVersion>3.5.1</mavenShadePluginVersion>
         <metainfServicesVersion>1.11</metainfServicesVersion>
         <mysqlConnectorVersion>8.0.30</mysqlConnectorVersion>
         <opennmsVersion>32.0.0</opennmsVersion>
