@@ -31,7 +31,7 @@
         <chQosLogbackVersion>1.4.11</chQosLogbackVersion>
         <commonsConfigurationVersion>1.10</commonsConfigurationVersion>
         <commonsIoVersion>2.15.0</commonsIoVersion>
-        <commonsLang3Version>3.13.0</commonsLang3Version>
+        <commonsLang3Version>3.14.0</commonsLang3Version>
         <downloadMavenPluginVersion>1.7.1</downloadMavenPluginVersion>
         <gparsVersion>1.2.1</gparsVersion>
         <groovyVersion>2.4.21</groovyVersion>
