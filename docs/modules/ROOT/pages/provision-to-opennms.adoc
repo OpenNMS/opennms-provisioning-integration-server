@@ -1,4 +1,5 @@
 = Provision to OpenNMS
+:description: Learn how to use the OpenNMS Provisioning Integration Server (PRIS) requisition to get external inventory information into OpenNMS.
 
 To use the requisition from {page-component-title} in _OpenNMS_ you have the following possibilities:
 

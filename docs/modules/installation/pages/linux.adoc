@@ -1,4 +1,5 @@
 = Linux
+:description: Learn how to run the OpenNMS Provisioning Integration Server (PRIS) on Linux. PRIS helps get external inventory information into an OpenNMS requisition.
 
 To install {page-component-title} on your Linux system you have to install a current Java Runtime Environment link:http://openjdk.java.net[OpenJDK 11] or link:https://developer.oracle.com/java[Oracle 11 JRE].
 

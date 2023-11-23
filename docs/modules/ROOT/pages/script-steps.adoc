@@ -1,6 +1,7 @@
 = Script Steps
+:description: Learn the script steps that can help customize the results from running the OpenNMS Provisioning Integration Server (PRIS) requisition.
 
-After the mapper has delivered its requitition, multiple script steps can be used to customize the result.
+After the mapper has delivered its requisition, multiple script steps can be used to customize the result.
 These script steps can change the requisition initially provided by the mapper.
 Script steps provide a requisition as their results, which allows the chaining of script steps.
 Every script step has access to the latest version of the requisition.
