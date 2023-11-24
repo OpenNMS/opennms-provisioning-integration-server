@@ -6,6 +6,7 @@
 |===
 |Version: |{page-component-display-version}
 |Source:  |{page-origin-url}
+|Last update: |{docdatetime}
 |===
 
 If you have a large network and discovery doesn't help and you have one or multiple inventory, {page-component-title} can help you to use this sources as inventory for your _OpenNMS_.
