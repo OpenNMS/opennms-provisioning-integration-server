@@ -1,4 +1,5 @@
 = File Driver
+:description: Learn about the file driver in the OpenNMS Provisioning Integration Server (PRIS), which helps get external inventory information into an OpenNMS requisition.
 
 This driver offers the ability to generate an OpenNMS requisition directly into the filesystem.
 To use the _file driver_ you have to set the parameters in the `global.properties`:

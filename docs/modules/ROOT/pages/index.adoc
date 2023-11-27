@@ -1,10 +1,12 @@
 
 = Welcome to the Documentation for {page-component-title}
+:description: Learn about the OpenNMS Provisioning Integration Server (PRIS) that helps get external inventory information into an OpenNMS requisition.
 
 [options="autowidth"]
 |===
 |Version: |{page-component-display-version}
 |Source:  |{page-origin-url}
+|Last update: |{docdatetime}
 |===
 
 If you have a large network and discovery doesn't help and you have one or multiple inventory, {page-component-title} can help you to use this sources as inventory for your _OpenNMS_.

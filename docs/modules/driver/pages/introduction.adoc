@@ -1,4 +1,5 @@
-= What is a Driver
+= What is a Driver?
+:description: Learn about the driver in the OpenNMS Provisioning Integration Server (PRIS) that determines how to provide the generated OpenNMS requisition.
 
 The driver determines how to provide the generated OpenNMS requisition.
 It is a required global configuration item for the {page-component-title} server.

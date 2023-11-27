@@ -1,4 +1,5 @@
 = HTTP Driver
+:description: Learn about the HTTP driver that starts the OpenNMS Provisioning Integration Server (PRIS) as a web server to provide the OpenNMS requisition over HTTP.
 
 The HTTP driver starts {page-component-title} as a web server to provide the OpenNMS requisition over HTTP.
 

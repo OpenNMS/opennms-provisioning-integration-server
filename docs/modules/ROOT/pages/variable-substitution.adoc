@@ -1,4 +1,5 @@
 = Variable Substitution
+:description: Learn how variable substitution works with the OpenNMS Provisioning Integration Server (PRIS).
 
 The configuration mechanism of {page-component-title} supports basic variable substitution.
 Therefore it is possible to add properties to the `global.properties` file and reference the property values in any `requisition.properties` file.

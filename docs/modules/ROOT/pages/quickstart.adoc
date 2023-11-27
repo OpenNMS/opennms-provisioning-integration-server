@@ -1,4 +1,5 @@
-= Quickstart
+= Quick Start
+:description: Get started with OpenNMS Provisioning Integration Server (PRIS) requisition to get external inventory information into OpenNMS.
 
 To give an example we want to provide two requisitions from an poor man's inventory as _XLS file_ (myInventory.xls).
 The first requisition has a worksheet containing all routers and the second worksheet has all servers of our network.
