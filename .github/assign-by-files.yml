@@ -1,9 +1,9 @@
 ---
 "**/*.adoc":
-  - Bonrob2
+  - indigo423
 
 "docs/**/*":
-  - Bonrob2
+  - indigo423
 
 ".circleci/**/*":
   - RangerRick
