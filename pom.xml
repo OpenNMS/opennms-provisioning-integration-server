@@ -48,7 +48,7 @@
         <jettyServerVersion>10.0.19</jettyServerVersion>
         <junitVersion>4.13.2</junitVersion>
         <mavenAssemblyPluginVersion>3.6.0</mavenAssemblyPluginVersion>
-        <mavenCompilerPluginVersion>3.12.0</mavenCompilerPluginVersion>
+        <mavenCompilerPluginVersion>3.12.1</mavenCompilerPluginVersion>
         <mavenJaxbPluginVersion>0.15.3</mavenJaxbPluginVersion>
         <mavenResourcesPluginVersion>3.2.0</mavenResourcesPluginVersion>
         <mavenShadePluginVersion>3.5.1</mavenShadePluginVersion>
