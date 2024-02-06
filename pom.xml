@@ -57,7 +57,7 @@
         <opennmsVersion>32.0.0</opennmsVersion>
         <opennmsApiVersion>1.6.0</opennmsApiVersion>
         <postgresqlDriverVersion>42.7.1</postgresqlDriverVersion>
-        <slf4jVersion>2.0.11</slf4jVersion>
+        <slf4jVersion>2.0.12</slf4jVersion>
         <updatePolicy>interval:60</updatePolicy>
         <wagonPluginVersion>3.4.1</wagonPluginVersion>
         <wagonSshVersion>3.4.1</wagonSshVersion>
