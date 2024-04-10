@@ -26,7 +26,7 @@
         <github.global.server>github</github.global.server>
 
         <!-- Version settings -->
-        <apacheDerbyVersion>10.14.2.0</apacheDerbyVersion>
+        <apacheDerbyVersion>10.17.1.0</apacheDerbyVersion>
         <beanshellVersion>2.0b5</beanshellVersion>
         <chQosLogbackVersion>1.5.4</chQosLogbackVersion>
         <commonsConfigurationVersion>1.10</commonsConfigurationVersion>
