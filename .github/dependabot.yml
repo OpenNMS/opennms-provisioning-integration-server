@@ -6,7 +6,7 @@ updates:
     target-branch: "master"
     reviewers:
       - "gallenc"
-      - "rangerrick"
+      - "opennms/dependabot-reviewers-maven"
     labels:
       - "dependencies"
     commit-message:
