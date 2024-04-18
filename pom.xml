@@ -28,7 +28,7 @@
         <!-- Version settings -->
         <apacheDerbyVersion>10.14.2.0</apacheDerbyVersion>
         <beanshellVersion>2.0b5</beanshellVersion>
-        <chQosLogbackVersion>1.5.5</chQosLogbackVersion>
+        <chQosLogbackVersion>1.5.6</chQosLogbackVersion>
         <commonsConfigurationVersion>1.10</commonsConfigurationVersion>
         <commonsIoVersion>2.16.1</commonsIoVersion>
         <commonsLang3Version>3.14.0</commonsLang3Version>
