@@ -9,6 +9,7 @@ target/
 # Package Files #
 Docker/deploy/*
 *.jar
+*.swp
 *.war
 *.ear
 *.iml
