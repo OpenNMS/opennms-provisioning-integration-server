@@ -1,5 +1,5 @@
 name: pris
-version: 'BLEEDING'
+version: '2.1.0'
 title: PRIS
 prerelease: false
 asciidoc:
