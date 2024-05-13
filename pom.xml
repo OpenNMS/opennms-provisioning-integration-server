@@ -54,7 +54,7 @@
         <mavenShadePluginVersion>3.5.3</mavenShadePluginVersion>
         <metainfServicesVersion>1.11</metainfServicesVersion>
         <mysqlConnectorVersion>8.0.30</mysqlConnectorVersion>
-        <opennmsVersion>32.0.0</opennmsVersion>
+        <opennmsVersion>33.0.4</opennmsVersion>
         <opennmsApiVersion>1.6.0</opennmsApiVersion>
         <postgresqlDriverVersion>42.7.3</postgresqlDriverVersion>
         <slf4jVersion>2.0.13</slf4jVersion>
