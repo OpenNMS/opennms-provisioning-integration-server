@@ -1,4 +1,4 @@
-FROM openjdk:11.0.9-jre-slim
+FROM eclipse-temurin:17.0.11_9-jre-ubi9-minimal
 
 ARG OPENNMS_PRIS_VERSION=SNAPSHOT
 ARG OPENNMS_PRIS_HOME=/opt/opennms-pris
