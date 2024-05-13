@@ -6,12 +6,6 @@ ENV JAVA_OPTS ""
 
 ADD deploy/opennms-pris-release-archive.tar.gz /opt
 
-RUN apt-get update && \
-    apt-get -y --no-install-recommends install curl && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/* && \
-    ln -s /usr/local/openjdk-11/bin/java /usr/bin/java
-
 ## Volumes for storing data outside of the container
 VOLUME [ "${OPENNMS_PRIS_HOME}/requisitions", "${OPENNMS_PRIS_HOME}/scriptsteps" ]
 
@@ -41,6 +35,8 @@ LABEL org.opencontainers.image.created="${BUILD_DATE}" \
       org.opennms.cicd.buildurl="${BUILD_URL}" \
       org.opennms.cicd.branch="${BUILD_BRANCH}"
 
-ENTRYPOINT ./opennms-pris.sh
+ENTRYPOINT [ "/opt/java/openjdk/bin/java" ]
+
+CMD ["-cp", "/opt/opennms-pris/lib/*:/opt/opennms-pris/opennms-pris.jar", "org.opennms.pris.Starter" ]
 
 EXPOSE 8000
