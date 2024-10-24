@@ -176,7 +176,7 @@ bin/changeversion.sh -o BLEEDING -n 1.2.1
 3. Commit the changes and push the new release branch
 
 ```
-git commit -m "I made a new asesome release"
+git commit -m "I made a new awesome release"
 git push --set-upstream origin release-1.2.0
 ```
 
