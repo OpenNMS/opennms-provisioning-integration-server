@@ -94,18 +94,19 @@ public class XlsSourceTest {
 
 	}
 
-	@Test
-	public void testDuplicatePrimaryInterfaceFailsHard() throws Exception {
-		File xlsxFile = new File("target/duplicate-primary.xlsx");
+	// Builds an xlsx under target/ from a grid of cell values (null skips a cell,
+	// producing a short row) and returns an XlsSource configured for it. The sheet
+	// name equals the instance/foreign-source name.
+	private XlsSource sourceFor(String name, String[][] rows) throws Exception {
+		File xlsxFile = new File("target/" + name + ".xlsx");
 		try (XSSFWorkbook workbook = new XSSFWorkbook()) {
-			Sheet sheet = workbook.createSheet("duplicate-primary");
-			String[][] rows = { { "ID_", "Node_", "IP_", "MgmtType_", "svc_" },
-					{ "12345678", "nodelabel1", "10.1.1.1", "P", "ICMP" },
-					{ "87654321", "nodelabel1", "10.1.1.2", "P", "ICMP" } };
+			Sheet sheet = workbook.createSheet(name);
 			for (int rowIndex = 0; rowIndex < rows.length; rowIndex++) {
 				Row row = sheet.createRow(rowIndex);
 				for (int column = 0; column < rows[rowIndex].length; column++) {
-					row.createCell(column).setCellValue(rows[rowIndex][column]);
+					if (rows[rowIndex][column] != null) {
+						row.createCell(column).setCellValue(rows[rowIndex][column]);
+					}
 				}
 			}
 			try (FileOutputStream outputStream = new FileOutputStream(xlsxFile)) {
@@ -113,17 +114,25 @@ public class XlsSourceTest {
 			}
 		}
 
-		MockInstanceConfiguration config = new MockInstanceConfiguration("duplicate-primary");
+		MockInstanceConfiguration config = new MockInstanceConfiguration(name);
 		config.set("encoding", "ISO-8859-1");
 		config.set("file", xlsxFile.toPath());
+		return new XlsSource(config);
+	}
 
-		xlsSource = new XlsSource(config);
+	@Test
+	public void testDuplicatePrimaryInterfaceFailsHard() throws Exception {
+		// two rows share a foreign id, so they merge into one node with two primaries
+		xlsSource = sourceFor("duplicate-primary", new String[][] { { "ID_", "Node_", "IP_", "MgmtType_", "svc_" },
+				{ "12345678", "nodelabel1", "10.1.1.1", "P", "ICMP" },
+				{ "12345678", "nodelabel1", "10.1.1.2", "P", "ICMP" } });
 
 		try {
 			xlsSource.dump();
 			fail("expected InvalidInterfaceException for duplicate primary interface");
 		} catch (InvalidInterfaceException ex) {
 			assertThat(ex.getMessage(), containsString("nodelabel1"));
+			assertThat(ex.getMessage(), containsString("12345678"));
 			assertThat(ex.getMessage(), containsString("duplicate-primary"));
 			assertThat(ex.getMessage(), containsString("10.1.1.1"));
 			assertThat(ex.getMessage(), containsString("10.1.1.2"));
@@ -132,29 +141,82 @@ public class XlsSourceTest {
 	}
 
 	@Test
-	public void testBlankManagementTypeDefaultsToNotEligible() throws Exception {
-		File xlsxFile = new File("target/blank-mgmttype.xlsx");
-		try (XSSFWorkbook workbook = new XSSFWorkbook()) {
-			Sheet sheet = workbook.createSheet("blank-mgmttype");
-			Row header = sheet.createRow(0);
-			String[] headers = { "Node_", "IP_", "MgmtType_", "svc_" };
-			for (int column = 0; column < headers.length; column++) {
-				header.createCell(column).setCellValue(headers[column]);
-			}
-			// data row omits the MgmtType_ cell entirely (short row)
-			Row dataRow = sheet.createRow(1);
-			dataRow.createCell(0).setCellValue("nodelabel1");
-			dataRow.createCell(1).setCellValue("10.1.1.1");
-			try (FileOutputStream outputStream = new FileOutputStream(xlsxFile)) {
-				workbook.write(outputStream);
-			}
+	public void testDistinctForeignIdsProduceDistinctNodes() throws Exception {
+		// same node label but different ID_ values must become two distinct nodes
+		xlsSource = sourceFor("distinct-ids", new String[][] { { "ID_", "Node_", "IP_", "MgmtType_", "svc_" },
+				{ "12345678", "nodelabel1", "10.1.1.1", "P", "ICMP" },
+				{ "87654321", "nodelabel1", "10.1.1.2", "P", "ICMP" } });
+
+		Requisition requisition = (Requisition) xlsSource.dump();
+
+		assertEquals(2, requisition.getNodes().size());
+		RequisitionNode first = requisition.getNodes().get(0);
+		RequisitionNode second = requisition.getNodes().get(1);
+		assertEquals("nodelabel1", first.getNodeLabel());
+		assertEquals("nodelabel1", second.getNodeLabel());
+		assertEquals("12345678", first.getForeignId());
+		assertEquals("87654321", second.getForeignId());
+		assertEquals(1, first.getInterfaces().size());
+		assertEquals(1, second.getInterfaces().size());
+	}
+
+	@Test
+	public void testContinuationRowWithoutIdMergesIntoNode() throws Exception {
+		// documented multi-interface pattern: the ID_ appears on the first row only,
+		// continuation rows repeat just the node label
+		xlsSource = sourceFor("continuation-row", new String[][] { { "ID_", "Node_", "IP_", "MgmtType_", "svc_" },
+				{ "12345678", "nodelabel1", "10.1.1.1", "P", "ICMP" },
+				{ null, "nodelabel1", "10.1.1.2", "S", "ICMP" } });
+
+		Requisition requisition = (Requisition) xlsSource.dump();
+
+		assertEquals(1, requisition.getNodes().size());
+		RequisitionNode node = requisition.getNodes().get(0);
+		assertEquals("nodelabel1", node.getNodeLabel());
+		assertEquals("12345678", node.getForeignId());
+		assertEquals(2, node.getInterfaces().size());
+	}
+
+	@Test
+	public void testSameForeignIdConflictingLabelsFailsHard() throws Exception {
+		// one foreign id cannot identify two different node labels
+		xlsSource = sourceFor("conflicting-labels", new String[][] { { "ID_", "Node_", "IP_", "MgmtType_", "svc_" },
+				{ "100", "nodeA", "10.1.1.1", "P", "ICMP" }, { "100", "nodeB", "10.1.1.2", "S", "ICMP" } });
+
+		try {
+			xlsSource.dump();
+			fail("expected RuntimeException for conflicting node labels");
+		} catch (RuntimeException ex) {
+			assertThat(ex.getMessage(), containsString("Conflicting node labels"));
+			assertThat(ex.getMessage(), containsString("100"));
+			assertThat(ex.getMessage(), containsString("nodeA"));
+			assertThat(ex.getMessage(), containsString("nodeB"));
+			assertThat(ex.getMessage(), containsString("row '3'"));
 		}
+	}
 
-		MockInstanceConfiguration config = new MockInstanceConfiguration("blank-mgmttype");
-		config.set("encoding", "ISO-8859-1");
-		config.set("file", xlsxFile.toPath());
+	@Test
+	public void testLabelCollidingWithExplicitForeignIdFailsHard() throws Exception {
+		// a continuation row whose label equals another node's explicit foreign id must not
+		// silently mint a second node with a duplicate foreign id
+		xlsSource = sourceFor("label-id-collision", new String[][] { { "ID_", "Node_", "IP_", "MgmtType_", "svc_" },
+				{ "foo", "nodeA", "10.1.1.1", "P", "ICMP" }, { null, "foo", "10.1.1.2", "P", "ICMP" } });
 
-		xlsSource = new XlsSource(config);
+		try {
+			xlsSource.dump();
+			fail("expected RuntimeException for foreign id / label collision");
+		} catch (RuntimeException ex) {
+			assertThat(ex.getMessage(), containsString("foo"));
+			assertThat(ex.getMessage(), containsString("nodeA"));
+			assertThat(ex.getMessage(), containsString("row '3'"));
+		}
+	}
+
+	@Test
+	public void testBlankManagementTypeDefaultsToNotEligible() throws Exception {
+		// data row omits the MgmtType_ cell entirely (short row)
+		xlsSource = sourceFor("blank-mgmttype",
+				new String[][] { { "Node_", "IP_", "MgmtType_", "svc_" }, { "nodelabel1", "10.1.1.1", null, null } });
 
 		Requisition requisition = (Requisition) xlsSource.dump();
 		RequisitionNode node = requisition.getNodes().get(0);
@@ -177,6 +239,17 @@ public class XlsSourceTest {
 
 		basicTest("testcsv-noheaders");
 
+	}
+
+	@Test
+	public void testMultipleIpInterfacesMergeByLabel() throws Exception {
+		MockInstanceConfiguration config = new MockInstanceConfiguration("testcsv");
+		config.set("encoding", "ISO-8859-1");
+		config.set("file", Paths.get("src/test/resources/testcsv.csv"));
+
+		xlsSource = new XlsSource(config);
+
+		getNodeWithMultipleIpInterfaces("testcsv");
 	}
 
 	// test method used by xls and csv tests
