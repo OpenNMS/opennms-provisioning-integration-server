@@ -1,6 +1,17 @@
 version: 2
 updates:
 
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    target-branch: "master"
+    labels:
+      - "dependencies"
+    commit-message:
+      prefix: "build"
+      include: "scope"
+    schedule:
+      interval: "daily"
+
   - package-ecosystem: "maven"
     directory: "/"
     target-branch: "master"
