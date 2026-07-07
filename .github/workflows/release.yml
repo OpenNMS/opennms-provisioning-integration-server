@@ -43,7 +43,7 @@ jobs:
         run: |
           {
             echo "VERSION=${GITHUB_REF_NAME#v}"
-            echo "IMAGE_REPO=ghcr.io/${GITHUB_REPOSITORY,,}"
+            echo "IMAGE_REPO=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/pris"
             echo "BUILD_ARGS<<EOF"
             echo "OPENNMS_PRIS_VERSION=${GITHUB_REF_NAME#v}"
             echo "VERSION=${GITHUB_REF_NAME#v}"

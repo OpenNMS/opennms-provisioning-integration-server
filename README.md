@@ -37,7 +37,7 @@ Docker Tags
 Current releases of PRIS are published on the [GitHub Container Registry].
 You can download and start the container image with:
 
-    docker run --name mypris --detach --publish 8000:8000 ghcr.io/opennms/opennms-provisioning-integration-server:latest
+    docker run --name mypris --detach --publish 8000:8000 ghcr.io/opennms/pris:latest
 
 The container will be downloaded from the GitHub Container Registry and is started in background with name `mypris`.
 A port 8000 is published on your local machine which can be used with your browser.
@@ -55,7 +55,7 @@ volumes:
 services:
   pris:
     container_name: opennms.pris
-    image: ghcr.io/opennms/opennms-provisioning-integration-server:latest
+    image: ghcr.io/opennms/pris:latest
     environment:
       - TZ=Europe/Berlin
       - JAVA_OPTS=-XX:+PrintGCDetails -XX:+UnlockExperimentalVMOptions
@@ -164,7 +164,7 @@ The package created by the very first release is private, its visibility has to 
 
 [GitHub]: https://github.com/OpenNMS/opennms-provisioning-integration-server.git
 [GitHub Actions]: https://github.com/OpenNMS/opennms-provisioning-integration-server/actions
-[GitHub Container Registry]: https://github.com/OpenNMS/opennms-provisioning-integration-server/pkgs/container/opennms-provisioning-integration-server
+[GitHub Container Registry]: https://github.com/OpenNMS/opennms-provisioning-integration-server/pkgs/container/pris
 [JIRA]: https://issues.opennms.org/projects/PRIS
 [OpenJDK]: http://openjdk.java.net/
 [Oracle Java Development Kit]: http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html
