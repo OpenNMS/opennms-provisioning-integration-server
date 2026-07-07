@@ -34,12 +34,18 @@ import java.nio.file.Paths;
 
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.Before;
 import org.junit.Test;
+import org.opennms.opennms.pris.plugins.xls.source.exceptions.InvalidInterfaceException;
 import org.opennms.pris.api.MockInstanceConfiguration;
 import org.opennms.pris.model.AssetField;
 import org.opennms.pris.model.MetaData;
@@ -86,6 +92,74 @@ public class XlsSourceTest {
 
 		basicTest("testcsv");
 
+	}
+
+	@Test
+	public void testDuplicatePrimaryInterfaceFailsHard() throws Exception {
+		File xlsxFile = new File("target/duplicate-primary.xlsx");
+		try (XSSFWorkbook workbook = new XSSFWorkbook()) {
+			Sheet sheet = workbook.createSheet("duplicate-primary");
+			String[][] rows = { { "ID_", "Node_", "IP_", "MgmtType_", "svc_" },
+					{ "12345678", "nodelabel1", "10.1.1.1", "P", "ICMP" },
+					{ "87654321", "nodelabel1", "10.1.1.2", "P", "ICMP" } };
+			for (int rowIndex = 0; rowIndex < rows.length; rowIndex++) {
+				Row row = sheet.createRow(rowIndex);
+				for (int column = 0; column < rows[rowIndex].length; column++) {
+					row.createCell(column).setCellValue(rows[rowIndex][column]);
+				}
+			}
+			try (FileOutputStream outputStream = new FileOutputStream(xlsxFile)) {
+				workbook.write(outputStream);
+			}
+		}
+
+		MockInstanceConfiguration config = new MockInstanceConfiguration("duplicate-primary");
+		config.set("encoding", "ISO-8859-1");
+		config.set("file", xlsxFile.toPath());
+
+		xlsSource = new XlsSource(config);
+
+		try {
+			xlsSource.dump();
+			fail("expected InvalidInterfaceException for duplicate primary interface");
+		} catch (InvalidInterfaceException ex) {
+			assertThat(ex.getMessage(), containsString("nodelabel1"));
+			assertThat(ex.getMessage(), containsString("duplicate-primary"));
+			assertThat(ex.getMessage(), containsString("10.1.1.1"));
+			assertThat(ex.getMessage(), containsString("10.1.1.2"));
+			assertThat(ex.getMessage(), containsString("row '3'"));
+		}
+	}
+
+	@Test
+	public void testBlankManagementTypeDefaultsToNotEligible() throws Exception {
+		File xlsxFile = new File("target/blank-mgmttype.xlsx");
+		try (XSSFWorkbook workbook = new XSSFWorkbook()) {
+			Sheet sheet = workbook.createSheet("blank-mgmttype");
+			Row header = sheet.createRow(0);
+			String[] headers = { "Node_", "IP_", "MgmtType_", "svc_" };
+			for (int column = 0; column < headers.length; column++) {
+				header.createCell(column).setCellValue(headers[column]);
+			}
+			// data row omits the MgmtType_ cell entirely (short row)
+			Row dataRow = sheet.createRow(1);
+			dataRow.createCell(0).setCellValue("nodelabel1");
+			dataRow.createCell(1).setCellValue("10.1.1.1");
+			try (FileOutputStream outputStream = new FileOutputStream(xlsxFile)) {
+				workbook.write(outputStream);
+			}
+		}
+
+		MockInstanceConfiguration config = new MockInstanceConfiguration("blank-mgmttype");
+		config.set("encoding", "ISO-8859-1");
+		config.set("file", xlsxFile.toPath());
+
+		xlsSource = new XlsSource(config);
+
+		Requisition requisition = (Requisition) xlsSource.dump();
+		RequisitionNode node = requisition.getNodes().get(0);
+		RequisitionInterface iface = RequisitionUtils.findInterface(node, "10.1.1.1");
+		assertEquals(PrimaryType.NOT_ELIGIBLE, iface.getSnmpPrimary());
 	}
 
 	@Test
