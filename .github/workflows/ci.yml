@@ -100,22 +100,26 @@ jobs:
     needs: oci-smoke
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     permissions:
-      contents: write
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10  # v6.0.3
-        with:
-          ref: gh-pages
       - name: Download javadoc artifact
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c  # v8.0.1
         with:
           name: javadoc
           path: ${{ runner.temp }}/javadoc/
-      - name: Publish javadoc to gh-pages
+      - name: Extract javadoc
         run: |
-          find . -mindepth 1 -maxdepth 1 -not -name '.git' -exec rm -rf {} +
-          unzip -q "$(ls ${{ runner.temp }}/javadoc/*-javadoc.jar)" -d .
-          git config user.email "cicd-system@opennms.com"
-          git config user.name "CI/CD System"
-          git add -A
-          git diff --cached --quiet || git commit -m 'docs: publish latest API docs'
-          git push origin gh-pages
+          mkdir -p "${{ runner.temp }}/site"
+          unzip -q "$(ls "${{ runner.temp }}"/javadoc/*-javadoc.jar)" -d "${{ runner.temp }}/site"
+      - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d  # v6.0.0
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9  # v5.0.0
+        with:
+          path: ${{ runner.temp }}/site/
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128  # v5.0.0
