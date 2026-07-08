@@ -74,8 +74,33 @@
 
                         <shadedArtifactAttached>true</shadedArtifactAttached>
 
+                        <!--
+                            Drop resources that multiple dependencies duplicate. module-info
+                            descriptors are meaningless on the shaded (unnamed-module) class path,
+                            and each dependency ships its own MANIFEST.MF - shade generates the
+                            uber-jar manifest itself.
+                        -->
+                        <filters>
+                            <filter>
+                                <artifact>*:*</artifact>
+                                <excludes>
+                                    <exclude>module-info.class</exclude>
+                                    <exclude>META-INF/versions/*/module-info.class</exclude>
+                                    <exclude>META-INF/MANIFEST.MF</exclude>
+                                    <exclude>META-INF/DEPENDENCIES</exclude>
+                                </excludes>
+                            </filter>
+                        </filters>
+
                         <transformers>
                             <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                            <!-- Merge the Apache LICENSE/NOTICE files instead of clobbering one at random -->
+                            <transformer implementation="org.apache.maven.plugins.shade.resource.ApacheLicenseResourceTransformer"/>
+                            <transformer implementation="org.apache.maven.plugins.shade.resource.ApacheNoticeResourceTransformer"/>
+                            <!-- Concatenate HK2 service-locator descriptors so entries from every dependency survive -->
+                            <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                <resource>META-INF/hk2-locator/default</resource>
+                            </transformer>
                         </transformers>
                     </configuration>
                 </plugin>
