@@ -39,18 +39,33 @@ import org.slf4j.LoggerFactory;
 import org.opennms.integration.api.utils.IPLike;
 import org.opennms.pris.api.InstanceConfiguration;
 
+/**
+ * Maintains IP black- and white-lists and matches IP addresses against them
+ * using IPLike patterns.
+ */
 public class InterfaceUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(InterfaceUtils.class);
-    
+
     private List<String> ipBlackList = new ArrayList<>();
     private List<String> ipWhiteList = new ArrayList<>();
 
     private final InstanceConfiguration config;
-    
+
+    /**
+     * Creates interface utilities bound to the given instance configuration.
+     *
+     * @param config the configuration of the requisition instance
+     */
     public InterfaceUtils(final InstanceConfiguration config) {
         this.config = config;
     }
 
+    /**
+     * Checks whether the given IP address matches any entry on the black-list.
+     *
+     * @param ipAddress the IP address to test
+     * @return {@code true} if the address matches a black-list entry
+     */
     public Boolean isIpBlackListed(String ipAddress) {
         for (String blackedIp : ipBlackList) {
             if (IPLike.matches(ipAddress, blackedIp)) {
@@ -63,6 +78,12 @@ public class InterfaceUtils {
         return false;
     }
 
+    /**
+     * Checks whether the given IP address matches any entry on the white-list.
+     *
+     * @param ipAddress the IP address to test
+     * @return {@code true} if the address matches a white-list entry
+     */
     public Boolean isIpWhiteListed(String ipAddress) {
         for (String whiteIp : ipWhiteList) {
             if (IPLike.matches(ipAddress, whiteIp)) {
@@ -75,6 +96,12 @@ public class InterfaceUtils {
         return false;
     }
 
+    /**
+     * Adds an IPLike pattern to the white-list. Entries with invalid syntax are
+     * rejected and logged rather than added.
+     *
+     * @param ip the IPLike pattern to add
+     */
     public void addIpWhite(String ip) {
         try {
             //This check forces valid IPLike syntax
@@ -85,6 +112,12 @@ public class InterfaceUtils {
         }
     }
 
+    /**
+     * Adds an IPLike pattern to the black-list. Entries with invalid syntax are
+     * rejected and logged rather than added.
+     *
+     * @param ip the IPLike pattern to add
+     */
     public void addIpBlack(String ip) {
         try {
             //This check forces valid IPLike syntax
@@ -95,6 +128,11 @@ public class InterfaceUtils {
         }
     }
 
+    /**
+     * Loads the black- and white-lists from the {@code blackList.properties} and
+     * {@code whiteList.properties} files in the working directory, falling back
+     * to empty lists if the files cannot be read.
+     */
     public void initListsFromConfigs() {
         try {
             List<String> rawBlackedList = Files.readAllLines(Paths.get("./", "blackList.properties"), Charset.forName("UTF-8"));

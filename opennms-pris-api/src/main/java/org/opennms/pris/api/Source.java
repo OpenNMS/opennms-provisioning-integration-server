@@ -65,7 +65,7 @@ public interface Source {
      *
      * @return the loaded information
      *
-     * @throws Exception
+     * @throws Exception if the information cannot be loaded
      */
     Object dump() throws Exception;
 }
