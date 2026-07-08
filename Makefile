@@ -5,7 +5,7 @@
 # Copyright 2026 The OpenNMS Group, Inc.
 # Created by Ronny Trommer <ronny@opennms.com>
 ##
-.PHONY: help all deps-build compile package deps-docs deps-docs-docker deps-oci docs docs-check docs-docker oci-stage oci smoke-test clean clean-docs clean-docs-cache clean-all
+.PHONY: help all deps-build compile package run deps-docs deps-docs-docker deps-oci docs docs-check docs-docker oci-stage oci smoke-test clean clean-docs clean-docs-cache clean-all
 
 .DEFAULT_GOAL := help
 
@@ -16,6 +16,7 @@ SITE_FILE            := antora-playbook-local.yml
 IMAGE                ?= pris
 VERSION              ?= $(shell cat version.txt)
 RELEASE_ARCHIVE      := opennms-pris-dist/target/opennms-pris-release-archive.tar.gz
+RUN_DIR              := opennms-pris-dist/target/run
 
 help: ## Show this help with all build goals
 	@echo ""
@@ -42,6 +43,14 @@ compile: ## Compile the project and run the test suite
 package: ## Package the release archives in tar.gz and zip format
 	@echo "Maven package ..."
 	mvn package -DskipTests
+
+run: deps-build package ## Build from source and start PRIS in the foreground on http://localhost:8000
+	@echo "Extract release archive to $(RUN_DIR) ..."
+	@rm -rf $(RUN_DIR)
+	@mkdir -p $(RUN_DIR)
+	@tar -xzf $(RELEASE_ARCHIVE) -C $(RUN_DIR)
+	@echo "Starting PRIS on http://localhost:8000 (press Ctrl-C to stop) ..."
+	cd $(RUN_DIR)/opennms-pris && java $${JAVA_OPTS:-} -cp "./lib/*:./opennms-pris.jar" org.opennms.pris.Starter
 
 deps-docs:
 	@command -v antora
