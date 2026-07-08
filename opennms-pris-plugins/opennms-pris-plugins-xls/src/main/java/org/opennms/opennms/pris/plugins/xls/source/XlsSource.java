@@ -39,6 +39,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -109,8 +110,10 @@ public class XlsSource implements Source {
 			if (d % 1 == 0) {
 				value = Integer.toString((int) d);
 			} else {
-				// prints double with 7 decimal places - suitable for lat/long
-				value = String.format("%.7f", d);
+				// prints double with 7 decimal places - suitable for lat/long;
+				// Locale.ROOT keeps the decimal separator a dot regardless of the
+				// JVM default locale (e.g. a German locale would emit a comma)
+				value = String.format(Locale.ROOT, "%.7f", d);
 			}
 			break;
 		case STRING:
