@@ -38,11 +38,21 @@ import org.opennms.pris.model.RequisitionInterface;
 import org.opennms.pris.model.RequisitionMonitoredService;
 import org.opennms.pris.model.RequisitionNode;
 
+/**
+ * Utility methods for looking up elements within a requisition or its nodes.
+ */
 public class RequisitionUtils {
 
     private RequisitionUtils() {
     }
 
+    /**
+     * Finds the node with the given foreign ID.
+     *
+     * @param requisition the requisition to search
+     * @param foreignId the foreign ID to match
+     * @return the matching node, or {@code null} if none matches
+     */
     public static RequisitionNode findNode(final Requisition requisition,
             final String foreignId) {
         for (final RequisitionNode node : requisition.getNodes()) {
@@ -54,6 +64,13 @@ public class RequisitionUtils {
         return null;
     }
 
+    /**
+     * Finds the interface on the given node with the given IP address.
+     *
+     * @param node the node to search
+     * @param ipAddress the IP address to match
+     * @return the matching interface, or {@code null} if none matches
+     */
     public static RequisitionInterface findInterface(final RequisitionNode node,
             final String ipAddress) {
         for (final RequisitionInterface _interface : node.getInterfaces()) {
@@ -65,6 +82,13 @@ public class RequisitionUtils {
         return null;
     }
 
+    /**
+     * Finds the category on the given node with the given name.
+     *
+     * @param node the node to search
+     * @param categoryName the category name to match
+     * @return the matching category, or {@code null} if none matches
+     */
     public static RequisitionCategory findCategory(final RequisitionNode node,
             final String categoryName) {
         for (final RequisitionCategory category : node.getCategories()) {
@@ -76,6 +100,15 @@ public class RequisitionUtils {
         return null;
     }
 
+    /**
+     * Determines whether the given node carries the given category.
+     *
+     * @param node the node to search
+     * @param categoryName the category name to match
+     * @param ignoreCase whether a case-insensitive match is sufficient; when
+     *        {@code false} the names must match exactly
+     * @return {@code true} if a matching category exists
+     */
     public static Boolean hasCategory(final RequisitionNode node, final String categoryName, final Boolean ignoreCase) {
         for (final RequisitionCategory category : node.getCategories()) {
             if (Objects.equals(category.getName().toLowerCase(), categoryName.toLowerCase())) {
@@ -91,6 +124,13 @@ public class RequisitionUtils {
         return false;
     }
 
+    /**
+     * Finds the asset on the given node with the given name.
+     *
+     * @param node the node to search
+     * @param assetName the asset name to match
+     * @return the matching asset, or {@code null} if none matches
+     */
     public static RequisitionAsset findAsset(final RequisitionNode node,
             final String assetName) {
         for (final RequisitionAsset asset : node.getAssets()) {
@@ -102,6 +142,14 @@ public class RequisitionUtils {
         return null;
     }
 
+    /**
+     * Finds the meta-data entry on the given node with the given context and key.
+     *
+     * @param node the node to search
+     * @param context the meta-data context to match
+     * @param key the meta-data key to match
+     * @return the matching meta-data entry, or {@code null} if none matches
+     */
     public static MetaData findMetaData(final RequisitionNode node,
                                         final String context, final String key) {
         for (final MetaData metaData : node.getMetaDatas()) {
@@ -113,6 +161,13 @@ public class RequisitionUtils {
         return null;
     }
 
+    /**
+     * Finds the monitored service on the given interface with the given name.
+     *
+     * @param _interface the interface to search
+     * @param serviceName the service name to match
+     * @return the matching monitored service, or {@code null} if none matches
+     */
     public static RequisitionMonitoredService findMonitoredService(final RequisitionInterface _interface,
             final String serviceName) {
         for (final RequisitionMonitoredService monitoredService : _interface.getMonitoredServices()) {

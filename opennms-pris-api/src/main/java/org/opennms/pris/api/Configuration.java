@@ -201,6 +201,11 @@ public interface Configuration {
      */
     Iterator<String> getKeys();
 
-    
+    /**
+     * Adds a property to the configuration.
+     *
+     * @param key the key of the property to add
+     * @param string the value of the property to add
+     */
     void addProperty(String key, String string);
 }

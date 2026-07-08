@@ -28,11 +28,25 @@
 
 package org.opennms.pris.util;
 
+/**
+ * Utility methods for normalizing asset field values before they are stored in
+ * a requisition.
+ */
 public class AssetUtils {
 
     private AssetUtils() {
     }
 
+    /**
+     * Cleans up an asset string by stripping trademark markers, abbreviating
+     * common vendor and operating-system names, collapsing runs of whitespace
+     * and truncating the result to a maximum length.
+     *
+     * @param assetString the raw asset value, may be {@code null}
+     * @param maxSize the maximum number of characters to keep
+     * @return the cleaned value, or an empty string if {@code assetString} is
+     *         {@code null}
+     */
     public static String assetStringCleaner(final String assetString,
                                             final Integer maxSize) {
         String result = "";

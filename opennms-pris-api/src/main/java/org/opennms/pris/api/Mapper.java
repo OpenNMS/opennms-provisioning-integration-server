@@ -72,7 +72,7 @@ public interface Mapper {
      *
      * @return the mapped requisition
      *
-     * @throws Exception
+     * @throws Exception if the data cannot be mapped to a requisition
      */
     Requisition map(final Object data,
                     final Requisition requisition) throws Exception;
