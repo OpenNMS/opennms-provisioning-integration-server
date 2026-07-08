@@ -47,6 +47,9 @@
     <dependencySets>
         <dependencySet>
             <outputDirectory>lib</outputDirectory>
+            <!-- This is a pom-packaging module with no artifact of its own; do not
+                 try to include it (avoids the "Cannot include project artifact" warning). -->
+            <useProjectArtifact>false</useProjectArtifact>
             <includes>
                 <include>${project.groupId}:opennms-pris-plugins-*:jar:shaded</include>
             </includes>
