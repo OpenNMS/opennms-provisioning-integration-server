@@ -65,16 +65,18 @@ public class MockInstanceConfiguration implements InstanceConfiguration {
         return this.values.containsKey(key);
     }
     
+    @SuppressWarnings("unchecked")
     private <T> T get(final String key) {
         return (T) this.values.get(key);
     }
-    
+
+    @SuppressWarnings("unchecked")
     private <T> T get(final String key,
                       final T defaultValue) {
         if (!this.values.containsKey(key)) {
             return defaultValue;
         }
-        
+
         return (T) this.values.get(key);
     }
     
