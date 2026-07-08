@@ -159,7 +159,11 @@
                 <configuration>
                     <source>17</source>
                     <target>17</target>
-                    <compilerArgument>-Xlint:all</compilerArgument>
+                    <!-- -processing: the metainf-services annotation processor deliberately
+                         does not claim @MetaInfServices (so other processors can also see it),
+                         and test frameworks use runtime annotations with no processor; the
+                         "No processor claimed ..." lint is noise here. -->
+                    <compilerArgument>-Xlint:all,-processing</compilerArgument>
                     <showWarnings>true</showWarnings>
                     <showDeprecation>true</showDeprecation>
                 </configuration>

@@ -30,6 +30,8 @@ package org.opennms.opennms.pris.plugins.xls.source.exceptions;
 
 public class InvalidInterfaceException extends Exception {
 
+    private static final long serialVersionUID = 1L;
+
     public InvalidInterfaceException(String string) {
         super(string);
     }

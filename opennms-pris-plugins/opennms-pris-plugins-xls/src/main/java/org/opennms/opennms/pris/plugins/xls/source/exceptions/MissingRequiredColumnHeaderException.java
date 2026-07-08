@@ -30,6 +30,8 @@ package org.opennms.opennms.pris.plugins.xls.source.exceptions;
 
 public class MissingRequiredColumnHeaderException extends Exception {
 
+    private static final long serialVersionUID = 1L;
+
     public MissingRequiredColumnHeaderException(String columnName) {
         this(columnName, null);
     }

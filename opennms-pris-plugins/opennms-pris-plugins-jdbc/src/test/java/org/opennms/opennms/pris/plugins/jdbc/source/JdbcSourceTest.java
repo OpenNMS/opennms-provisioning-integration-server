@@ -34,6 +34,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Assert;
@@ -155,8 +156,8 @@ public class JdbcSourceTest {
         final RequisitionNode node2 = requisition.getNodes().stream().filter(n -> n.getForeignId().equals("2")).findFirst().get();
         final RequisitionNode node3 = requisition.getNodes().stream().filter(n -> n.getForeignId().equals("3")).findFirst().get();
 
-        Assert.assertThat(node1.getMetaDatas(), Matchers.containsInAnyOrder(new MetaData("requisition", "keyWithoutContext", "Foo1"), new MetaData("Context", "keyWithContext", "Bar1")));
-        Assert.assertThat(node2.getMetaDatas(), Matchers.containsInAnyOrder(new MetaData("requisition", "keyWithoutContext", "Foo2"), new MetaData("Context", "keyWithContext", "Bar2")));
-        Assert.assertThat(node3.getMetaDatas(), Matchers.containsInAnyOrder(new MetaData("requisition", "keyWithoutContext", "Foo3"), new MetaData("Context", "keyWithContext", "Bar3")));
+        MatcherAssert.assertThat(node1.getMetaDatas(), Matchers.containsInAnyOrder(new MetaData("requisition", "keyWithoutContext", "Foo1"), new MetaData("Context", "keyWithContext", "Bar1")));
+        MatcherAssert.assertThat(node2.getMetaDatas(), Matchers.containsInAnyOrder(new MetaData("requisition", "keyWithoutContext", "Foo2"), new MetaData("Context", "keyWithContext", "Bar2")));
+        MatcherAssert.assertThat(node3.getMetaDatas(), Matchers.containsInAnyOrder(new MetaData("requisition", "keyWithoutContext", "Foo3"), new MetaData("Context", "keyWithContext", "Bar3")));
     }
 }
