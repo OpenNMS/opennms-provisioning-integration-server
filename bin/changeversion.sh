@@ -1,6 +1,8 @@
 #!/bin/bash
 #
-# Script changes the pom.xml files in the current project.
+# SPDX-License-Identifier: GPL-3.0-only
+#
+# Script changes the pom.xml files, docs and version.txt in the current project.
 #
 # Usage example:
 #   changeversion.sh -o 1.0.4-SNAPSHOT -n 1.0.5-SNAPSHOT
@@ -61,3 +63,7 @@ for i in $(find ${CWD}/docs -name "antora.yml"); do
   cat ${i} | sed -e "s/${OLD_VERSION}/${NEW_VERSION}/g" | sed -e "s/prerelease: true/prerelease: false/g" > ${i}.new;
   mv ${i}.new ${i};
 done
+
+# Replace version number in the version.txt file
+cat ${CWD}/version.txt | sed -e "s/${OLD_VERSION}/${NEW_VERSION}/g" > ${CWD}/version.txt.new;
+mv ${CWD}/version.txt.new ${CWD}/version.txt;
