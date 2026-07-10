@@ -28,58 +28,64 @@
 
 package org.opennms.pris.driver;
 
-import java.io.IOException;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayOutputStream;
+import java.nio.ByteBuffer;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
+import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Request;
-import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.eclipse.jetty.server.Response;
+import org.eclipse.jetty.util.Callback;
 import org.opennms.pris.RequisitionGenerator;
 import org.opennms.pris.model.Requisition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class RequisitionProviderHandler extends AbstractHandler {
+public class RequisitionProviderHandler extends Handler.Abstract {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RequisitionProviderHandler.class);
 
     @Override
-    public void handle(final String target,
-            final Request baseRequest,
-            final HttpServletRequest request,
-            final HttpServletResponse response) throws IOException,
-            ServletException {
+    public boolean handle(final Request request,
+            final Response response,
+            final Callback callback) throws Exception {
 
-        String[] pathParts = request.getPathInfo().substring(1).split("/");
-
-        baseRequest.setHandled(true);
+        // The path within the "/requisitions" context, e.g. "/example" for /requisitions/example
+        final String pathInContext = Request.getPathInContext(request);
+        final String[] pathParts = pathInContext.substring(1).split("/");
 
         // Get the instance for the request path
-        String instance = pathParts[0];
+        final String instance = pathParts.length > 0 ? pathParts[0] : "";
 
         if (instance == null || instance.isEmpty() || instance.contains("favicon.ico")) {
-            response.sendError(404, "No instance specified");
-        } else {
-            try {
-                LOGGER.debug("Handling request for instance: {}", instance);
-                // Create the requisition provider for the instance
-                final RequisitionGenerator requisitionProvider = new RequisitionGenerator(instance);
-
-                // Generate the requisition
-                final Requisition requisition = requisitionProvider.generate(instance);
-
-                // Create the marshaller for the requisition
-                final JAXBContext jaxbContext = JAXBContext.newInstance(Requisition.class);
-                final Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-                jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-                // Marshall the requisition and write it to the response stream
-                jaxbMarshaller.marshal(requisition, response.getOutputStream());
-            } catch (final Exception ex) {
-                response.sendError(500, ex.getMessage());
-                LOGGER.warn("Request failed", ex);
-            }
+            Response.writeError(request, response, callback, 404, "No instance specified");
+            return true;
         }
+
+        try {
+            LOGGER.debug("Handling request for instance: {}", instance);
+            // Create the requisition provider for the instance
+            final RequisitionGenerator requisitionProvider = new RequisitionGenerator(instance);
+
+            // Generate the requisition
+            final Requisition requisition = requisitionProvider.generate(instance);
+
+            // Create the marshaller for the requisition
+            final JAXBContext jaxbContext = JAXBContext.newInstance(Requisition.class);
+            final Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+
+            // Marshall the requisition and write it to the response
+            final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            jaxbMarshaller.marshal(requisition, baos);
+
+            response.setStatus(200);
+            response.write(true, ByteBuffer.wrap(baos.toByteArray()), callback);
+        } catch (final Exception ex) {
+            LOGGER.warn("Request failed", ex);
+            Response.writeError(request, response, callback, 500, ex.getMessage());
+        }
+
+        return true;
     }
 }
