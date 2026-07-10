@@ -16,7 +16,6 @@ updates:
     directory: "/"
     target-branch: "master"
     reviewers:
-      - "gallenc"
       - "OpenNMS/dependabot-reviewers-maven"
     labels:
       - "dependencies"
