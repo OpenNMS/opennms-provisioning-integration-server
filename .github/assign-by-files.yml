@@ -6,5 +6,4 @@
   - indigo423
 
 ".circleci/**/*":
-  - RangerRick
   - mershad-manesh
