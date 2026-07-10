@@ -29,10 +29,13 @@
 package org.opennms.pris.driver;
 
 import java.net.InetSocketAddress;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.server.handler.ResourceHandler;
+import org.eclipse.jetty.util.resource.ResourceFactory;
 import org.opennms.pris.api.Configuration;
 
 /**
@@ -73,10 +76,15 @@ public class HttpServerDriver implements Driver {
         ContextHandler contextHandlerRequisitions = new ContextHandler(requisitionProviderHandler, "/requisitions");
 
         // provide the documentation
+        // Jetty 12 rejects a relative base resource as an "alias", so resolve
+        // "./documentation/" (relative to the working directory) to an absolute,
+        // normalized path before handing it to the ResourceHandler.
+        final Path documentationRoot = Paths.get("documentation").toAbsolutePath().normalize();
         ResourceHandler docuResourceHandler = new ResourceHandler();
         docuResourceHandler.setDirAllowed(true);
         docuResourceHandler.setWelcomeFiles("index.html");
-        docuResourceHandler.setBaseResourceAsString("./documentation/");
+        docuResourceHandler.setBaseResource(
+                ResourceFactory.of(docuResourceHandler).newResource(documentationRoot));
 
         // serving the docu at http://ip:port/
         ContextHandler rootContext = new ContextHandler(docuResourceHandler, "/");

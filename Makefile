@@ -52,7 +52,13 @@ deps-docs-docker:
 deps-oci:
 	@command -v docker
 
-docs: deps-docs ## Build the Antora docs
+docs: public ## Build the Antora docs
+
+# The ./public directory is the Antora output that assembly.xml bundles into the
+# release archive as documentation/. Declared as a real target (not phony) so the
+# release archive can depend on it and be rebuilt when the docs change. deps-docs
+# is order-only so an existing public/ is reused instead of rebuilt every time.
+public: | deps-docs
 	@echo "Build Antora docs..."
 	antora --stacktrace $(SITE_FILE)
 
@@ -64,11 +70,11 @@ docs-docker: deps-docs-docker ## Build the Antora docs with a docker container
 	@echo "Build Antora docs with docker ..."
 	docker run --rm -v $(WORKING_DIRECTORY):/antora $(DOCKER_ANTORA_IMAGE) --stacktrace generate $(SITE_FILE)
 
-$(RELEASE_ARCHIVE):
-	@echo "Release archive is missing, packaging it ..."
+$(RELEASE_ARCHIVE): public
+	@echo "Release archive is missing or stale, packaging it ..."
 	$(MAKE) package
 
-oci-stage: $(RELEASE_ARCHIVE) ## Stage the release archive for the container build
+oci-stage: docs $(RELEASE_ARCHIVE) ## Stage the release archive (with docs) for the container build
 	cp $(RELEASE_ARCHIVE) docker/deploy/
 
 oci: deps-oci oci-stage ## Build a local container image for the host platform, tagged IMAGE:VERSION
@@ -97,4 +103,4 @@ clean-docs-cache: ## Clean Antora cache for git repositories and UI components
 
 clean-all: clean clean-docs-cache ## Clean everything including the Antora cache
 
-all: compile package docs ## Compile, package and build the docs
+all: compile docs package ## Compile, build the docs, then package (docs must precede package)
