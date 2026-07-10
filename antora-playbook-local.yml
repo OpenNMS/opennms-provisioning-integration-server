@@ -6,7 +6,6 @@ content:
   sources:
   - url: .
     branches: HEAD
-    tags: v*
     start_path: docs
 ui:
   bundle:

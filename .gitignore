@@ -7,7 +7,7 @@ target/
 .classpath
 .java-version
 # Package Files #
-Docker/deploy/*
+docker/deploy/*
 *.jar
 *.swp
 *.war
@@ -18,3 +18,8 @@ Docker/deploy/*
 *.ipr
 public/*
 build/*
+
+# AI tools
+_bmad-output/
+_bmad/
+openspec/

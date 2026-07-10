@@ -17,10 +17,9 @@ The project is divided in the following Maven modules:
 
 ## General Project Information
 
-* CI/CD Status: [![CircleCI](https://circleci.com/gh/OpenNMS/opennms-provisioning-integration-server.svg?style=svg)](https://circleci.com/gh/OpenNMS/opennms-provisioning-integration-server)
-* Container Image Info: [![](https://images.microbadger.com/badges/version/opennms/pris.svg)](https://microbadger.com/images/opennms/pris "Get your own version badge on microbadger.com") [![](https://images.microbadger.com/badges/image/opennms/pris.svg)](https://microbadger.com/images/opennms/pris "Get your own image badge on microbadger.com") [![](https://images.microbadger.com/badges/license/opennms/pris.svg)](https://microbadger.com/images/opennms/pris "Get your own license badge on microbadger.com")
-* CI/CD System: [CircleCI]
-* Docker Container Image Repository: [DockerHub]
+* CI/CD Status: [![CI](https://github.com/OpenNMS/opennms-provisioning-integration-server/actions/workflows/ci.yml/badge.svg)](https://github.com/OpenNMS/opennms-provisioning-integration-server/actions/workflows/ci.yml)
+* CI/CD System: [GitHub Actions]
+* Container Image Repository: [GitHub Container Registry]
 * Issue- and Bug-Tracking: [JIRA]
 * Source code: [GitHub]
 * Chat: [IRC] or [Web Chat]
@@ -33,14 +32,14 @@ The project is divided in the following Maven modules:
 Docker Tags
 
 * `latest` floating tag for a build from latest stable release
-* to run a specific stable version see the [DockerHub Tag] section
+* to run a specific stable version see the tags of the [GitHub Container Registry] package
 
-Current releases of PRIS are published on [DockerHub].
+Current releases of PRIS are published on the [GitHub Container Registry].
 You can download and start the container image with:
 
-    docker run --name mypris --detach --publish 8000:8000 opennms/pris:latest
+    docker run --name mypris --detach --publish 8000:8000 ghcr.io/opennms/pris:latest
 
-The container will be downloaded from DockerHub and is started in background with name `mypris`.
+The container will be downloaded from the GitHub Container Registry and is started in background with name `mypris`.
 A port 8000 is published on your local machine which can be used with your browser.
 The unique container is returned which identifies the running instance of your container.
 
@@ -56,7 +55,7 @@ volumes:
 services:
   pris:
     container_name: opennms.pris
-    image: opennms/pris:latest
+    image: ghcr.io/opennms/pris:latest
     environment:
       - TZ=Europe/Berlin
       - JAVA_OPTS=-XX:+PrintGCDetails -XX:+UnlockExperimentalVMOptions
@@ -88,12 +87,16 @@ As `-Djava.rmi.server.hostname` you have to take the IP address of your Docker H
 This guide describes how you can checkout the source code from GitHub and how you can compile from source.
 The following parts are required: 
 
-* [OpenJDK] or [Oracle Java Development Kit] with javac Version 11
+* [OpenJDK] or [Oracle Java Development Kit] with javac Version 17
 * Apache [Maven]
 * [git-scm]
 * `java`, `javac`, `git`, `make` and `mvn` should be in your search path
 * Internet connection to download maven dependencies
-* Documentation is build with [Antora] and requires to have `antora` in your search path
+* Documentation is build with [Antora] and requires to have `antora` in your search path, alternatively `make docs-docker` builds the docs with a Docker container
+
+The Makefile is the front door for all build goals. Get an overview with
+
+    make help
 
 In your source directory run the command
 
@@ -111,81 +114,57 @@ The example requisition from a provided Excel sheet can be accessed with http://
 
 ## Build a Docker Container Image
 
-You can build a Docker Container Image by using the provided `Docker/Dockerfile`.
-
-### Step 0:
-
-Checkout the source code repository to a subdirectory name `pris` and change into the directory
+You can build a local container image for your host platform with
 
 ```
-git clone https://github.com/OpenNMS/opennms-provisioning-integration-server.git pris
-cd pris
+make oci
 ```
 
-### Step 1:
-
-Compile and assemble the source code to get the distributable tar.gz file
-
-```
-make all
-```
-
-### Step 2:
-
-Build the image with the command:
+It packages the release archive (if missing) and builds an image tagged `pris:$(cat version.txt)`.
+The image name and tag can be overridden with `make oci IMAGE=mypris VERSION=1.2.3`.
+Run the built container image with
 
 ```
-cp opennms-pris-dist/target/opennms-pris-release-archive.tar.gz Docker/deploy
-docker build -t mypris .
+docker run --name mypris --detach --publish 8000:8000 pris:$(cat version.txt)
 ```
 
-### Step 3:
-
-Run the build container image with
-
-```
-docker run --name mypris --detach --publish 8000:8000 mypris
-```
+`make clean` removes the build artifacts including the local container image.
+Multi-arch images (amd64/arm64) are built and published by the release workflow in GitHub Actions.
 
 # Development and Releases
 
-Releases are made from branches filtered in CircleCI with the following pattern: `^release-.*`.
-To make a release create a branch with a version number like `release-<major>.<minor>.<patch>` (release-1.1.7).
-The version portion of the branch name, e.g. 1.1.7 will be used as the version number to be released.
+Releases are made by pushing a git tag with the pattern `v<major>.<minor>.<patch>` (e.g. v1.2.1).
+The tag name without the `v` prefix is used as the version number to be released.
 Releases are published to the following places:
 
-* OCI container images to [DockerHub]
-* .tar.gz files to the GitHub releases of this repository
+* Multi-arch (amd64/arm64) OCI container images to the [GitHub Container Registry] of the repository the release is cut from
+* .tar.gz and .zip files to the GitHub releases of this repository
 
-For any other branches, they are just built and tested.
-You can download build artifacts like Docker images from your branch from [CircleCI].
+All other pushes and pull requests are just built, packaged and smoke tested.
 
 Steps to make a release:
 
-1. Create a branch with your new version number
-```
-git checkout -b release-1.2.1
-```
-
-2. Set the new version number in docs and code artifacts
+1. Set the new version number in docs and code artifacts
 
 ```
 bin/changeversion.sh -o BLEEDING -n 1.2.1
 ```
 
-3. Commit the changes and push the new release branch
+2. Commit the changes and tag the release
 
 ```
-git commit -m "I made a new asesome release"
-git push --set-upstream origin release-1.2.0
+git commit -m "release: version 1.2.1"
+git tag -a v1.2.1 -m "Release 1.2.1"
+git push origin v1.2.1
 ```
 
-The CI/CD workflows can be found in the `.circleci` directory.
+The CI/CD workflows can be found in the `.github/workflows` directory.
+The release workflow needs no repository secrets, container images are pushed with the built-in workflow token.
+The package created by the very first release is private, its visibility has to be flipped to public once in the GitHub package settings.
 
 [GitHub]: https://github.com/OpenNMS/opennms-provisioning-integration-server.git
-[CircleCI]: https://circleci.com/gh/opennms/opennms-provisioning-integration-server
-[DockerHub]: https://hub.docker.com/r/opennms/pris
-[DockerHub Tag]: https://hub.docker.com/r/opennms/pris/tags/
+[GitHub Actions]: https://github.com/OpenNMS/opennms-provisioning-integration-server/actions
+[GitHub Container Registry]: https://github.com/OpenNMS/opennms-provisioning-integration-server/pkgs/container/pris
 [JIRA]: https://issues.opennms.org/projects/PRIS
 [OpenJDK]: http://openjdk.java.net/
 [Oracle Java Development Kit]: http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html

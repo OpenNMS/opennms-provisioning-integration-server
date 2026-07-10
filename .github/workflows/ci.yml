@@ -1,0 +1,125 @@
+# SPDX-License-Identifier: GPL-3.0-only
+# Copyright 2026 The OpenNMS Group, Inc.
+# Created by Ronny Trommer <ronny@opennms.com>
+#
+# CI pipeline: build and test with Maven, build the Antora docs, package the
+# release archives, build a local OCI image and smoke test it. On pushes to
+# master the aggregated javadoc is published to the gh-pages branch.
+---
+name: CI
+
+on:
+  push:
+    branches-ignore:
+      - gh-pages
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
+
+jobs:
+  docs:
+    runs-on: ubuntu-latest
+    container:
+      image: opennms/antora:3.1.7-b10461
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10  # v6.0.3
+      - name: Validate xrefs in docs
+        run: make docs-check
+      - name: Build documentation
+        run: make docs
+      - name: Upload site artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7.0.1
+        with:
+          name: docs-site
+          path: public/
+
+  build-package:
+    runs-on: ubuntu-latest
+    needs: docs
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10  # v6.0.3
+      - uses: actions/setup-java@1bcf9fb12cf4aa7d266a90ae39939e61372fe520  # v5.4.0
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+      - name: Compile and run tests
+        run: make compile
+      - name: Download site artifact
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c  # v8.0.1
+        with:
+          name: docs-site
+          path: public/
+      - name: Package release archives
+        run: make package
+      - name: Upload release archives
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7.0.1
+        with:
+          name: release-archives
+          path: |
+            opennms-pris-dist/target/opennms-pris-release-archive.tar.gz
+            opennms-pris-dist/target/opennms-pris-release-archive.zip
+      - name: Upload javadoc artifact
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7.0.1
+        with:
+          name: javadoc
+          path: target/*-javadoc.jar
+
+  oci-smoke:
+    runs-on: ubuntu-latest
+    needs: build-package
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10  # v6.0.3
+      - name: Download release archives
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c  # v8.0.1
+        with:
+          name: release-archives
+          path: opennms-pris-dist/target/
+      - name: Build container image
+        run: make oci
+      - name: Smoke test container image
+        run: make smoke-test
+      - name: Upload smoke test results
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7.0.1
+        with:
+          name: smoke-test-results
+          if-no-files-found: ignore
+          path: |
+            myRouter.xml
+            myServer.xml
+
+  publish-javadoc:
+    runs-on: ubuntu-latest
+    needs: oci-smoke
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Download javadoc artifact
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c  # v8.0.1
+        with:
+          name: javadoc
+          path: ${{ runner.temp }}/javadoc/
+      - name: Extract javadoc
+        run: |
+          mkdir -p "${{ runner.temp }}/site"
+          unzip -q "$(ls "${{ runner.temp }}"/javadoc/*-javadoc.jar)" -d "${{ runner.temp }}/site"
+      - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d  # v6.0.0
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9  # v5.0.0
+        with:
+          path: ${{ runner.temp }}/site/
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128  # v5.0.0
