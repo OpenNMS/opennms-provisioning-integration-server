@@ -82,7 +82,7 @@ jobs:
           name: release-archives
           path: opennms-pris-dist/target/
       - name: Build container image
-        run: make oci
+        run: make docs-docker oci
       - name: Smoke test container image
         run: make smoke-test
       - name: Upload smoke test results
