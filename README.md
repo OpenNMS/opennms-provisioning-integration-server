@@ -171,7 +171,7 @@ User and developer documentation lives under `docs/` and is built with [Antora].
 - Container images: [Docker Hub]
 - Issue and bug tracking: [GitHub Issues]
 - Source code: [GitHub]
-- Chat: [Web Chat]
+- Chat: [Mattermost]
 - Maintainer: ronny@opennms.org
 
 ## License
@@ -186,6 +186,6 @@ the full text.
 [OpenJDK]: https://openjdk.org/
 [Maven]: https://maven.apache.org/
 [git-scm]: https://git-scm.com/
-[Web Chat]: https://chats.opennms.org/opennms-discuss
+[Mattermost]: https://chat.opennms.com/opennms/channels/opennms-discussion
 [Documentation]: https://docs.opennms.com
 [Antora]: https://docs.antora.org/antora/latest/install/install-antora/
