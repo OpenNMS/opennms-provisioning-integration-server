@@ -76,6 +76,12 @@ public class FileDriver implements Driver {
         final String instanceGlob = this.config.getString("requisitions", "*");
         final Collection<String> instances = Starter.getConfigManager().getInstances(instanceGlob);
 
+        if (instances.isEmpty()) {
+            LOGGER.warn("No requisition instances found matching '{}' - nothing to generate", instanceGlob);
+            return;
+        }
+        LOGGER.info("Generating requisitions for {} instance(s) matching '{}'", instances.size(), instanceGlob);
+
         // Get the target directory and ensure it exist
         final Path targetBase = Paths.get(this.config.getString("target"));
         Files.createDirectories(targetBase);

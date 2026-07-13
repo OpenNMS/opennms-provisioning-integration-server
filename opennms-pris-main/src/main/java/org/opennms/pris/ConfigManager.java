@@ -28,7 +28,6 @@
 
 package org.opennms.pris;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
@@ -36,11 +35,14 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import org.opennms.pris.api.Configuration;
 import org.opennms.pris.api.InstanceConfiguration;
 import org.opennms.pris.config.GlobalApacheConfiguration;
 import org.opennms.pris.config.InstanceApacheConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The configuration manager.
@@ -51,11 +53,16 @@ import org.opennms.pris.config.InstanceApacheConfiguration;
  *
  * The global configuration is loaded from the {@literal config.properties} in the base path. These properties can be overwritten by the system properties.
  *
- * The instance configurations are loaded from sub-folders relative to the configuration base path where the instance name in the folder name.
+ * The instance configurations are loaded from sub-folders of the {@literal requisitions} folder relative to the configuration base path where the instance name is the folder name.
  *
  * @author Dustin Frisch &lt;fooker@lab.sh&gt;
  */
 public class ConfigManager {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(ConfigManager.class);
+
+    // The folder relative to the config base path holding the instance configurations
+    private static final String REQUISITIONS_FOLDER = "requisitions";
 
     // The base path of the config
     private final Path base;
@@ -79,7 +86,7 @@ public class ConfigManager {
     /**
      * Returns all known instance names.
      *
-     * All sub-folders of the base directory having a {@literal requisition.properties} file are interpreted as instance configurations.
+     * All sub-folders of the {@literal requisitions} folder having a {@literal requisition.properties} file are interpreted as instance configurations.
      *
      * @return a collection of instance names
      */
@@ -90,7 +97,7 @@ public class ConfigManager {
     /**
      * Returns all known instance names matching the provided glob.
      *
-     * All sub-folders of the base directory matching the passed glob and having a {@literal  requisition.properties} file are interpreted as instance configurations.
+     * All sub-folders of the {@literal requisitions} folder matching the passed glob and having a {@literal requisition.properties} file are interpreted as instance configurations.
      *
      * The provided glob pattern is used to limit the returned instances to those matching the glob. To return all instances, {@code "*"} can be passed.
      *
@@ -99,7 +106,15 @@ public class ConfigManager {
      * @return a collection of instance names
      */
     public Collection<String> getInstances(final String glob) {
-        try (final DirectoryStream<Path> stream = Files.newDirectoryStream(this.base, glob)) {
+        final Path requisitions = this.getRequisitionsPath();
+
+        // A missing requisitions folder is an operator state, not an error - there are just no instances
+        if (!Files.isDirectory(requisitions)) {
+            LOGGER.warn("Requisitions folder does not exist: {}", requisitions.toAbsolutePath());
+            return Collections.emptyList();
+        }
+
+        try (final DirectoryStream<Path> stream = Files.newDirectoryStream(requisitions, glob)) {
 
             // The list of found instances
             final Collection<String> instances = new ArrayList<>();
@@ -112,9 +127,9 @@ public class ConfigManager {
                     continue;
                 }
 
-                // Get the name of the folder relative to the base folder and add it to
+                // Get the name of the folder relative to the requisitions folder and add it to
                 // the list of known instances
-                instances.add(this.base.relativize(path).toString());
+                instances.add(requisitions.relativize(path).toString());
             }
 
             return instances;
@@ -134,8 +149,20 @@ public class ConfigManager {
      * @return the instance configuration
      */
     public InstanceConfiguration getInstanceConfig(final String instance) {
-        return new InstanceApacheConfiguration(this.base.resolve("requisitions" + File.separator + instance),
+        return new InstanceApacheConfiguration(this.getRequisitionsPath().resolve(instance),
                                                instance);
+    }
+
+    /**
+     * Returns the folder holding the instance configurations.
+     *
+     * Instance discovery ({@link #getInstances}) and instance loading ({@link #getInstanceConfig}) MUST resolve
+     * against this same path.
+     *
+     * @return the requisitions folder
+     */
+    private Path getRequisitionsPath() {
+        return this.base.resolve(REQUISITIONS_FOLDER);
     }
     
     public InstanceConfiguration getInstanceConfigWithGlobals(final String instance) {
