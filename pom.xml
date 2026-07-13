@@ -26,7 +26,6 @@
         <github.global.server>github</github.global.server>
 
         <!-- Version settings -->
-        <apacheDerbyVersion>10.14.2.0</apacheDerbyVersion>
         <apachePoiVersion>5.5.1</apachePoiVersion>
         <beanshellVersion>2.0b5</beanshellVersion>
         <chQosLogbackVersion>1.6.0</chQosLogbackVersion>
@@ -36,6 +35,7 @@
         <downloadMavenPluginVersion>1.13.0</downloadMavenPluginVersion>
         <gparsVersion>1.2.1</gparsVersion>
         <groovyVersion>2.4.21</groovyVersion>
+        <h2Version>2.4.240</h2Version>
         <hamcrestVersion>3.0</hamcrestVersion>
         <httpComponentsVersion>4.5.14</httpComponentsVersion>
         <ivyVersion>2.6.0</ivyVersion>
