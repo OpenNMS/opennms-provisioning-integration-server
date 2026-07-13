@@ -39,7 +39,6 @@ import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.opennms.pris.api.MockInstanceConfiguration;
 import org.opennms.pris.model.MetaData;
@@ -49,10 +48,11 @@ import org.opennms.pris.model.RequisitionNode;
 public class JdbcSourceTest {
 
     private Connection connection = null;
-    private final String DRIVER = "org.apache.derby.jdbc.EmbeddedDriver";
-    private final String CONNECTION_URL_CREATE = "jdbc:derby:memory:testDB;create=true";
-    private final String CONNECTION_URL_SHUTDOWN = "jdbc:derby:memory:testDB;shutdown=true;";
-    private final String CONNECTION_URL_DROP = "jdbc:derby:memory:testDB;drop=true";
+    private static final String DRIVER = "org.h2.Driver";
+    // A named in-memory database lives as long as at least one connection is open, so the
+    // connection held by setUp() keeps it alive for the connection opened by JdbcSource.dump(),
+    // and closing it in cleanUp() drops the database - fresh state for every test.
+    private static final String CONNECTION_URL = "jdbc:h2:mem:testDB";
 
     private final String INSTANCE = "Test-Instance";
     private final String SQL_CREATE_ALL = "CREATE TABLE node ("
@@ -93,15 +93,9 @@ public class JdbcSourceTest {
             + "metaDataColumn2 AS \"MetaData_Context:keyWithContext\","
             + "categoryName AS Cat FROM node";
 
-    @BeforeClass
-    public static void setUpClass() {
-        System.setProperty("derby.stream.error.field", "DerbyUtil.DEV_NULL");
-    }
-
     @Before
-    public void setUp() throws ClassNotFoundException, SQLException {
-        Class.forName(DRIVER);
-        connection = DriverManager.getConnection(CONNECTION_URL_CREATE);
+    public void setUp() throws SQLException {
+        connection = DriverManager.getConnection(CONNECTION_URL);
         Statement stmnt = connection.createStatement();
         stmnt.executeUpdate(SQL_CREATE_ALL);
 
@@ -117,13 +111,9 @@ public class JdbcSourceTest {
     }
 
     @After
-    public void cleanUp() {
-        try {
-            connection.close();
-            DriverManager.getConnection(CONNECTION_URL_DROP);
-            DriverManager.getConnection(CONNECTION_URL_SHUTDOWN);
-        } catch (SQLException ex) {
-        }
+    public void cleanUp() throws SQLException {
+        // Closing the last connection drops the in-memory database
+        connection.close();
     }
 
     @Test
@@ -131,16 +121,19 @@ public class JdbcSourceTest {
         System.out.println("testDB");
         Statement selectAll = connection.createStatement();
         ResultSet selectAllResult = selectAll.executeQuery(SQL_SELECT_STATEMENT_TEST_1);
+        int rows = 0;
         while (selectAllResult.next()) {
+            rows++;
             System.out.println("Results: " + selectAllResult.getString("Foreign_Id") + " " + selectAllResult.getString("Node_Label")  + " " + selectAllResult.getString("Location"));
         }
+        Assert.assertEquals(3, rows);
     }
 
     @Test
     public void testDump() {
         MockInstanceConfiguration config = new MockInstanceConfiguration(INSTANCE);
         config.set("driver", DRIVER);
-        config.set("url", CONNECTION_URL_CREATE);
+        config.set("url", CONNECTION_URL);
         config.set("user", "");
         config.set("password", "");
         config.set("selectStatement", SQL_SELECT_STATEMENT_TEST_1);

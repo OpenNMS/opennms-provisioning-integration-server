@@ -35,9 +35,9 @@
             <classifier>tests</classifier>
         </dependency>
         <dependency>
-            <groupId>org.apache.derby</groupId>
-            <artifactId>derby</artifactId>
-            <version>${apacheDerbyVersion}</version>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>${h2Version}</version>
             <scope>test</scope>
         </dependency>
 
