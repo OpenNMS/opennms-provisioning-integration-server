@@ -45,6 +45,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.Before;
 import org.junit.Test;
+import org.opennms.opennms.pris.plugins.xls.source.exceptions.ConflictingNodeLabelException;
 import org.opennms.opennms.pris.plugins.xls.source.exceptions.InvalidInterfaceException;
 import org.opennms.pris.api.MockInstanceConfiguration;
 import org.opennms.pris.model.AssetField;
@@ -185,8 +186,8 @@ public class XlsSourceTest {
 
 		try {
 			xlsSource.dump();
-			fail("expected RuntimeException for conflicting node labels");
-		} catch (RuntimeException ex) {
+			fail("expected ConflictingNodeLabelException for conflicting node labels");
+		} catch (ConflictingNodeLabelException ex) {
 			assertThat(ex.getMessage(), containsString("Conflicting node labels"));
 			assertThat(ex.getMessage(), containsString("100"));
 			assertThat(ex.getMessage(), containsString("nodeA"));
@@ -204,8 +205,8 @@ public class XlsSourceTest {
 
 		try {
 			xlsSource.dump();
-			fail("expected RuntimeException for foreign id / label collision");
-		} catch (RuntimeException ex) {
+			fail("expected ConflictingNodeLabelException for foreign id / label collision");
+		} catch (ConflictingNodeLabelException ex) {
 			assertThat(ex.getMessage(), containsString("foo"));
 			assertThat(ex.getMessage(), containsString("nodeA"));
 			assertThat(ex.getMessage(), containsString("row '3'"));

@@ -56,6 +56,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.kohsuke.MetaInfServices;
+import org.opennms.opennms.pris.plugins.xls.source.exceptions.ConflictingNodeLabelException;
 import org.opennms.opennms.pris.plugins.xls.source.exceptions.InvalidInterfaceException;
 import org.opennms.opennms.pris.plugins.xls.source.exceptions.MissingRequiredColumnHeaderException;
 import org.opennms.pris.api.InstanceConfiguration;
@@ -110,9 +111,9 @@ public class XlsSource implements Source {
 			if (d % 1 == 0) {
 				value = Integer.toString((int) d);
 			} else {
-				// prints double with 7 decimal places - suitable for lat/long;
-				// Locale.ROOT keeps the decimal separator a dot regardless of the
-				// JVM default locale (e.g. a German locale would emit a comma)
+				// Format doubles with 7 decimal places, which is suitable for lat/long
+				// values. Locale.ROOT keeps the decimal separator a dot regardless of
+				// the JVM default locale, where e.g. German would emit a comma.
 				value = String.format(Locale.ROOT, "%.7f", d);
 			}
 			break;
@@ -250,23 +251,7 @@ public class XlsSource implements Source {
 		Requisition requisition = new Requisition().withForeignSource(instance);
 		xls = new File(getXlsFile());
 		try (Workbook workbook = getWorkbook(xls)) {
-			List<String> sheetNames = new ArrayList<String>();
-			for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
-				sheetNames.add(workbook.getSheetName(i));
-			}
-			if (!sheetNames.contains(instance)) {
-				LOGGER.error("can not find sheet {} in workbook from file {}", instance, xls.getAbsolutePath());
-				throw new RuntimeException(
-						"can not find sheet " + instance + " in workbook from file " + xls.getAbsolutePath());
-			}
-
-			Sheet sheet = workbook.getSheet(instance);
-			if (sheet == null) {
-				LOGGER.error("can not read sheet {} in workbook from file {} check the configured encoding {}",
-						instance, xls.getAbsolutePath(), encoding);
-				throw new RuntimeException("can not read sheet " + instance + " from file " + xls.getAbsolutePath()
-						+ " check the encoding " + encoding + ".");
-			}
+			Sheet sheet = getInstanceSheet(workbook, instance);
 
 			requiredColumns = initializeRequiredColumns(sheet);
 			optionalMultiColumns = initializeOptionalMultiColumns(sheet);
@@ -274,7 +259,6 @@ public class XlsSource implements Source {
 			assetColumns = initializeAssetColumns(sheet);
 			metaDataColumns = initializeMetaDataColumns(sheet);
 
-			RequisitionInterface reqInterface;
 			Iterator<Row> rowiterator = sheet.rowIterator();
 			if (rowiterator.hasNext()) {
 				rowiterator.next();
@@ -295,92 +279,121 @@ public class XlsSource implements Source {
 				}
 				String nodeLabel = XlsSource.getStringValueFromCell(cell);
 
-				cell = getRelevantColumnID(row, OPTIONAL_UNIQUE_HEADERS.PREFIX_FOREIGN_ID);
-				String explicitForeignId = cell == null ? null : XlsSource.getStringValueFromCell(cell);
-				if (explicitForeignId != null) {
-					explicitForeignId = explicitForeignId.trim();
-					if (explicitForeignId.isEmpty()) {
-						explicitForeignId = null;
-					}
-				}
-
-				// an explicit ID_ identifies the node; a continuation row (blank ID_) inherits
-				// the foreign ID of the current node for its label, or defaults to the label
-				String foreignId;
-				if (explicitForeignId != null) {
-					foreignId = explicitForeignId;
-				} else {
-					RequisitionNode current = currentNodeByLabel.get(nodeLabel);
-					foreignId = current != null ? current.getForeignId() : nodeLabel;
-				}
-
-				RequisitionNode node = nodeByForeignId.get(foreignId);
-				if (node == null) {
-					node = new RequisitionNode();
-					node.setNodeLabel(nodeLabel);
-					node.setForeignId(foreignId);
-					nodeByForeignId.put(foreignId, node);
-					requisition.getNodes().add(node);
-				} else if (!Objects.equals(node.getNodeLabel(), nodeLabel)) {
-					throw new RuntimeException("Conflicting node labels for foreign ID '" + foreignId
-							+ "' in requisition '" + instance + "' at row '" + reportedRowNumber(row) + "' in file '"
-							+ xls.getAbsolutePath() + "': '" + node.getNodeLabel() + "' and '" + nodeLabel
-							+ "'. A foreign ID must identify exactly one node.");
-				}
+				String foreignId = resolveForeignId(row, nodeLabel, currentNodeByLabel);
+				RequisitionNode node = resolveNode(requisition, nodeByForeignId, foreignId, nodeLabel, row, instance);
 				currentNodeByLabel.put(nodeLabel, node);
 
-				cell = getRelevantColumnID(row, OPTIONAL_UNIQUE_HEADERS.PREFIX_LOCATION);
-				if (cell != null) {
-					node.setLocation(XlsSource.getStringValueFromCell(cell));
-				}
-
-				// adding parent data
-				cell = getRelevantColumnID(row, OPTIONAL_UNIQUE_HEADERS.PREFIX_PARENT_FOREIGN_SOURCE);
-				if (cell != null) {
-					node.setParentForeignSource(XlsSource.getStringValueFromCell(cell));
-				}
-
-				cell = getRelevantColumnID(row, OPTIONAL_UNIQUE_HEADERS.PREFIX_PARENT_FOREIGN_ID);
-				if (cell != null) {
-					node.setParentForeignId(XlsSource.getStringValueFromCell(cell));
-				}
-
-				cell = getRelevantColumnID(row, OPTIONAL_UNIQUE_HEADERS.PREFIX_PARENT_NODE_LABEL);
-				if (cell != null) {
-					node.setParentNodeLabel(XlsSource.getStringValueFromCell(cell));
-				}
-
+				setNodeColumns(node, row);
 				node.getCategories().addAll(getCategoriesByRow(row));
-
-				// adding assets
 				node.getAssets().addAll(getAssetsByRow(row));
-
-				// adding meta-data
 				node.getMetaDatas().addAll(getMetaDataByRow(row));
 
-				// Add interface
-				reqInterface = getInterfaceByRow(row);
-
-				if (PrimaryType.PRIMARY.equals(reqInterface.getSnmpPrimary())) {
-					for (RequisitionInterface existingInterface : node.getInterfaces()) {
-						if (PrimaryType.PRIMARY.equals(existingInterface.getSnmpPrimary())) {
-							throw new InvalidInterfaceException("Duplicate primary interface on node '"
-									+ node.getNodeLabel() + "' (foreign ID '" + node.getForeignId()
-									+ "') in requisition '" + instance + "': interface '" + reqInterface.getIpAddr()
-									+ "' at row '" + reportedRowNumber(row) + "' in file '" + xls.getAbsolutePath()
-									+ "' is marked as primary, but interface '" + existingInterface.getIpAddr()
-									+ "' is already the primary interface.");
-						}
-					}
-				}
-
-				// Add services to the interface
+				RequisitionInterface reqInterface = getInterfaceByRow(row);
+				assertSinglePrimaryInterface(node, reqInterface, row, instance);
 				reqInterface.getMonitoredServices().addAll(getServicesByRow(row));
 				node.getInterfaces().add(reqInterface);
 			}
 			LOGGER.info("xls source delivered for requisition '{}' '{}' nodes", instance,
 					requisition.getNodes().size());
 			return requisition;
+		}
+	}
+
+	private Sheet getInstanceSheet(Workbook workbook, String instance) {
+		List<String> sheetNames = new ArrayList<String>();
+		for (int i = 0; i < workbook.getNumberOfSheets(); i++) {
+			sheetNames.add(workbook.getSheetName(i));
+		}
+		if (!sheetNames.contains(instance)) {
+			LOGGER.error("can not find sheet {} in workbook from file {}", instance, xls.getAbsolutePath());
+			throw new RuntimeException(
+					"can not find sheet " + instance + " in workbook from file " + xls.getAbsolutePath());
+		}
+
+		Sheet sheet = workbook.getSheet(instance);
+		if (sheet == null) {
+			LOGGER.error("can not read sheet {} in workbook from file {} check the configured encoding {}",
+					instance, xls.getAbsolutePath(), encoding);
+			throw new RuntimeException("can not read sheet " + instance + " from file " + xls.getAbsolutePath()
+					+ " check the encoding " + encoding + ".");
+		}
+		return sheet;
+	}
+
+	// an explicit ID_ identifies the node; a continuation row (blank ID_) inherits
+	// the foreign ID of the current node for its label, or defaults to the label
+	private String resolveForeignId(Row row, String nodeLabel, Map<String, RequisitionNode> currentNodeByLabel) {
+		Cell cell = getRelevantColumnID(row, OPTIONAL_UNIQUE_HEADERS.PREFIX_FOREIGN_ID);
+		String explicitForeignId = cell == null ? null : XlsSource.getStringValueFromCell(cell);
+		if (explicitForeignId != null) {
+			explicitForeignId = explicitForeignId.trim();
+			if (explicitForeignId.isEmpty()) {
+				explicitForeignId = null;
+			}
+		}
+
+		if (explicitForeignId != null) {
+			return explicitForeignId;
+		}
+		RequisitionNode current = currentNodeByLabel.get(nodeLabel);
+		return current != null ? current.getForeignId() : nodeLabel;
+	}
+
+	private RequisitionNode resolveNode(Requisition requisition, Map<String, RequisitionNode> nodeByForeignId,
+			String foreignId, String nodeLabel, Row row, String instance) throws ConflictingNodeLabelException {
+		RequisitionNode node = nodeByForeignId.get(foreignId);
+		if (node == null) {
+			node = new RequisitionNode();
+			node.setNodeLabel(nodeLabel);
+			node.setForeignId(foreignId);
+			nodeByForeignId.put(foreignId, node);
+			requisition.getNodes().add(node);
+		} else if (!Objects.equals(node.getNodeLabel(), nodeLabel)) {
+			throw new ConflictingNodeLabelException("Conflicting node labels for foreign ID '" + foreignId
+					+ "' in requisition '" + instance + "' at row '" + reportedRowNumber(row) + "' in file '"
+					+ xls.getAbsolutePath() + "': '" + node.getNodeLabel() + "' and '" + nodeLabel
+					+ "'. A foreign ID must identify exactly one node.");
+		}
+		return node;
+	}
+
+	private void setNodeColumns(RequisitionNode node, Row row) {
+		Cell cell = getRelevantColumnID(row, OPTIONAL_UNIQUE_HEADERS.PREFIX_LOCATION);
+		if (cell != null) {
+			node.setLocation(XlsSource.getStringValueFromCell(cell));
+		}
+
+		// adding parent data
+		cell = getRelevantColumnID(row, OPTIONAL_UNIQUE_HEADERS.PREFIX_PARENT_FOREIGN_SOURCE);
+		if (cell != null) {
+			node.setParentForeignSource(XlsSource.getStringValueFromCell(cell));
+		}
+
+		cell = getRelevantColumnID(row, OPTIONAL_UNIQUE_HEADERS.PREFIX_PARENT_FOREIGN_ID);
+		if (cell != null) {
+			node.setParentForeignId(XlsSource.getStringValueFromCell(cell));
+		}
+
+		cell = getRelevantColumnID(row, OPTIONAL_UNIQUE_HEADERS.PREFIX_PARENT_NODE_LABEL);
+		if (cell != null) {
+			node.setParentNodeLabel(XlsSource.getStringValueFromCell(cell));
+		}
+	}
+
+	private void assertSinglePrimaryInterface(RequisitionNode node, RequisitionInterface reqInterface, Row row,
+			String instance) throws InvalidInterfaceException {
+		if (!PrimaryType.PRIMARY.equals(reqInterface.getSnmpPrimary())) {
+			return;
+		}
+		for (RequisitionInterface existingInterface : node.getInterfaces()) {
+			if (PrimaryType.PRIMARY.equals(existingInterface.getSnmpPrimary())) {
+				throw new InvalidInterfaceException("Duplicate primary interface on node '"
+						+ node.getNodeLabel() + "' (foreign ID '" + node.getForeignId()
+						+ "') in requisition '" + instance + "': interface '" + reqInterface.getIpAddr()
+						+ "' at row '" + reportedRowNumber(row) + "' in file '" + xls.getAbsolutePath()
+						+ "' is marked as primary, but interface '" + existingInterface.getIpAddr()
+						+ "' is already the primary interface.");
+			}
 		}
 	}
 
