@@ -4,10 +4,10 @@
 #
 # Release pipeline, triggered by v* tags: build from source, smoke test the
 # amd64 container image, then push the amd64/arm64 multi-arch manifest to
-# GHCR and create a GitHub release with the distribution archives.
+# DockerHub and create a GitHub release with the distribution archives.
 #
-# No repository secrets required: images are pushed to docker.io/opennms/pris
-# with the workflow GITHUB_TOKEN. One-time setup: the org must allow GitHub
+# DockerHub repository secrets are required: images are pushed to docker.io/opennms/pris
+# with the workflow DOCKERHUB_TOKEN. One-time setup: the org must allow GitHub
 # Actions to create packages, and the package created by the first push is
 # private until its visibility is flipped to public manually.
 ---
