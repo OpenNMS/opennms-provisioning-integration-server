@@ -9,7 +9,7 @@ To use the _file driver_ you have to set the parameters in the `global.propertie
 | Parameter      | Required | Description
 | `driver`       | *        | set to `file` to generate OpenNMS requisitions as XML file
 | `target`       | *        | `path/to/output/folder` for XML files to generate
-| `requisitions` |          | parameter as Java regular expression filter for the requisition name
+| `requisitions` |          | glob pattern filter for the requisition name, e.g. `my*`; defaults to `*`
 |===
 
 .Example configuration for a file based requisition
