@@ -64,8 +64,13 @@ docs-docker: deps-docs-docker ## Build the Antora docs with a docker container
 	@echo "Build Antora docs with docker ..."
 	docker run --rm -v $(WORKING_DIRECTORY):/antora $(DOCKER_ANTORA_IMAGE) --stacktrace generate $(SITE_FILE)
 
+# assembly.xml bundles ./public into the release archive as documentation/, so
+# build the docs first if they are missing. Uses docs-docker because this rule
+# only runs in oci flows, which require docker anyway; in CI the archive and
+# public/ are provided as prebuilt artifacts, so neither step runs there.
 $(RELEASE_ARCHIVE):
 	@echo "Release archive is missing, packaging it ..."
+	@if [ ! -d public ]; then $(MAKE) docs-docker; fi
 	$(MAKE) package
 
 oci-stage: $(RELEASE_ARCHIVE) ## Stage the release archive for the container build
