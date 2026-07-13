@@ -1,4 +1,5 @@
 docs:
-- 'docs/*'
-- 'docs/**/*'
-- '**/*.adoc'
+- changed-files:
+  - any-glob-to-any-file:
+    - 'docs/**'
+    - '**/*.adoc'
