@@ -14,9 +14,6 @@
 
    <name>OpenNMS :: Provisioning Integration Server :: Plugins :: XLS</name>
 
-   <properties>
-      <apachePoiVersion>5.5.1</apachePoiVersion>
-   </properties>
 
    <dependencies>
       <!-- XLS -->

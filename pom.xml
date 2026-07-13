@@ -27,6 +27,7 @@
 
         <!-- Version settings -->
         <apacheDerbyVersion>10.14.2.0</apacheDerbyVersion>
+        <apachePoiVersion>5.5.1</apachePoiVersion>
         <beanshellVersion>2.0b5</beanshellVersion>
         <chQosLogbackVersion>1.5.6</chQosLogbackVersion>
         <commonsConfigurationVersion>1.10</commonsConfigurationVersion>
@@ -54,6 +55,7 @@
         <mavenShadePluginVersion>3.6.2</mavenShadePluginVersion>
         <metainfServicesVersion>1.11</metainfServicesVersion>
         <mysqlConnectorVersion>8.0.33</mysqlConnectorVersion>
+        <ocsInventoryClientVersion>1.0.1</ocsInventoryClientVersion>
         <opennmsVersion>33.0.4</opennmsVersion>
         <opennmsApiVersion>2.0.0</opennmsApiVersion>
         <postgresqlDriverVersion>42.7.13</postgresqlDriverVersion>
