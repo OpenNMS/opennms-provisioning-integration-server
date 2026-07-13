@@ -115,12 +115,6 @@
                 <version>${jettyServerVersion}</version>
             </dependency>
 
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-rewrite</artifactId>
-                <version>${jettyServerVersion}</version>
-            </dependency>
-
             <!-- SPI -->
             <dependency>
                 <groupId>org.kohsuke.metainf-services</groupId>
