@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/OpenNMS/opennms-provisioning-integration-server/actions/workflows/ci.yml/badge.svg)](https://github.com/OpenNMS/opennms-provisioning-integration-server/actions/workflows/ci.yml)
 [![Latest release](https://img.shields.io/github/v/release/OpenNMS/opennms-provisioning-integration-server?sort=semver)](https://github.com/OpenNMS/opennms-provisioning-integration-server/releases)
-[![Container image](https://img.shields.io/badge/ghcr.io-opennms%2Fpris-2496ED?logo=docker&logoColor=white)](https://github.com/OpenNMS/opennms-provisioning-integration-server/pkgs/container/pris)
+[![Container image](https://img.shields.io/badge/docker.io-opennms%2Fpris-2496ED?logo=docker&logoColor=white)](https://hub.docker.com/r/opennms/pris)
 [![Java 17](https://img.shields.io/badge/Java-17-orange.svg?logo=openjdk&logoColor=white)](https://adoptium.net/)
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
 
@@ -24,11 +24,11 @@ inventory data before it reaches OpenNMS.
 
 ## Quick start (container)
 
-Released images are published to the [GitHub Container Registry]. Start the
+Released images are published to [Docker Hub]. Start the
 latest stable release with:
 
 ```sh
-docker run --name mypris --detach --publish 8000:8000 ghcr.io/opennms/pris:latest
+docker run --name mypris --detach --publish 8000:8000 opennms/pris:latest
 ```
 
 Then open <http://localhost:8000>. If no requisition source is configured yet
@@ -37,7 +37,7 @@ you are redirected to the documentation page.
 Image tags:
 
 - `latest` — floating tag tracking the most recent stable release
-- `<version>` — a specific release (see the [container package][GitHub Container Registry] for available tags)
+- `<version>` — a specific release (see the [Docker Hub repository][Docker Hub] for available tags)
 
 ### Docker Compose
 
@@ -49,7 +49,7 @@ volumes:
 services:
   pris:
     container_name: opennms.pris
-    image: ghcr.io/opennms/pris:latest
+    image: opennms/pris:latest
     environment:
       - TZ=Europe/Berlin
     volumes:
@@ -168,7 +168,7 @@ User and developer documentation lives under `docs/` and is built with [Antora].
 ## Project information
 
 - CI/CD system: [GitHub Actions]
-- Container images: [GitHub Container Registry]
+- Container images: [Docker Hub]
 - Issue and bug tracking: [GitHub Issues]
 - Source code: [GitHub]
 - Chat: [Web Chat]
@@ -181,7 +181,7 @@ the full text.
 
 [GitHub]: https://github.com/OpenNMS/opennms-provisioning-integration-server
 [GitHub Actions]: https://github.com/OpenNMS/opennms-provisioning-integration-server/actions
-[GitHub Container Registry]: https://github.com/OpenNMS/opennms-provisioning-integration-server/pkgs/container/pris
+[Docker Hub]: https://hub.docker.com/r/opennms/pris
 [GitHub Issues]: https://github.com/OpenNMS/opennms-provisioning-integration-server/issues
 [OpenJDK]: https://openjdk.org/
 [Maven]: https://maven.apache.org/

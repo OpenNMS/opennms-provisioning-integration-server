@@ -15,7 +15,7 @@ The [`release`](.github/workflows/release.yml) workflow reacts to `v*` tags and:
 2. Builds the docs and packages the `.tar.gz` / `.zip` release archives.
 3. Builds an `amd64` image and runs the container smoke test (`make smoke-test`).
 4. Builds and pushes a **multi-arch** (`linux/amd64`, `linux/arm64`) OCI image to
-   `ghcr.io/<owner>/pris`, tagged with both the version and `latest`.
+   `docker.io/opennms/pris`, tagged with both the version and `latest`.
 5. Creates a GitHub release for the tag with auto-generated notes and attaches
    the `.tar.gz` and `.zip` archives.
 
@@ -28,10 +28,9 @@ by the [`ci`](.github/workflows/ci.yml) workflow — they do not publish anythin
 * Push access to `master` and permission to push tags.
 * A clean, up-to-date `master` working tree that builds green
   (`make compile`).
-* Nothing else is required for the pipeline itself: the release workflow uses
-  the built-in `GITHUB_TOKEN` and needs **no repository secrets**. Images are
-  pushed with that token to the GHCR namespace of the repository the release is
-  cut from.
+* The `DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN` Actions secrets must be
+  configured with a Docker Hub access token that has push rights to
+  `opennms/pris`. Everything else uses the built-in `GITHUB_TOKEN`.
 
 ## Cutting a release
 
@@ -83,11 +82,5 @@ Verify the published artifacts:
 * The container image is available:
 
   ```
-  docker run --rm --publish 8000:8000 ghcr.io/<owner>/pris:2.1.2
+  docker run --rm --publish 8000:8000 opennms/pris:2.1.2
   ```
-
-### First release only
-
-The GHCR package created by the very first release is **private**. Flip its
-visibility to public once, in the GitHub package settings for the repository
-owner; subsequent releases inherit that visibility.
