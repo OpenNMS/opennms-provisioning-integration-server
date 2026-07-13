@@ -29,15 +29,14 @@
 package org.opennms.pris.driver;
 
 import java.net.InetSocketAddress;
-import org.eclipse.jetty.rewrite.handler.RedirectPatternRule;
-import org.eclipse.jetty.rewrite.handler.RewriteHandler;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.server.handler.ResourceHandler;
+import org.eclipse.jetty.util.resource.ResourceFactory;
 import org.opennms.pris.api.Configuration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A working mode providing a HTTP server publishing generated requisitions.
@@ -72,26 +71,27 @@ public class HttpServerDriver implements Driver {
                 this.config.getInt("port", 8000)));
         
         
-        ContextHandlerCollection contextHandlerCollection = new ContextHandlerCollection();
-        
         // custom handling for requisitions
         RequisitionProviderHandler requisitionProviderHandler = new RequisitionProviderHandler();
-        ContextHandler contextHandlerRequisitions = new ContextHandler("/requisitions");
-        contextHandlerRequisitions.setHandler(requisitionProviderHandler);
-        contextHandlerCollection.addHandler(contextHandlerRequisitions);
-        
+        ContextHandler contextHandlerRequisitions = new ContextHandler(requisitionProviderHandler, "/requisitions");
+
         // provide the documentation
+        // Jetty 12 rejects a relative base resource as an "alias", so resolve
+        // "./documentation/" (relative to the working directory) to an absolute,
+        // normalized path before handing it to the ResourceHandler.
+        final Path documentationRoot = Paths.get("documentation").toAbsolutePath().normalize();
         ResourceHandler docuResourceHandler = new ResourceHandler();
-        docuResourceHandler.setDirectoriesListed(true);
-        docuResourceHandler.setWelcomeFiles(new String[]{"index.html"});
-        docuResourceHandler.setResourceBase("./documentation/");
+        docuResourceHandler.setDirAllowed(true);
+        docuResourceHandler.setWelcomeFiles("index.html");
+        docuResourceHandler.setBaseResource(
+                ResourceFactory.of(docuResourceHandler).newResource(documentationRoot));
 
-        // redirecting http://ip:port/ to the docu
+        // serving the docu at http://ip:port/
+        ContextHandler rootContext = new ContextHandler(docuResourceHandler, "/");
 
-        ContextHandler rootContext = new ContextHandler("/");
-        rootContext.setHandler(docuResourceHandler);
-        contextHandlerCollection.addHandler(rootContext);
-        
+        ContextHandlerCollection contextHandlerCollection =
+                new ContextHandlerCollection(contextHandlerRequisitions, rootContext);
+
         server.setHandler(contextHandlerCollection);
 
         server.start();
