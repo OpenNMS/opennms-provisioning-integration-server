@@ -28,10 +28,11 @@
 
 package org.opennms.pris.driver;
 
-import java.io.ByteArrayOutputStream;
-import java.nio.ByteBuffer;
+import java.io.OutputStream;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
+import org.eclipse.jetty.http.HttpHeader;
+import org.eclipse.jetty.io.Content;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Response;
@@ -52,12 +53,13 @@ public class RequisitionProviderHandler extends Handler.Abstract {
 
         // The path within the "/requisitions" context, e.g. "/example" for /requisitions/example
         final String pathInContext = Request.getPathInContext(request);
-        final String[] pathParts = pathInContext.substring(1).split("/");
 
-        // Get the instance for the request path
-        final String instance = pathParts.length > 0 ? pathParts[0] : "";
+        // Get the instance for the request path (first path segment)
+        final String instance = pathInContext.isEmpty()
+                ? ""
+                : pathInContext.substring(1).split("/", 2)[0];
 
-        if (instance == null || instance.isEmpty() || instance.contains("favicon.ico")) {
+        if (instance.isEmpty() || instance.contains("favicon.ico")) {
             Response.writeError(request, response, callback, 404, "No instance specified");
             return true;
         }
@@ -75,12 +77,14 @@ public class RequisitionProviderHandler extends Handler.Abstract {
             final Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
             jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
-            // Marshall the requisition and write it to the response
-            final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            jaxbMarshaller.marshal(requisition, baos);
-
             response.setStatus(200);
-            response.write(true, ByteBuffer.wrap(baos.toByteArray()), callback);
+            response.getHeaders().put(HttpHeader.CONTENT_TYPE, "application/xml");
+
+            // Marshall the requisition and stream it to the response
+            try (OutputStream out = Content.Sink.asOutputStream(response)) {
+                jaxbMarshaller.marshal(requisition, out);
+            }
+            callback.succeeded();
         } catch (final Exception ex) {
             LOGGER.warn("Request failed", ex);
             Response.writeError(request, response, callback, 500, ex.getMessage());
