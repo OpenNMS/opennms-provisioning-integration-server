@@ -30,13 +30,15 @@ package org.opennms.pris.config;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import org.apache.commons.configuration.ConfigurationException;
-import org.apache.commons.configuration.reloading.FileChangedReloadingStrategy;
+import org.apache.commons.configuration2.PropertiesConfiguration;
+import org.apache.commons.configuration2.convert.LegacyListDelimiterHandler;
+import org.apache.commons.configuration2.ex.ConfigurationException;
+import org.apache.commons.configuration2.io.FileHandler;
 import org.opennms.pris.api.InstanceConfiguration;
 
 public class InstanceApacheConfiguration extends AbstractApacheConfiguration implements InstanceConfiguration {
 
-    private static org.apache.commons.configuration.Configuration createConfig(final Path basePath) {
+    private static org.apache.commons.configuration2.Configuration createConfig(final Path basePath) {
         final Path path = basePath.resolve("requisition.properties");
 
         // Raise wrapped file not found exception if the config file does not exist
@@ -44,14 +46,15 @@ public class InstanceApacheConfiguration extends AbstractApacheConfiguration imp
             throw new RuntimeException("Config file not found: " + path);
         }
 
-        // Load system and file properties
+        // Load via FileHandler directly (no builder, which would require
+        // commons-beanutils). No reloading strategy needed: the ConfigManager
+        // builds a fresh configuration for every request anyway.
         try {
-            return new org.apache.commons.configuration.PropertiesConfiguration(path.toFile()) {
-                {
-                    setThrowExceptionOnMissing(true);
-                    setReloadingStrategy(new FileChangedReloadingStrategy());
-                }
-            };
+            final PropertiesConfiguration config = new PropertiesConfiguration();
+            config.setListDelimiterHandler(new LegacyListDelimiterHandler(','));
+            config.setThrowExceptionOnMissing(true);
+            new FileHandler(config).load(path.toFile());
+            return config;
 
         } catch (final ConfigurationException ex) {
             throw new RuntimeException(ex);
@@ -71,7 +74,7 @@ public class InstanceApacheConfiguration extends AbstractApacheConfiguration imp
 
     private InstanceApacheConfiguration(final Path basePath,
                                         final String instance,
-                                        final org.apache.commons.configuration.Configuration config) {
+                                        final org.apache.commons.configuration2.Configuration config) {
         super(config);
 
         this.basePath = basePath;

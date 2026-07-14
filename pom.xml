@@ -29,7 +29,9 @@
         <apachePoiVersion>5.5.1</apachePoiVersion>
         <beanshellVersion>2.0b5</beanshellVersion>
         <chQosLogbackVersion>1.6.1</chQosLogbackVersion>
-        <commonsConfigurationVersion>1.10</commonsConfigurationVersion>
+        <commonsConfiguration2Version>2.15.1</commonsConfiguration2Version>
+        <!-- commons-configuration2 requires the commons-io version it was
+             built against; keep them in lockstep when bumping either -->
         <commonsIoVersion>2.22.0</commonsIoVersion>
         <commonsLang3Version>3.20.0</commonsLang3Version>
         <downloadMavenPluginVersion>1.13.0</downloadMavenPluginVersion>
@@ -105,9 +107,9 @@
 
             <!-- Configuration -->
             <dependency>
-                <groupId>commons-configuration</groupId>
-                <artifactId>commons-configuration</artifactId>
-                <version>${commonsConfigurationVersion}</version>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-configuration2</artifactId>
+                <version>${commonsConfiguration2Version}</version>
             </dependency>
 
             <!-- Web-Server -->

@@ -37,18 +37,14 @@ import java.util.List;
 import org.opennms.pris.api.Configuration;
 
 public abstract class AbstractApacheConfiguration implements Configuration {
-    
-    private final org.apache.commons.configuration.Configuration config;
 
-    public org.apache.commons.configuration.Configuration getConfiguration() {
-        return config;
-    }
-    
-    protected AbstractApacheConfiguration(final org.apache.commons.configuration.Configuration config) {
+    private final org.apache.commons.configuration2.Configuration config;
+
+    protected AbstractApacheConfiguration(final org.apache.commons.configuration2.Configuration config) {
         this.config = config;
     }
 
-    protected org.apache.commons.configuration.Configuration getConfig() {
+    protected org.apache.commons.configuration2.Configuration getConfig() {
         return config;
     }
 
