@@ -28,33 +28,44 @@
 
 package org.opennms.pris.config;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
-import org.apache.commons.configuration.CompositeConfiguration;
-import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration2.CompositeConfiguration;
+import org.apache.commons.configuration2.PropertiesConfiguration;
+import org.apache.commons.configuration2.SystemConfiguration;
+import org.apache.commons.configuration2.convert.LegacyListDelimiterHandler;
+import org.apache.commons.configuration2.ex.ConfigurationException;
+import org.apache.commons.configuration2.io.FileHandler;
 import org.opennms.pris.api.Configuration;
 
 public class GlobalApacheConfiguration extends AbstractApacheConfiguration implements Configuration {
 
-    private static org.apache.commons.configuration.Configuration createConfig(final Path base) {
+    private static org.apache.commons.configuration2.Configuration createConfig(final Path base) {
         // Load system and file properties
-        final org.apache.commons.configuration.SystemConfiguration systemConfig;
-        final org.apache.commons.configuration.PropertiesConfiguration propertiesConfig;
-        try {
-            systemConfig = new org.apache.commons.configuration.SystemConfiguration();
-            
-            propertiesConfig = new org.apache.commons.configuration.PropertiesConfiguration(base.resolve("global.properties").toFile());
-            
-        } catch (final ConfigurationException ex) {
-            throw new RuntimeException(ex);
-        }
-        
-        // Build composition of system properties and config file
-        return new CompositeConfiguration() {{
-            addConfiguration(systemConfig);
-            addConfiguration(propertiesConfig);
+        final SystemConfiguration systemConfig = new SystemConfiguration();
+        systemConfig.setListDelimiterHandler(new LegacyListDelimiterHandler(','));
 
-            setThrowExceptionOnMissing(true);
-        }};
+        // The global.properties stays optional like with Commons
+        // Configuration 1.x, which created an empty configuration when the
+        // file was absent
+        final Path path = base.resolve("global.properties");
+        final PropertiesConfiguration propertiesConfig = new PropertiesConfiguration();
+        propertiesConfig.setListDelimiterHandler(new LegacyListDelimiterHandler(','));
+        if (Files.exists(path)) {
+            try {
+                new FileHandler(propertiesConfig).load(path.toFile());
+            } catch (final ConfigurationException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+
+        // Build composition of system properties and config file
+        final CompositeConfiguration config = new CompositeConfiguration();
+        config.addConfiguration(systemConfig);
+        config.addConfiguration(propertiesConfig);
+        config.setListDelimiterHandler(new LegacyListDelimiterHandler(','));
+        config.setThrowExceptionOnMissing(true);
+        return config;
     }
 
     private final Path basePath;
