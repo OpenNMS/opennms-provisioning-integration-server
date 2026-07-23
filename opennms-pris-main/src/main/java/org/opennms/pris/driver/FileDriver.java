@@ -72,6 +72,10 @@ public class FileDriver implements Driver {
 
     @Override
     public void run() throws Exception {
+        // Resolve the target directory first so a missing 'target' is diagnosed
+        // even when no instances match (getString throws on the unset key)
+        final Path targetBase = Paths.get(this.config.getString("target"));
+
         // Get the instance matching glob and find all matching instances
         final String instanceGlob = this.config.getString("requisitions", "*");
         final Collection<String> instances = Starter.getConfigManager().getInstances(instanceGlob);
@@ -82,8 +86,7 @@ public class FileDriver implements Driver {
         }
         LOGGER.info("Generating requisitions for {} instance(s) matching '{}'", instances.size(), instanceGlob);
 
-        // Get the target directory and ensure it exist
-        final Path targetBase = Paths.get(this.config.getString("target"));
+        // Ensure the target directory exists
         Files.createDirectories(targetBase);
 
         // Loop over all instances

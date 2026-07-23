@@ -1,7 +1,7 @@
 /*
  * Copyright 2026 The OpenNMS Group, Inc.
  *
- * SPDX-License-Identifier: GPL-3.0-only
+ * SPDX-License-Identifier: GPL-3.0-or-later
  *
  * Created by Ronny Trommer <ronny@opennms.com>
  */
