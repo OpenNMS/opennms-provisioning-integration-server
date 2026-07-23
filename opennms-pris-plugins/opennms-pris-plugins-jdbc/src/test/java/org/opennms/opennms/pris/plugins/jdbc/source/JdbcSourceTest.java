@@ -30,6 +30,7 @@ package org.opennms.opennms.pris.plugins.jdbc.source;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -105,9 +106,18 @@ public class JdbcSourceTest {
     }
 
     private void insertRow(String foreignId, String nodeLabel, String location, String parentNodeLabel, String parentForeignId, String parentForeignSource, String ipAddress, String ifType, String ifStatus, String description, String city, String state, String serviceName, String categoryName, String metaDataColumn1, String metaDataColumn2) throws SQLException {
-        String DML = "INSERT INTO node (foreignId, nodeLabel, location, parentNodeLabel, parentForeignId, parentForeignSource, ipAddress, ifType, ifStatus, description, city, state, serviceName, categoryName, metaDataColumn1, metaDataColumn2) VALUES (" + foreignId + ", '" + nodeLabel + "', '" + location + "', '" + parentNodeLabel + "', '" + parentForeignId + "', '" + parentForeignSource + "', '" + ipAddress + "', '" + ifType + "', '" + ifStatus + "', '" + description + "', '" + city + "', '" + state + "', '" + serviceName + "', '" + categoryName + "', '" + metaDataColumn1 +"', '" + metaDataColumn2 +"')";
-        Statement stmnt = connection.createStatement();
-        stmnt.executeUpdate(DML);
+        final String DML = "INSERT INTO node (foreignId, nodeLabel, location, parentNodeLabel, parentForeignId, parentForeignSource, ipAddress, ifType, ifStatus, description, city, state, serviceName, categoryName, metaDataColumn1, metaDataColumn2) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        try (final PreparedStatement stmnt = connection.prepareStatement(DML)) {
+            stmnt.setInt(1, Integer.parseInt(foreignId));
+            // Bind the VARCHAR columns; setString(index, null) binds a real SQL NULL
+            // rather than the literal string "null" produced by concatenation.
+            final String[] values = {nodeLabel, location, parentNodeLabel, parentForeignId, parentForeignSource, ipAddress, ifType, ifStatus, description, city, state, serviceName, categoryName, metaDataColumn1, metaDataColumn2};
+            for (int i = 0; i < values.length; i++) {
+                stmnt.setString(i + 2, values[i]);
+            }
+            stmnt.executeUpdate();
+        }
     }
 
     @After
