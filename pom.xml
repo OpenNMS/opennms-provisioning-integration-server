@@ -31,7 +31,7 @@
         <beanshellVersion>2.0b5</beanshellVersion>
         <chQosLogbackVersion>1.6.0</chQosLogbackVersion>
         <commonsConfigurationVersion>1.10</commonsConfigurationVersion>
-        <commonsIoVersion>2.16.1</commonsIoVersion>
+        <commonsIoVersion>2.22.0</commonsIoVersion>
         <commonsLang3Version>3.20.0</commonsLang3Version>
         <downloadMavenPluginVersion>1.13.0</downloadMavenPluginVersion>
         <gparsVersion>1.2.1</gparsVersion>
