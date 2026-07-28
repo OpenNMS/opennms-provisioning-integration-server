@@ -28,7 +28,7 @@
         <!-- Version settings -->
         <apachePoiVersion>5.5.1</apachePoiVersion>
         <beanshellVersion>2.0b5</beanshellVersion>
-        <chQosLogbackVersion>1.6.0</chQosLogbackVersion>
+        <chQosLogbackVersion>1.6.1</chQosLogbackVersion>
         <commonsConfigurationVersion>1.10</commonsConfigurationVersion>
         <commonsIoVersion>2.22.0</commonsIoVersion>
         <commonsLang3Version>3.20.0</commonsLang3Version>
