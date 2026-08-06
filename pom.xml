@@ -47,7 +47,7 @@
         <jaxb2ValueConstructorVersion>3.0</jaxb2ValueConstructorVersion>
         <jaxbApiVersion>2.3.1</jaxbApiVersion>
         <jaxbCoreVersion>4.0.0</jaxbCoreVersion>
-        <jaxbImplVersion>2.3.9</jaxbImplVersion>
+        <jaxbImplVersion>4.0.0</jaxbImplVersion>
         <jettyServerVersion>12.1.11</jettyServerVersion>
         <junitVersion>4.13.2</junitVersion>
         <mavenAssemblyPluginVersion>3.8.0</mavenAssemblyPluginVersion>
