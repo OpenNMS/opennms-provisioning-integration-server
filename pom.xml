@@ -28,7 +28,7 @@
         <!-- Version settings -->
         <apachePoiVersion>5.5.1</apachePoiVersion>
         <beanshellVersion>2.0b5</beanshellVersion>
-        <chQosLogbackVersion>1.6.1</chQosLogbackVersion>
+        <chQosLogbackVersion>1.6.3</chQosLogbackVersion>
         <commonsConfiguration2Version>2.15.1</commonsConfiguration2Version>
         <!-- commons-configuration2 requires the commons-io version it was
              built against; keep them in lockstep when bumping either -->
