@@ -38,6 +38,7 @@ import org.opennms.pris.model.RequisitionNode;
 import org.opennms.ocs.inventory.client.response.snmp.SnmpDevice;
 import org.opennms.ocs.inventory.client.response.snmp.SnmpDevices;
 import org.opennms.opennms.pris.plugins.ocs.util.OcsInterfaceUtils;
+import org.opennms.pris.api.ParameterDescriptor;
 import org.opennms.pris.api.Mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -106,6 +107,12 @@ public class DefaultOcsSnmpDevicesMapper implements Mapper {
         @Override
         public Mapper create(final InstanceConfiguration config) {
             return new DefaultOcsSnmpDevicesMapper(config);
+        }
+
+        @Override
+        public java.util.List<ParameterDescriptor> getParameters() {
+            return java.util.List.of(
+                ParameterDescriptor.required("url", "Base URL of the OCS web UI, used for the node link"));
         }
     }
 }

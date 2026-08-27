@@ -35,6 +35,7 @@ import java.util.Map;
 import org.kohsuke.MetaInfServices;
 import org.opennms.opennms.pris.plugins.script.util.ScriptManager;
 import org.opennms.pris.api.InstanceConfiguration;
+import org.opennms.pris.api.ParameterDescriptor;
 import org.opennms.pris.api.Mapper;
 import org.opennms.pris.model.Requisition;
 import org.slf4j.Logger;
@@ -77,6 +78,13 @@ public class ScriptMapper implements Mapper {
         @Override
         public Mapper create(InstanceConfiguration config) {
             return new ScriptMapper(config);
+        }
+
+        @Override
+        public java.util.List<ParameterDescriptor> getParameters() {
+            return java.util.List.of(
+                ParameterDescriptor.required("file", "Mapping script file(s) to run, comma-separated"),
+                ParameterDescriptor.optional("lang", "Script engine name; when omitted the engine is chosen by the script file extension"));
         }
     }
 }

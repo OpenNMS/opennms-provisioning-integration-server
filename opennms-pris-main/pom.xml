@@ -40,6 +40,21 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-configuration2</artifactId>
         </dependency>
+
+        <!-- JSON for the configuration REST API -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+
+        <!-- Default source/mapper plugins so integration tests can exercise a
+             full requisition round-trip through the configuration API -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>opennms-pris-plugins-defaults</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>

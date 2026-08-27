@@ -37,6 +37,8 @@ import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.util.resource.ResourceFactory;
 import org.opennms.pris.api.Configuration;
+import org.opennms.pris.configapi.ConfigApiHandler;
+import org.opennms.pris.configapi.RequisitionConfigRepository;
 
 /**
  * A working mode providing a HTTP server publishing generated requisitions.
@@ -66,11 +68,23 @@ public class HttpServerDriver implements Driver {
 
     @Override
     public void run() throws Exception {
+        this.start().join();
+    }
+
+    /**
+     * Builds and starts the server without joining it.
+     *
+     * Kept separate from {@link #run()} so tests can start an instance on an
+     * ephemeral port, talk to it and stop it again.
+     *
+     * @return the started server
+     */
+    public Server start() throws Exception {
         // Create an embedded jetty instance
         final Server server = new Server(new InetSocketAddress(this.config.getString("host", "127.0.0.1"),
                 this.config.getInt("port", 8000)));
-        
-        
+
+
         // custom handling for requisitions
         RequisitionProviderHandler requisitionProviderHandler = new RequisitionProviderHandler();
         ContextHandler contextHandlerRequisitions = new ContextHandler(requisitionProviderHandler, "/requisitions");
@@ -92,9 +106,27 @@ public class HttpServerDriver implements Driver {
         ContextHandlerCollection contextHandlerCollection =
                 new ContextHandlerCollection(contextHandlerRequisitions, rootContext);
 
+        // The configuration REST API is strictly opt-in: without the flag the
+        // server exposes exactly the same contexts as before
+        if (this.config.getBoolean("config.api.enabled", false)) {
+            final String token = this.config.getString("config.api.token", "");
+            if (token.isBlank()) {
+                throw new IllegalStateException(
+                        "config.api.enabled is set but config.api.token is missing - "
+                        + "refusing to start the configuration API without authentication");
+            }
+
+            final Path base = this.config.getBasePath();
+            final ConfigApiHandler configApiHandler = new ConfigApiHandler(token,
+                    base.resolve("global.properties"),
+                    new RequisitionConfigRepository(base.resolve("requisitions")));
+
+            contextHandlerCollection.addHandler(new ContextHandler(configApiHandler, "/api/v1/config"));
+        }
+
         server.setHandler(contextHandlerCollection);
 
         server.start();
-        server.join();
+        return server;
     }
 }

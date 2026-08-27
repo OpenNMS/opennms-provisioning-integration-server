@@ -38,6 +38,7 @@ import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.kohsuke.MetaInfServices;
 import org.opennms.pris.api.InstanceConfiguration;
+import org.opennms.pris.api.ParameterDescriptor;
 import org.opennms.pris.api.Source;
 import org.opennms.pris.model.Requisition;
 import org.slf4j.Logger;
@@ -136,6 +137,14 @@ public class HttpRequisitionSource implements Source {
         @Override
         public Source create(final InstanceConfiguration config) {
             return new HttpRequisitionSource(config);
+        }
+
+        @Override
+        public java.util.List<ParameterDescriptor> getParameters() {
+            return java.util.List.of(
+                ParameterDescriptor.required("url", "URL serving a requisition XML"),
+                ParameterDescriptor.optional("username", "Username for HTTP basic authentication"),
+                ParameterDescriptor.secret("password", "Password for HTTP basic authentication"));
         }
     }
 }

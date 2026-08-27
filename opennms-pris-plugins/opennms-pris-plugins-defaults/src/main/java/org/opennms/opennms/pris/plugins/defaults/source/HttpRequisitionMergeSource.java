@@ -48,6 +48,7 @@ import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.kohsuke.MetaInfServices;
 import org.opennms.pris.api.InstanceConfiguration;
+import org.opennms.pris.api.ParameterDescriptor;
 import org.opennms.pris.api.Source;
 import org.opennms.pris.model.MetaData;
 import org.opennms.pris.model.PrimaryType;
@@ -307,6 +308,19 @@ public class HttpRequisitionMergeSource implements Source {
         @Override
         public Source create(final InstanceConfiguration config) {
             return new HttpRequisitionMergeSource(config);
+        }
+
+        @Override
+        public java.util.List<ParameterDescriptor> getParameters() {
+            return java.util.List.of(
+                ParameterDescriptor.required("A.url", "URL of the first requisition"),
+                ParameterDescriptor.optional("A.username", "Username for requisition A"),
+                ParameterDescriptor.secret("A.password", "Password for requisition A"),
+                ParameterDescriptor.optional("A.keepAll", "Keep nodes only present in A (true/false, default false)"),
+                ParameterDescriptor.required("B.url", "URL of the second requisition"),
+                ParameterDescriptor.optional("B.username", "Username for requisition B"),
+                ParameterDescriptor.secret("B.password", "Password for requisition B"),
+                ParameterDescriptor.optional("B.keepAll", "Keep nodes only present in B (true/false, default false)"));
         }
     }
 }

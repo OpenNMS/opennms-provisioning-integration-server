@@ -29,8 +29,6 @@
 package org.opennms.pris.driver;
 
 import java.io.OutputStream;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
 import org.eclipse.jetty.http.HttpHeader;
 import org.eclipse.jetty.io.Content;
 import org.eclipse.jetty.server.Handler;
@@ -38,6 +36,7 @@ import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Response;
 import org.eclipse.jetty.util.Callback;
 import org.opennms.pris.RequisitionGenerator;
+import org.opennms.pris.RequisitionXml;
 import org.opennms.pris.model.Requisition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,17 +71,12 @@ public class RequisitionProviderHandler extends Handler.Abstract {
             // Generate the requisition
             final Requisition requisition = requisitionProvider.generate(instance);
 
-            // Create the marshaller for the requisition
-            final JAXBContext jaxbContext = JAXBContext.newInstance(Requisition.class);
-            final Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-
             response.setStatus(200);
             response.getHeaders().put(HttpHeader.CONTENT_TYPE, "application/xml");
 
             // Marshall the requisition and stream it to the response
             try (OutputStream out = Content.Sink.asOutputStream(response)) {
-                jaxbMarshaller.marshal(requisition, out);
+                RequisitionXml.marshal(requisition, out);
             }
             callback.succeeded();
         } catch (final Exception ex) {

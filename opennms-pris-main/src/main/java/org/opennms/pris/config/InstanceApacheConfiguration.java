@@ -30,6 +30,9 @@ package org.opennms.pris.config;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
+import org.apache.commons.configuration2.MapConfiguration;
 import org.apache.commons.configuration2.PropertiesConfiguration;
 import org.apache.commons.configuration2.convert.LegacyListDelimiterHandler;
 import org.apache.commons.configuration2.ex.ConfigurationException;
@@ -59,6 +62,31 @@ public class InstanceApacheConfiguration extends AbstractApacheConfiguration imp
         } catch (final ConfigurationException ex) {
             throw new RuntimeException(ex);
         }
+    }
+
+    /**
+     * Builds an instance configuration from an in-memory property map instead
+     * of a requisition.properties file.
+     *
+     * Used to dry-run a candidate configuration that has not been saved yet:
+     * the base path still points at the instance folder so relative paths
+     * (like {@code source.file = ../inventory.xls}) resolve exactly as they
+     * would for the saved configuration - whether or not the folder exists.
+     *
+     * @param basePath the folder the instance configuration would live in
+     * @param instance the name of the instance
+     * @param properties the candidate properties
+     *
+     * @return an instance configuration backed by the given map
+     */
+    public static InstanceApacheConfiguration fromMap(final Path basePath,
+                                                      final String instance,
+                                                      final Map<String, String> properties) {
+        final MapConfiguration config = new MapConfiguration(new HashMap<String, Object>(properties));
+        config.setListDelimiterHandler(new LegacyListDelimiterHandler(','));
+        config.setThrowExceptionOnMissing(true);
+
+        return new InstanceApacheConfiguration(basePath, instance, config);
     }
 
     private final Path basePath;

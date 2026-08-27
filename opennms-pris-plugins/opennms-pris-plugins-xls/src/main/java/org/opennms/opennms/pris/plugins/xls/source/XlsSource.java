@@ -60,6 +60,7 @@ import org.opennms.opennms.pris.plugins.xls.source.exceptions.ConflictingNodeLab
 import org.opennms.opennms.pris.plugins.xls.source.exceptions.InvalidInterfaceException;
 import org.opennms.opennms.pris.plugins.xls.source.exceptions.MissingRequiredColumnHeaderException;
 import org.opennms.pris.api.InstanceConfiguration;
+import org.opennms.pris.api.ParameterDescriptor;
 import org.opennms.pris.api.Source;
 import org.opennms.pris.model.AssetField;
 import org.opennms.pris.model.MetaData;
@@ -196,7 +197,7 @@ public class XlsSource implements Source {
 				while ((nextLine = br.readLine()) != null) {
 					Row currentRow = sheet.createRow(rowNum);
 					
-					String rowData[] = nextLine.split(CSV_FILE_DELIMITER);
+					String[] rowData = nextLine.split(CSV_FILE_DELIMITER);
 					for (int column = 0; column < rowData.length; column++) {
 						if (NumberUtils.isDigits(rowData[column])) {
 							currentRow.createCell(column).setCellValue(Integer.parseInt(rowData[column].trim()));
@@ -250,7 +251,14 @@ public class XlsSource implements Source {
 
 		Requisition requisition = new Requisition().withForeignSource(instance);
 		xls = new File(getXlsFile());
+		if (!xls.isFile()) {
+			throw new RuntimeException("can not read spreadsheet file " + xls.getAbsolutePath());
+		}
 		try (Workbook workbook = getWorkbook(xls)) {
+			if (workbook == null) {
+				throw new RuntimeException("can not create a workbook from file " + xls.getAbsolutePath()
+						+ " - not a readable .xls, .xlsx or .csv file");
+			}
 			Sheet sheet = getInstanceSheet(workbook, instance);
 
 			requiredColumns = initializeRequiredColumns(sheet);
@@ -532,8 +540,8 @@ public class XlsSource implements Source {
 				if (rawCategories == null) {
 					continue;
 				}
-				for (String category : rawCategories.trim().split(WITHIN_SPLITTER)) {
-					category = category.trim();
+				for (String rawCategory : rawCategories.trim().split(WITHIN_SPLITTER)) {
+					final String category = rawCategory.trim();
 					if (!category.isEmpty()) {
 						categories.add(new RequisitionCategory(category));
 					}
@@ -557,8 +565,8 @@ public class XlsSource implements Source {
 					continue;
 				}
 				String rawServices = value.trim();
-				for (String service : rawServices.split(WITHIN_SPLITTER)) {
-					service = service.trim();
+				for (String rawService : rawServices.split(WITHIN_SPLITTER)) {
+					final String service = rawService.trim();
 					if (!service.isEmpty()) {
 						services.add(new RequisitionMonitoredService().withServiceName(service));
 					}
@@ -722,6 +730,14 @@ public class XlsSource implements Source {
 		@Override
 		public Source create(final InstanceConfiguration config) {
 			return new XlsSource(config);
+		}
+
+		@Override
+		public java.util.List<ParameterDescriptor> getParameters() {
+		    return java.util.List.of(
+		        ParameterDescriptor.required("file", "Path to the .xls/.xlsx workbook or .csv file; the sheet named after the requisition is used"),
+		        ParameterDescriptor.optional("encoding", "Character encoding of the file (default ISO-8859-1)"),
+		        ParameterDescriptor.optional("org.opennms.pris.spreadsheet.fields", "Comma-separated header names for headerless .csv files"));
 		}
 	}
 }

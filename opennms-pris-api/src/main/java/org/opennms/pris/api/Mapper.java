@@ -28,6 +28,9 @@
 
 package org.opennms.pris.api;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.opennms.pris.model.Requisition;
 
 /**
@@ -59,6 +62,17 @@ public interface Mapper {
          * @return the created mapper
          */
         Mapper create(final InstanceConfiguration config);
+
+        /**
+         * Describes the configuration parameters this mapper understands,
+         * relative to the {@code mapper.} prefix.
+         *
+         * @return the parameter descriptors; empty if the mapper does not
+         *         describe its parameters
+         */
+        default List<ParameterDescriptor> getParameters() {
+            return Collections.emptyList();
+        }
     }
 
     /**

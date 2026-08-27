@@ -41,6 +41,7 @@
         <hamcrestVersion>3.0</hamcrestVersion>
         <httpComponentsVersion>4.5.14</httpComponentsVersion>
         <ivyVersion>2.6.0</ivyVersion>
+        <jacksonVersion>2.18.3</jacksonVersion>
         <jaxb2BasicsVersion>0.13.1</jaxb2BasicsVersion>
         <jaxb2BasicsRuntimeVersion>0.13.1</jaxb2BasicsRuntimeVersion>
         <jaxb2FluentApiVersion>3.0</jaxb2FluentApiVersion>
@@ -51,6 +52,8 @@
         <jettyServerVersion>12.1.11</jettyServerVersion>
         <junitVersion>4.13.2</junitVersion>
         <mavenAssemblyPluginVersion>3.8.0</mavenAssemblyPluginVersion>
+        <mavenCheckstylePluginVersion>3.6.0</mavenCheckstylePluginVersion>
+        <checkstyleVersion>10.21.2</checkstyleVersion>
         <mavenCompilerPluginVersion>3.15.0</mavenCompilerPluginVersion>
         <mavenJaxbPluginVersion>0.15.3</mavenJaxbPluginVersion>
         <mavenResourcesPluginVersion>3.2.0</mavenResourcesPluginVersion>
@@ -119,6 +122,13 @@
                 <version>${jettyServerVersion}</version>
             </dependency>
 
+            <!-- JSON -->
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jacksonVersion}</version>
+            </dependency>
+
             <!-- SPI -->
             <dependency>
                 <groupId>org.kohsuke.metainf-services</groupId>
@@ -154,6 +164,26 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>${mavenCheckstylePluginVersion}</version>
+                <configuration>
+                    <configLocation>${maven.multiModuleProjectDirectory}/checkstyle.xml</configLocation>
+                    <propertyExpansion>config_loc=${maven.multiModuleProjectDirectory}</propertyExpansion>
+                    <includeTestSourceDirectory>true</includeTestSourceDirectory>
+                    <consoleOutput>true</consoleOutput>
+                </configuration>
+                <dependencies>
+                    <!-- The default checkstyle shipped with the plugin is old;
+                         pin the version the ruleset is written against -->
+                    <dependency>
+                        <groupId>com.puppycrawl.tools</groupId>
+                        <artifactId>checkstyle</artifactId>
+                        <version>${checkstyleVersion}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>

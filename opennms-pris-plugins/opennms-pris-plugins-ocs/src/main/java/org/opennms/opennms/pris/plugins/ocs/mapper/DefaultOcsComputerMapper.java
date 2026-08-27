@@ -32,6 +32,7 @@ import org.kohsuke.MetaInfServices;
 import org.opennms.ocs.inventory.client.response.*;
 import org.opennms.opennms.pris.plugins.ocs.util.OcsInterfaceUtils;
 import org.opennms.pris.api.InstanceConfiguration;
+import org.opennms.pris.api.ParameterDescriptor;
 import org.opennms.pris.api.Mapper;
 import org.opennms.pris.model.*;
 import org.opennms.pris.util.AssetUtils;
@@ -197,6 +198,15 @@ public class DefaultOcsComputerMapper implements Mapper {
         @Override
         public Mapper create(final InstanceConfiguration config) {
             return new DefaultOcsComputerMapper(config);
+        }
+
+        @Override
+        public java.util.List<ParameterDescriptor> getParameters() {
+            return java.util.List.of(
+                ParameterDescriptor.required("categoryMap", "Path to a properties file mapping OCS accountinfo to categories; the key must exist and may be left empty"),
+                ParameterDescriptor.required("assetMap", "Path to a properties file mapping OCS data to asset fields; the key must exist and may be left empty"),
+                ParameterDescriptor.required("ocs.url", "Base URL of the OCS web UI, used for the node link"),
+                ParameterDescriptor.optional("accountinfo", "Whitespace-separated accountinfo entries a computer must carry to be imported"));
         }
     }
 }

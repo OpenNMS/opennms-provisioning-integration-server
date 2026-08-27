@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.Map;
 import org.opennms.pris.api.Configuration;
 import org.opennms.pris.api.InstanceConfiguration;
 import org.opennms.pris.config.GlobalApacheConfiguration;
@@ -166,9 +167,33 @@ public class ConfigManager {
     }
     
     public InstanceConfiguration getInstanceConfigWithGlobals(final String instance) {
-        InstanceConfiguration instanceConfig = this.getInstanceConfig(instance);
+        return this.mergeGlobals(this.getInstanceConfig(instance), instance);
+    }
+
+    /**
+     * Builds an instance configuration from an in-memory candidate property
+     * map - the same view {@link #getInstanceConfigWithGlobals} provides for a
+     * saved configuration, without anything being written to disk.
+     *
+     * @param instance the name of the instance
+     * @param properties the candidate properties
+     *
+     * @return the candidate configuration with global properties merged in
+     */
+    public InstanceConfiguration getCandidateConfigWithGlobals(final String instance,
+                                                               final Map<String, String> properties) {
+        final InstanceConfiguration instanceConfig = InstanceApacheConfiguration.fromMap(
+                this.getRequisitionsPath().resolve(instance),
+                instance,
+                properties);
+
+        return this.mergeGlobals(instanceConfig, instance);
+    }
+
+    private InstanceConfiguration mergeGlobals(final InstanceConfiguration instanceConfig,
+                                               final String instance) {
         instanceConfig.addProperty("requisition", instance);
-        
+
         globalConfig = new GlobalApacheConfiguration(this.base);
         Iterator<String> keys = globalConfig.getKeys();
         while (keys.hasNext()) {
@@ -177,7 +202,7 @@ public class ConfigManager {
                 instanceConfig.addProperty(key, globalConfig.getString(key));
             }
         }
-       
+
         return instanceConfig;
-    }    
+    }
 }

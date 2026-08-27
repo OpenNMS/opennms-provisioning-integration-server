@@ -37,6 +37,7 @@ import java.sql.Statement;
 
 import org.kohsuke.MetaInfServices;
 import org.opennms.pris.api.InstanceConfiguration;
+import org.opennms.pris.api.ParameterDescriptor;
 import org.opennms.pris.api.Source;
 import org.opennms.pris.model.AssetField;
 import org.opennms.pris.model.MetaData;
@@ -304,6 +305,16 @@ public class JdbcSource implements Source {
         @Override
         public Source create(final InstanceConfiguration config) {
             return new JdbcSource(config);
+        }
+
+        @Override
+        public java.util.List<ParameterDescriptor> getParameters() {
+            return java.util.List.of(
+                ParameterDescriptor.required("driver", "JDBC driver class name, e.g. org.postgresql.Driver"),
+                ParameterDescriptor.required("url", "JDBC connection string, e.g. jdbc:postgresql://host:5432/db"),
+                ParameterDescriptor.optional("user", "Database user"),
+                ParameterDescriptor.secret("password", "Database password"),
+                ParameterDescriptor.required("selectStatement", "SQL query; column names like Foreign_Id, Node_Label, IP_Address, Cat, Svc map to requisition fields"));
         }
     }
 }

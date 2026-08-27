@@ -30,9 +30,11 @@ package org.opennms.pris;
 
 import org.opennms.pris.api.Source;
 import org.opennms.pris.api.Mapper;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.ServiceLoader;
+import java.util.Set;
 import org.opennms.pris.model.Requisition;
 import org.opennms.pris.api.InstanceConfiguration;
 import org.slf4j.Logger;
@@ -91,7 +93,49 @@ public class RequisitionGenerator {
                         factory);
         }
     }
-    
+
+    /**
+     * Returns the identifiers of all source implementations found on the
+     * classpath.
+     *
+     * @return the known source identifiers
+     */
+    public static Set<String> getSourceIdentifiers() {
+        return Collections.unmodifiableSet(SOURCES.keySet());
+    }
+
+    /**
+     * Returns the identifiers of all mapper implementations found on the
+     * classpath.
+     *
+     * @return the known mapper identifiers
+     */
+    public static Set<String> getMapperIdentifiers() {
+        return Collections.unmodifiableSet(MAPPERS.keySet());
+    }
+
+    /**
+     * Returns the factory of a source implementation.
+     *
+     * @param identifier the source identifier
+     *
+     * @return the factory, or {@code null} for an unknown identifier
+     */
+    public static Source.Factory getSourceFactory(final String identifier) {
+        return SOURCES.get(identifier);
+    }
+
+    /**
+     * Returns the factory of a mapper implementation.
+     *
+     * @param identifier the mapper identifier
+     *
+     * @return the factory, or {@code null} for an unknown identifier
+     */
+    public static Mapper.Factory getMapperFactory(final String identifier) {
+        return MAPPERS.get(identifier);
+    }
+
     /**
      * The global configuration.
      */
@@ -113,9 +157,22 @@ public class RequisitionGenerator {
      * @param instance the name of the instance
      */
     public RequisitionGenerator(final String instance) {
-        // Get the configuration for the instance
-//        this.config = Starter.getConfigManager().getInstanceConfig(instance);
-        this.config = Starter.getConfigManager().getInstanceConfigWithGlobals(instance);
+        this(instance,
+             Starter.getConfigManager().getInstanceConfigWithGlobals(instance));
+    }
+
+    /**
+     * Creates a new requisition provider for an explicit configuration.
+     *
+     * Used to dry-run a candidate configuration that is not (or not yet)
+     * stored on disk - see the validation endpoint of the configuration API.
+     *
+     * @param instance the name of the instance
+     * @param config the instance configuration to use
+     */
+    public RequisitionGenerator(final String instance,
+                                final InstanceConfiguration config) {
+        this.config = config;
 
         // Create the source
         final String sourceName = this.config.getString("source");
