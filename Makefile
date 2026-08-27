@@ -5,7 +5,7 @@
 # Copyright 2026 The OpenNMS Group, Inc.
 # Created by Ronny Trommer <ronny@opennms.com>
 ##
-.PHONY: help all deps-build compile package run deps-docs deps-docs-docker deps-oci docs docs-check docs-docker oci-stage oci smoke-test clean clean-docs clean-docs-cache clean-all
+.PHONY: help all deps-build compile lint package run deps-docs deps-docs-docker deps-oci docs docs-check docs-docker oci-stage oci smoke-test smoke-test-standalone clean clean-docs clean-docs-cache clean-all
 
 .DEFAULT_GOAL := help
 
@@ -40,9 +40,16 @@ compile: ## Compile the project and run the test suite
 	@echo "Maven tests ..."
 	mvn verify
 
+lint: ## Run the Checkstyle static analysis
+	@echo "Maven checkstyle ..."
+	mvn checkstyle:check
+
 package: ## Package the release archives in tar.gz and zip format
 	@echo "Maven package ..."
 	mvn package -DskipTests
+
+smoke-test-standalone: $(RELEASE_ARCHIVE) ## Smoke test the release archive as a standalone installation
+	./bin/smoke-test-standalone.sh "$(RELEASE_ARCHIVE)"
 
 run: deps-build package ## Build from source and start PRIS in the foreground on http://localhost:8000
 	@echo "Extract release archive to $(RUN_DIR) ..."

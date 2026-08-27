@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!DOCTYPE suppressions PUBLIC
+    "-//Checkstyle//DTD SuppressionFilter Configuration 1.2//EN"
+    "https://checkstyle.org/dtds/suppressions_1_2.dtd">
+
+<!-- Grandfathered legacy files; do not add new entries without discussing it
+     in review first. -->
+<suppressions>
+    <!-- Tab-indented since their creation - converting them would churn the
+         whole file history for a whitespace-only change -->
+    <suppress checks="FileTabCharacter" files="XlsSource\.java"/>
+    <suppress checks="FileTabCharacter" files="XlsSourceTest\.java"/>
+</suppressions>
