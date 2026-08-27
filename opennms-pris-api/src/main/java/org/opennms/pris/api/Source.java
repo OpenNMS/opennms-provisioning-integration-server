@@ -28,6 +28,9 @@
 
 package org.opennms.pris.api;
 
+import java.util.Collections;
+import java.util.List;
+
 /**
  * A source for information used to create a requisition.
  *
@@ -55,6 +58,17 @@ public interface Source {
          * @return the created source
          */
         Source create(final InstanceConfiguration config);
+
+        /**
+         * Describes the configuration parameters this source understands,
+         * relative to the {@code source.} prefix.
+         *
+         * @return the parameter descriptors; empty if the source does not
+         *         describe its parameters
+         */
+        default List<ParameterDescriptor> getParameters() {
+            return Collections.emptyList();
+        }
     }
 
     /**

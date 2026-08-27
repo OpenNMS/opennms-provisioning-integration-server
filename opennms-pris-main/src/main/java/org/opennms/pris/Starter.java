@@ -93,10 +93,26 @@ public class Starter {
     /**
      * Returns the global config manager instance.
      *
+     * The instance is created lazily so that code paths not started through
+     * {@link #main} - like an embedded server in a test - get a config
+     * manager honoring the current {@code pris.config} system property.
+     *
      * @return a config manager
      */
-    public static ConfigManager getConfigManager() {
+    public static synchronized ConfigManager getConfigManager() {
+        if (Starter.configManager == null) {
+            Starter.configManager = new ConfigManager();
+        }
+
         return Starter.configManager;
+    }
+
+    /**
+     * Drops the cached config manager so the next access re-reads the
+     * {@code pris.config} system property.
+     */
+    static synchronized void resetConfigManager() {
+        Starter.configManager = null;
     }
 
     public static void setLoggingLevel(Level level) {

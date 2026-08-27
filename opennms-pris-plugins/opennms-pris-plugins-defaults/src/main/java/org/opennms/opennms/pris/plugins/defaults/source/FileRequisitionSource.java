@@ -37,6 +37,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import org.kohsuke.MetaInfServices;
 import org.opennms.pris.model.Requisition;
+import org.opennms.pris.api.ParameterDescriptor;
 import org.opennms.pris.api.Source;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -102,6 +103,12 @@ public class FileRequisitionSource implements Source {
         @Override
         public Source create(final InstanceConfiguration config) {
             return new FileRequisitionSource(config);
+        }
+
+        @Override
+        public java.util.List<ParameterDescriptor> getParameters() {
+            return java.util.List.of(
+                ParameterDescriptor.required("file", "Path to a requisition XML file"));
         }
     }
 }

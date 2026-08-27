@@ -36,6 +36,7 @@ import java.util.Collections;
 import org.kohsuke.MetaInfServices;
 import org.opennms.opennms.pris.plugins.script.util.ScriptManager;
 import org.opennms.pris.api.InstanceConfiguration;
+import org.opennms.pris.api.ParameterDescriptor;
 import org.opennms.pris.api.Source;
 
 /**
@@ -70,6 +71,13 @@ public class ScriptSource implements Source {
         @Override
         public Source create(final InstanceConfiguration config) {
             return new ScriptSource(config);
+        }
+
+        @Override
+        public java.util.List<ParameterDescriptor> getParameters() {
+            return java.util.List.of(
+                ParameterDescriptor.required("file", "Script file(s) to run, comma-separated; paths are relative to the requisition folder"),
+                ParameterDescriptor.optional("lang", "Script engine name; when omitted the engine is chosen by the script file extension"));
         }
     }
 }

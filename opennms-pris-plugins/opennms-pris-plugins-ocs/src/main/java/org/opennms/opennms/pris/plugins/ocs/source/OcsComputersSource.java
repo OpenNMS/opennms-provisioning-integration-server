@@ -35,6 +35,7 @@ import javax.xml.bind.Marshaller;
 import org.kohsuke.MetaInfServices;
 import org.opennms.ocs.inventory.client.request.logic.GetComputersLogic;
 import org.opennms.ocs.inventory.client.response.Computers;
+import org.opennms.pris.api.ParameterDescriptor;
 import org.opennms.pris.api.Source;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -86,6 +87,17 @@ public class OcsComputersSource extends AbstractOcsSource {
         @Override
         public Source create(final InstanceConfiguration config) {
             return new OcsComputersSource(config);
+        }
+
+        @Override
+        public java.util.List<ParameterDescriptor> getParameters() {
+            return java.util.List.of(
+                ParameterDescriptor.required("url", "OCS Inventory web service URL"),
+                ParameterDescriptor.required("username", "OCS user"),
+                ParameterDescriptor.requiredSecret("password", "OCS password"),
+                ParameterDescriptor.required("checksum", "OCS checksum controlling which data is fetched"),
+                ParameterDescriptor.optional("tags", "Comma-separated OCS tags to filter on"),
+                ParameterDescriptor.optional("target", "Path to dump the fetched OCS data to, for later replay"));
         }
     }
 }

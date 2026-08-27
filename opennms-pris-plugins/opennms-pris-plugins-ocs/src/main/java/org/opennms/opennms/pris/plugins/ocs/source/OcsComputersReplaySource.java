@@ -29,6 +29,7 @@
 package org.opennms.opennms.pris.plugins.ocs.source;
 
 import org.opennms.ocs.inventory.client.response.Computers;
+import org.opennms.pris.api.ParameterDescriptor;
 import org.opennms.pris.api.Source;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,6 +71,12 @@ public class OcsComputersReplaySource implements Source {
         @Override
         public Source create(final InstanceConfiguration config) {
             return new OcsComputersReplaySource(config);
+        }
+
+        @Override
+        public java.util.List<ParameterDescriptor> getParameters() {
+            return java.util.List.of(
+                ParameterDescriptor.required("file", "Previously dumped OCS XML file to replay"));
         }
     }
 }
