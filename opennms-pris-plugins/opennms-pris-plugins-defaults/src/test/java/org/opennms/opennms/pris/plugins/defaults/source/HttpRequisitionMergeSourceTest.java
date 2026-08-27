@@ -39,6 +39,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.opennms.pris.api.MockInstanceConfiguration;
@@ -53,21 +54,33 @@ import com.sun.net.httpserver.HttpServer;
 
 public class HttpRequisitionMergeSourceTest {
 
+    private HttpServer server;
+    private int port;
+
     @Before
     public void setup() throws Exception {
-        final HttpServer server = HttpServer.create(new InetSocketAddress(8000), 0);
-        server.createContext("/source1.xml", new TestHandler(Paths.get("src/test/resources/source1.xml")));
-        server.createContext("/source2.xml", new TestHandler(Paths.get("src/test/resources/source2.xml")));
-        server.setExecutor(null);
-        server.start();
+        // An ephemeral port keeps the test independent of a locally running PRIS
+        this.server = HttpServer.create(new InetSocketAddress(0), 0);
+        this.server.createContext("/source1.xml", new TestHandler(Paths.get("src/test/resources/source1.xml")));
+        this.server.createContext("/source2.xml", new TestHandler(Paths.get("src/test/resources/source2.xml")));
+        this.server.setExecutor(null);
+        this.server.start();
+        this.port = this.server.getAddress().getPort();
+    }
+
+    @After
+    public void teardown() {
+        if (this.server != null) {
+            this.server.stop(0);
+        }
     }
 
     @Test
     public void testMetaDataMerging() throws Exception {
         final MockInstanceConfiguration config = new MockInstanceConfiguration("test");
         config.set("encoding", "ISO-8859-1");
-        config.set("A.url", "http://localhost:8000/source1.xml");
-        config.set("B.url", "http://localhost:8000/source2.xml");
+        config.set("A.url", "http://localhost:" + this.port + "/source1.xml");
+        config.set("B.url", "http://localhost:" + this.port + "/source2.xml");
         final HttpRequisitionMergeSource httpRequisitionMergeSource = new HttpRequisitionMergeSource(config);
 
         final Requisition result = (Requisition) httpRequisitionMergeSource.dump();
