@@ -1,0 +1,85 @@
+= Configuration API
+:description: Learn about the optional REST API of the OpenNMS Provisioning Integration Server (PRIS) that manages requisition configurations over HTTP.
+
+The HTTP driver can expose an optional REST API to manage requisition configurations over HTTP instead of editing property files by hand.
+
+The API is a thin layer over the same files an operator edits directly:
+`global.properties` and `requisitions/<name>/requisition.properties` stay the single source of truth.
+{page-component-title} re-reads the configuration on every requisition request, so changes made through the API and changes made by editing files both take effect on the next request - no restart, in either direction.
+
+== Enabling the API
+
+The API is disabled by default.
+A {page-component-title} instance without the flag serves exactly the endpoints it always has: the documentation and `/requisitions/<name>`.
+
+[options="header",autowidth"]
+|===
+| Parameter           | Required | Description
+| `config.api.enabled` |         | set to `true` to serve the configuration API below `/api/v1/config`
+| `config.api.token`   | *(if enabled)* | bearer token every API request has to present; startup fails when the API is enabled without a token
+|===
+
+.Example configuration in global.properties
+[source,properties]
+----
+driver = http
+host = 0.0.0.0
+port = 8000
+
+config.api.enabled = true
+config.api.token = change-me
+----
+
+Both parameters can also be passed as Java system properties, which is the way to enable the API for a container:
+
+[source,bash]
+----
+docker run --name mypris --detach --publish 8000:8000 opennms/pris:latest \
+    -Dconfig.api.enabled=true -Dconfig.api.token=change-me \
+    -cp '/opt/opennms-pris/lib/*:/opt/opennms-pris/opennms-pris.jar' org.opennms.pris.Starter
+----
+
+CAUTION: The token protects write access to the requisition configuration.
+Treat it like a password, and terminate TLS in a reverse proxy in front of {page-component-title} when the API is reachable over untrusted networks.
+
+== Endpoints
+
+All endpoints require the header `Authorization: Bearer <token>`.
+Requests without a valid token are answered with status `401`.
+
+[options="header",autowidth"]
+|===
+| Method   | Path | Description
+| `GET`    | `/api/v1/config/global` | Read-only view of `global.properties`
+| `GET`    | `/api/v1/config/requisitions` | List all requisitions with their source and mapper type
+| `GET`    | `/api/v1/config/requisitions/\{name}` | All properties of one requisition
+| `PUT`    | `/api/v1/config/requisitions/\{name}` | Create or replace a requisition configuration
+| `DELETE` | `/api/v1/config/requisitions/\{name}` | Delete a requisition including its folder
+| `GET`    | `/api/v1/config/metadata` | Sources and mappers available on this instance, each with its parameter descriptions (name, description, required, secret)
+| `POST`   | `/api/v1/config/requisitions/\{name}/preview` | Dry-run the requisition generation and return the resulting XML
+| `POST`   | `/api/v1/config/requisitions/\{name}/validate` | Dry-run a configuration and report `ok`, the node and interface counts, or the error - existence and parseability of referenced files included. With a JSON body the given candidate properties are checked without anything being saved; with an empty body the saved configuration is checked
+|===
+
+A requisition configuration is represented as a flat JSON object with the same keys used in `requisition.properties`.
+`PUT` validates the configuration before anything is written: the requisition name must be a plain folder name, `source` must name a source available on the instance, and a `mapper` is required unless the source has a default mapper.
+The properties file is replaced atomically, so a requisition request served at the same moment never sees a partially written configuration.
+
+== Example session
+
+[source,bash]
+----
+# Create a requisition backed by the XLS source
+curl -X PUT -H "Authorization: Bearer change-me" \
+    -d '{"source": "xls", "source.file": "../myInventory.xls", "mapper": "echo"}' \
+    http://localhost:8000/api/v1/config/requisitions/myServer
+
+# The requisition is served immediately - no restart needed
+curl http://localhost:8000/requisitions/myServer
+
+# List everything that is configured
+curl -H "Authorization: Bearer change-me" \
+    http://localhost:8000/api/v1/config/requisitions
+----
+
+Referenced files like XLS workbooks, Groovy script steps or SQL statements are not managed through the API.
+Place them next to the requisition configuration as before.
